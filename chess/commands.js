@@ -44,16 +44,15 @@ const commands = {
 	      .setTitle('nigloo chess')
         .setThumbnail('https://i.imgur.com/XZMFwU1.png')
 	      .addFields(
-		{ name: '​', value: '♟ **Prefix:** `c!`\n----------------------------------------\n\n'+
-    '**c! help** - Show this message\n'+
-    '**c! new [who] [who]** - New match, who vs who\n'+
-    '**c! ax by** - Move the piece at position `ax` to position `by`\n'+
-    '**c! end** - End the current match\n\n'+
-    '----------------------------------------\n' },
- 
-    )
-	  .setTimestamp()
-	  .setFooter('♟ chess against gato?');
+          { name: '​', value: '♟ **Prefix:** `c!`\n----------------------------------------\n\n'+
+          '**c! help** - Show this message\n'+
+          '**c! new [who] [who]** - New match, who vs who\n'+
+          '**c! ax by** - Move the piece at position `ax` to position `by`\n'+
+          '**c! end** - End the current match\n\n'+
+          '----------------------------------------\n' },
+        )
+	      .setTimestamp()
+	      .setFooter('♟ chess against gato?');
 
     message.channel.send({ embed: chessHelp });
     },
