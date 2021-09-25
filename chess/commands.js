@@ -73,11 +73,16 @@ const commands = {
             await chessState.sendBoardImage(message, '**'+ message.author.username+': '+ fromTo[1]+' to '+fromTo[2]+'**')
             chessState.saveBoard()
 
-            let w, b
+            let w = false
+            let b = false
             for (row of board) {
-                w = (row.find(p => p === 'wking')) ? true : false
-                b = (row.find(p => p === 'bking')) ? true : false
+              if (row.find(p => p === 'wking')) {
+                w = true
+              } else if (row.find(p => p === 'bking')) {
+                b = true
+              }
             }
+            
             if (w === false) {
               return message.channel.send('Light king isn\'t on board anymore... I think dark won!')
             } else if (b === false) {
