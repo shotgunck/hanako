@@ -1,10 +1,10 @@
 # nigloo
-a multi-purpose discord bot written in JavaScript
+A multi-purpose discord bot written in JavaScript
 
 ## Uses
-* chess
-* music
+* Host a chess game
+* Play sounds in voice channel
 
-## Todo
-* a compiler
+## To-do
+* A compiler
 
