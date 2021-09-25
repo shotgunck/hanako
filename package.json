@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "discord music bot in js",
   "main": "index.js",
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@discordjs/opus": "github:discordjs/opus",
     "avconv": "^3.1.0",
