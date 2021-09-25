@@ -29,7 +29,7 @@ const commands = {
             message.reactions.removeAll()
           }
           }).catch(() => {
-            message.channel.send('k no chess then,, cringj').then(m => m.delete({timeout: 5000}))
+            message.channel.send('k no chess then...').then(m => m.delete({timeout: 5000}))
           });   
     },
   
@@ -39,11 +39,11 @@ const commands = {
     },
 
     help: message => {
-      const chessHelp = new Discord.MessageEmbed()
-	      .setColor('#00DFFF')
-	      .setTitle('nigloo chess')
+      message.channel.send({ embed: new Discord.MessageEmbed()
+        .setColor('#00DFFF')
+        .setTitle('nigloo chess')
         .setThumbnail('https://i.imgur.com/XZMFwU1.png')
-	      .addFields(
+        .addFields(
           { name: '​', value: '♟ **Prefix:** `c!`\n----------------------------------------\n\n'+
           '**c! help** - Show this message\n'+
           '**c! new [who] [who]** - New match, who vs who\n'+
@@ -51,14 +51,12 @@ const commands = {
           '**c! end** - End the current match\n\n'+
           '----------------------------------------\n' },
         )
-	      .setTimestamp()
-	      .setFooter('♟ chess against gato?');
-
-    message.channel.send({ embed: chessHelp });
+        .setTimestamp()
+      });
     },
 
     move: async message => {
-      if (!chessState.board) return message.channel.send('\\♟ Start a match first plss')
+      if (!chessState.board) return message.channel.send('\\♟ Start a match first pls')
   
         const msgNoPrefix = message.content.replace(commandPrefix, '')
         const fromTo = message.content.split(' ')
@@ -81,9 +79,9 @@ const commands = {
                 b = (row.find(p => p === 'bking')) ? true : false
             }
             if (w === false) {
-              return message.channel.send('Light queen isn\'t on board anymore,,, I think dark won!')
+              return message.channel.send('Light king isn\'t on board anymore... I think dark won!')
             } else if (b === false) {
-              return message.channel.send('Dark queen isn\'t on board anymore,,, I think light won!')
+              return message.channel.send('Dark king isn\'t on board anymore... I think light won!')
             }
 
             if ((chessMove.to.y === 0 || chessMove.to.y === 7) && targetPiece.includes('pawn')) {
@@ -108,7 +106,7 @@ const commands = {
                 return
             }
         }
-        message.channel.send(`Oui invalid command,, valid command looks like: \`${commandPrefix}set b8 wqueen\`` +
+        message.channel.send(`Invalid command,, valid command looks like: \`${commandPrefix}set b8 wqueen\`` +
             `. The valid piece names are: \`${piecesWithNone.join(', ')}\``);
     }
 };
