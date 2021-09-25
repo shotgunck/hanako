@@ -1,0 +1,10 @@
+[
+["brook","bknight","bbishop","bqueen","wking","bbishop","bknight","brook"],
+["bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn"],
+[null,null,null,null,null,null,null,null],
+[null,null,null,null,null,null,null,null],
+[null,null,null,null,null,null,null,null],
+[null,null,null,null,null,null,null,null],
+["wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn"],
+["wrook","wknight","wbishop","wqueen",null,"wbishop","wknight","wrook"]
+]
