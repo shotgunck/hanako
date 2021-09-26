@@ -32,15 +32,15 @@ client.on("message", async message => {
   const prefixed = content.substr(0, prefix.length).toLowerCase()
 
   const cmd = content.slice(prefix.length).trim().split(/ +/g).shift().toLowerCase()
-  const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
+  const arg2 = cmd === subcontents[1] ? subcontents[2] : subcontents[1]
 
-  if (prefixed == "c!") {
+  if (prefixed === "c!") {
     const command = chessCommands[cmd] || chessCommands.move
       if (command) {
         command(message, subcontents)
       }
 
-  } else if (prefixed == prefix) {
+  } else if (prefixed === prefix) {
     const command = musicCommands[cmd] || utilCommands[cmd]
       if (command) {
        command(message, arg2, distube)
