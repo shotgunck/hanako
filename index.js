@@ -15,6 +15,7 @@ const {loadImages} = require('./chess/images')
 const chessCommands = require('./chess/commands')
 const musicCommands = require('./modules/music')
 const utilCommands = require('./modules/utilities')
+const mcCommands = require('./modules/minecraft')
 
 let config = require('./config.json')
 
@@ -41,7 +42,7 @@ client.on("message", async message => {
       }
 
   } else if (prefixed === prefix) {
-    const command = musicCommands[cmd] || utilCommands[cmd]
+    const command = musicCommands[cmd] || utilCommands[cmd] || mcCommands[cmd]
       if (command) {
        command(message, arg2, distube)
       }
