@@ -62,7 +62,7 @@ distube
 
 const init = async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
-    require('./KeepOnline.js')()
+    require('./keepOnline.js')()
     client.login(token)
 }
 init()
