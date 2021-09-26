@@ -8,4 +8,3 @@ A multi-purpose discord bot written in JavaScript
 
 ## To-do
 * A compiler
-
