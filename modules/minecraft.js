@@ -29,23 +29,31 @@ const commands = {
     status: (message, arg2) => {
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(data => {
-            message.channel.send({ embed: new Discord.MessageEmbed() 
-            .setColor('#00DFFF')
-            .setTitle(arg2+': '+data.online)
-            .addFields(
+            console.log(data)
+            if (data.data.online === false) {
+              message.channel.send({ embed: new Discord.MessageEmbed() 
+               .setColor('#00DFFF')
+               .setTitle(arg2+' is offline, try again latur kk')
+               .setTimestamp()
+              })
+            } else if (data.data.online === true) {
+              message.channel.send({ embed: new Discord.MessageEmbed() 
+                .setColor('#00DFFF')
+                .setTitle(arg2+' is online')
+                .addFields(
                 { name: '​', value: '**🈷 Info: **'+'\n'+
                 '-------------------------------\n\n'+
 
-                '**Players in game:**'+data.players.online+'\n'+
-                '   •'+data.players.list+'\n'+
+                '**Players in game:** '+data.data.players.online+'\n'+
  
-                '\n\n'+
+                '\n'+
 
                 '-------------------------------'
-                },
-                )
+                })
                 .setTimestamp()
-            })
+              })
+            }
+
         })
     }
 }
