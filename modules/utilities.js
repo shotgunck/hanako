@@ -63,7 +63,7 @@ const commands = {
 
     status: async (message, arg2) => {
         http.get({host: arg2}, function(res){
-        if( res.statusCode == 200 || res.statusCode == 301 )
+        if ( res.statusCode == 200 || res.statusCode == 301 )
             message.channel.send({ embed: new Discord.MessageEmbed() 
             .setColor('#00DFFF')
             .setTitle(arg2+' is offline, try again latur kk')
@@ -75,6 +75,7 @@ const commands = {
             .setTitle(arg2+' is online and fine!')
             .setTimestamp()
             })
+        })
     }
 }
 
