@@ -62,20 +62,26 @@ const commands = {
     },
 
     status: async (message, arg2) => {
-        http.get({host: arg2}, function(res){
-        if ( res.statusCode == 200 || res.statusCode == 301 )
+        if (!arg2) return message.channel.send('\\🔅 Pls provide a server address,,')
+
+        try {
+          http.get({host: arg2}, res => {
+          if ( res.statusCode === 200 || res.statusCode === 301 )
             message.channel.send({ embed: new Discord.MessageEmbed() 
             .setColor('#00DFFF')
-            .setTitle(arg2+' is offline, try again latur kk')
+            .setTitle(arg2+' is online bb')
             .setTimestamp()
             })
-        else
+          else
             message.channel.send({ embed: new Discord.MessageEmbed() 
             .setColor('#00DFFF')
-            .setTitle(arg2+' is online and fine!')
+            .setTitle(arg2+' is offline, try again latur,,')
             .setTimestamp()
             })
-        })
+          })
+        } catch (err) {
+          message.channel.send('\\🔅 The server appears `offline` but it might also `not exist`,,,')
+        }
     }
 }
 
