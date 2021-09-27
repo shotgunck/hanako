@@ -22,8 +22,13 @@ const commands = {
             .addFields(
             { name: '​', value: '🎵 **Current prefix:** '+prefix+'\n'+
             '-------------------------------\n\n'+
-            '**chess** - Info about chess\n'+
             '**help** - Show this messenge\n'+
+
+            '**chess** - Info about chess\n'+
+            '**mcskin** - Show skin of a Minecraft player\n'+
+            '**acheive** - Achievement got!\n'+
+            '**status** - Get a server status\n'+
+
             '**prefix** - Set a new prefix for me\n'+
             '**play** - Play a sound or add into queue\n'+
             '**queue** - Show the current queue\n'+
