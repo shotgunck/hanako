@@ -2,6 +2,7 @@
 
 
 const Discord = require('discord.js')
+const http = require('http')
 
 const config = require('../config.json')
 
@@ -58,6 +59,22 @@ const commands = {
         } else {
             message.channel.send("Current prefix: ``"+prefix+"``\nTo change prefix, type ``"+prefix+" prefix [new-prefix]``\n\n**❗ In case you forgot what the prefix is,  see what I'm listening to!");
         }
+    },
+
+    status: async (message, arg2) => {
+        http.get({host: arg2}, function(res){
+        if( res.statusCode == 200 || res.statusCode == 301 )
+            message.channel.send({ embed: new Discord.MessageEmbed() 
+            .setColor('#00DFFF')
+            .setTitle(arg2+' is offline, try again latur kk')
+            .setTimestamp()
+            })
+        else
+            message.channel.send({ embed: new Discord.MessageEmbed() 
+            .setColor('#00DFFF')
+            .setTitle(arg2+' is online and fine!')
+            .setTimestamp()
+            })
     }
 }
 

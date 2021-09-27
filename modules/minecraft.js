@@ -26,7 +26,7 @@ const commands = {
         })
     },
 
-    status: (message, arg2) => {
+    mcstatus: (message, arg2) => {
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(data => {
             console.log(data)
