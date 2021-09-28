@@ -1,8 +1,9 @@
 const Discord = require('discord.js')
 const axios = require('axios')
-const base64image = require('base64-to-image')
-const fs = require('fs')
-const canvas = require('canvas')
+const imgbb = require('imgbb-uploader')
+
+const dotenv = require('dotenv')
+dotenv.config()
 
 const config = require('../config.json')
 
@@ -29,7 +30,7 @@ const commands = {
         })
     },
 
-    ms: (message, arg2) => {
+    ms: async (message, arg2) => {
         message.channel.send('Fetching, please wait...')
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
@@ -41,42 +42,40 @@ const commands = {
                .setTimestamp()
               })
             } else if (data.online === true) {
-
-			  let icon
-			  if (!data.icon) {
-				  icon = 'https://i.imgur.com/cpfxvnE.png'
-			  } else {
-					const base64Str = data.icon
-          			const path = './'
-          			const optionalObj = {'fileName': 'mcServerIcon', 'type':'png'}
-
-          			base64image(base64Str,path,optionalObj)
-					console.log('loading')
-					canvas.loadImage('./mcServerIcon.png').then(image => {
-						icon = image
-					})
-			  }
-
-			  message.channel.send({ embed: new Discord.MessageEmbed() 
-                .setColor('#00DFFF')
-                .setTitle('🟢 '+arg2+' is online')
-				.setDescription(data.motd.clean[0])
-				.setThumbnail(icon)
-                .addFields(
-                { name: '​', value: '**🈷 Info: **'+'\n'+
-                '-------------------------------\n\n'+
-				'**Version**: '+data.version+
-                '\n**Players in game:** '+data.players.online+
+                imgbb({
+                  apiKey: process.env.IMGBB_API_KEY,
+                  name: "mcservericon",
+                  expiration: 3600,
+                  base64string: !data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon.substr(22, data.icon.length)
+                  })
+                .then(res => { 
+                  message.channel.send({ embed: new Discord.MessageEmbed() 
+                    .setColor('#00DFFF')
+                    .setTitle('🟢 '+arg2+' is online')
+				            .setDescription(data.motd.clean[0])
+				            .setThumbnail(res.url)
+                    .addFields(
+                    { name: '​', value: '**🈷 Info: **'+'\n'+
+                    '-------------------------------\n\n'+
+				            '**Version**: '+data.version+
+                    '\n**Players in game:** '+data.players.online+
  
-                '\n\n'+
+                    '\n\n'+
 
-                '-------------------------------'
+                    '-------------------------------'
+                    })
+                    .setTimestamp()
+                    })
                 })
-                .setTimestamp()
-              })
+                .catch(err => {
+                    message.channel.send('Image API error, pls wait for 5 minutes before trying again.')       
+                })
+              
             }
-
-        })
+      }).catch(err => {
+        console.log(err)
+        message.channel.send('API error, pls wait for 5 minutes before trying again.')
+      })
     }
 }
 
