@@ -2,6 +2,7 @@ const Discord = require('discord.js')
 const axios = require('axios')
 const base64image = require('base64-to-image')
 const fs = require('fs')
+const canvas = require('canvas')
 
 const config = require('../config.json')
 
@@ -29,17 +30,18 @@ const commands = {
     },
 
     ms: (message, arg2) => {
+        message.channel.send('Fetching, please wait...')
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
             const data = res.data
             if (data.online === false) {
               message.channel.send({ embed: new Discord.MessageEmbed() 
                .setColor('#00DFFF')
-               .setTitle(arg2+' is offline, try again latur kk')
+               .setTitle('🔴 '+arg2+' is offline, try again latur kk')
                .setTimestamp()
               })
             } else if (data.online === true) {
-			  
+
 			  let icon
 			  if (!data.icon) {
 				  icon = 'https://i.imgur.com/cpfxvnE.png'
@@ -49,13 +51,15 @@ const commands = {
           			const optionalObj = {'fileName': 'mcServerIcon', 'type':'png'}
 
           			base64image(base64Str,path,optionalObj)
-					
-					icon = './mcServerIcon.png'
+					console.log('loading')
+					canvas.loadImage('./mcServerIcon.png').then(image => {
+						icon = image
+					})
 			  }
-			  
-              message.channel.send({ embed: new Discord.MessageEmbed() 
+
+			  message.channel.send({ embed: new Discord.MessageEmbed() 
                 .setColor('#00DFFF')
-                .setTitle(arg2+' is online')
+                .setTitle('🟢 '+arg2+' is online')
 				.setDescription(data.motd.clean[0])
 				.setThumbnail(icon)
                 .addFields(
