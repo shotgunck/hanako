@@ -31,14 +31,14 @@ const commands = {
     },
 
     ms: async (message, arg2) => {
-        message.channel.send('Fetching, please wait...')
+        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
             const data = res.data
             if (data.online === false) {
               message.channel.send({ embed: new Discord.MessageEmbed() 
                .setColor('#00DFFF')
-               .setTitle('🔴 '+arg2+' is offline, try again latur kk')
+               .setTitle('\\🔴 '+arg2+' is offline, try again latur kk')
                .setTimestamp()
               })
             } else if (data.online === true) {
@@ -51,11 +51,11 @@ const commands = {
                 .then(res => { 
                   message.channel.send({ embed: new Discord.MessageEmbed() 
                     .setColor('#00DFFF')
-                    .setTitle('🟢 '+arg2+' is online')
+                    .setTitle('\\🟢 '+arg2+' is online')
 				            .setDescription(data.motd.clean[0])
 				            .setThumbnail(res.url)
                     .addFields(
-                    { name: '​', value: '**🈷 Info: **'+'\n'+
+                    { name: '​', value: '**\\➕ Info: **'+'\n'+
                     '-------------------------------\n\n'+
 				            '**Version**: '+data.version+
                     '\n**Players in game:** '+data.players.online+
