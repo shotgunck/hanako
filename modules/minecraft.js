@@ -34,7 +34,6 @@ const commands = {
               message.channel.send({ embed: new Discord.MessageEmbed() 
                .setColor('#00DFFF')
                .setTitle(arg2+' is offline, try again latur kk')
-			   .setThumbnail(data.icon === null ? 'https://i.imgur.com/cpfxvnE.png' : data.icon)
                .setTimestamp()
               })
             } else if (data.online === true) {
@@ -42,6 +41,7 @@ const commands = {
                 .setColor('#00DFFF')
                 .setTitle(arg2+' is online')
 				.setDescription(data.motd.clean[0])
+				.setThumbnail(data.icon === null ? 'https://i.imgur.com/cpfxvnE.png' : data.icon)
                 .addFields(
                 { name: '​', value: '**🈷 Info: **'+'\n'+
                 '-------------------------------\n\n'+
