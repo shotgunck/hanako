@@ -1,5 +1,7 @@
 const Discord = require('discord.js')
 const axios = require('axios')
+const base64image = require('base64-to-image')
+const fs = require('fs')
 
 const config = require('../config.json')
 
@@ -42,9 +44,15 @@ const commands = {
 			  if (!data.icon) {
 				  icon = 'https://i.imgur.com/cpfxvnE.png'
 			  } else {
-				  icon = new Image()
-				  icon.src = data.icon
+					const base64Str = data.icon
+          			const path = './'
+          			const optionalObj = {'fileName': 'mcServerIcon', 'type':'png'}
+
+          			base64image(base64Str,path,optionalObj)
+					
+					icon = './mcServerIcon.png'
 			  }
+			  
               message.channel.send({ embed: new Discord.MessageEmbed() 
                 .setColor('#00DFFF')
                 .setTitle(arg2+' is online')
