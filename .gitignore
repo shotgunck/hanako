@@ -2,3 +2,5 @@
 comg.png
 node_modules/
 .history/
+.replit
+package-lock.json

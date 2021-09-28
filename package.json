@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": "16.x"
+    "node": "14.x"
   },
   "dependencies": {
     "@discordjs/opus": "github:discordjs/opus",
     "avconv": "^3.1.0",
+    "axios": "^0.21.4",
     "canvas": "^2.8.0",
     "discord.js": "^12.5.3",
     "distube": "^2.8.18",
@@ -16,7 +17,7 @@
     "express": "^4.17.1",
     "ffmpeg": "0.0.4",
     "ffmpeg-static": "^4.4.0",
-    "fs": "^0.0.1-security",
+    "fs": "0.0.1-security",
     "install": "^0.13.0",
     "jdoodlecoderunner": "^1.0.1",
     "request": "^2.88.2",
