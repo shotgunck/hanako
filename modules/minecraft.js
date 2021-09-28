@@ -37,11 +37,19 @@ const commands = {
                .setTimestamp()
               })
             } else if (data.online === true) {
+			  
+			  let icon
+			  if (!data.icon) {
+				  icon = 'https://i.imgur.com/cpfxvnE.png'
+			  } else {
+				  icon = new Image()
+				  icon.src = data.icon
+			  }
               message.channel.send({ embed: new Discord.MessageEmbed() 
                 .setColor('#00DFFF')
                 .setTitle(arg2+' is online')
 				.setDescription(data.motd.clean[0])
-				.setThumbnail(!data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon)
+				.setThumbnail(icon)
                 .addFields(
                 { name: '​', value: '**🈷 Info: **'+'\n'+
                 '-------------------------------\n\n'+
