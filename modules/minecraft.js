@@ -29,7 +29,7 @@ const commands = {
     ms: (message, arg2) => {
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
-            const mainData = res.data
+            const data = res.data
             if (data.online === false) {
               message.channel.send({ embed: new Discord.MessageEmbed() 
                .setColor('#00DFFF')
