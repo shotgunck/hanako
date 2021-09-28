@@ -31,7 +31,7 @@ const commands = {
     },
 
     ms: async (message, arg2) => {
-        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
+        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 750}))
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
             const data = res.data
