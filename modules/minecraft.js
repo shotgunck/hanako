@@ -65,10 +65,10 @@ const commands = {
                 .addFields(
                 { name: '​', value: '**🈷 Info: **'+'\n'+
                 '-------------------------------\n\n'+
-
-                '**Players in game:** '+data.players.online+'\n'+
+				'**Version**: '+data.version+
+                '\n**Players in game:** '+data.players.online+
  
-                '\n'+
+                '\n\n'+
 
                 '-------------------------------'
                 })
