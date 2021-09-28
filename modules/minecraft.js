@@ -31,7 +31,7 @@ const commands = {
     },
 
     ms: async (message, arg2) => {
-        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 750}))
+        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
         axios.get('https://api.mcsrvstat.us/2/'+arg2)
         .then(res => {
             const data = res.data
@@ -49,23 +49,29 @@ const commands = {
                   base64string: !data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon.substr(22, data.icon.length)
                   })
                 .then(res => { 
-                  message.channel.send({ embed: new Discord.MessageEmbed() 
-                    .setColor('#00DFFF')
-                    .setTitle('\\🟢 '+arg2+' is online')
-				            .setDescription(data.motd.clean[0])
-				            .setThumbnail(res.url)
-                    .addFields(
-                    { name: '​', value: '**\\➕ Info: **'+'\n'+
-                    '-------------------------------\n\n'+
-				            '**Version**: '+data.version+
-                    '\n**Players in game:** '+data.players.online+
- 
+                  axios.get('https://mcapi.us/server/status?ip='+arg2)
+                  .then(duration => {
+                      const uptime = Math.floor(Date.now() / 1000) - duration.data.last_updated
+                      message.channel.send({ embed: new Discord.MessageEmbed() 
+                        .setColor('#00DFFF')
+                        .setTitle('\\🟢 '+arg2+' is online')
+				                .setDescription(data.motd.clean[0])
+				                .setThumbnail(res.url)
+                        .addFields(
+                        { name: '​', value: '**\\➕ Info: **'+'\n'+
+                        '-------------------------------\n\n'+
+				                '**Version**: '+data.version+
+                        '\n**Players in game:** '+data.players.online+
+                        '\n**Uptime** [since last update]: '+uptime+
                     '\n\n'+
 
-                    '-------------------------------'
+                    '-------------------------------'+
+                    '\n🔹 If u see info being displayed wrongly, try again in 5 minutes!'
                     })
                     .setTimestamp()
                     })
+                  })
+                  
                 })
                 .catch(err => {
                     message.channel.send('Image API error, pls wait for 5 minutes before trying again.')       
