@@ -7,7 +7,6 @@ const commands = {
         .setStyle('red')
         .setLabel('Up') 
         .setID('click_to_function') 
-        .setDisabled()
     
     message.channel.send('sup babe', button);
   }
