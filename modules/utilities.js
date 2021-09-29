@@ -15,11 +15,11 @@ const commands = {
     
     help: async message => {
         message.channel.send({ embed: new Discord.MessageEmbed()
-            .setColor('#00DFFF')
-            .setTitle('nigloo bot')
-            .setAuthor('', 'https://i.imgur.com/j0CgA16.png')
+            .setColor('#DD6E0F')
+            .setTitle('Hanako')
+            .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
             .setDescription('created by shotgun#4239, written in JS')
-            .setThumbnail('https://i.imgur.com/j0CgA16.png')
+            .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
             .addFields(
             { name: '​', value: '🎵 **Current prefix:** '+prefix+'\n'+
             '-------------------------------\n\n'+

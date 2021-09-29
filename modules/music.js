@@ -43,7 +43,7 @@ const commands = {
         if (!queue) return message.channel.send("🕳 Queue empty..,")
         
         message.channel.send({ embed: new Discord.MessageEmbed()
-            .setColor('#00DFFF')
+            .setColor('#DD6E0F')
             .setTitle('Current Queue')
             .addFields(
             {name: '​', value: queue.songs.map((song, id) => `**${id+1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\`` )},

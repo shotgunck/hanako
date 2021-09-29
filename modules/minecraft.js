@@ -12,7 +12,7 @@ const commands = {
         axios.get('https://www.mc-heads.net/body/'+arg2+'/270')
         .then(data => {
             message.channel.send({ embed: new Discord.MessageEmbed() 
-            .setColor('#00DFFF')
+            .setColor('#DD6E0F')
             .setTitle(arg2)
             .setImage(data.config.url)
             })
@@ -24,7 +24,7 @@ const commands = {
         axios.get('https://minecraft-api.com/api/achivements/cooked_salmon/achievement..got/'+args)
         .then(data => {
             message.channel.send({ embed: new Discord.MessageEmbed() 
-            .setColor('#00DFFF')
+            .setColor('#DD6E0F')
             .setImage(data.config.url)
             })
         })
@@ -38,7 +38,7 @@ const commands = {
             const data = res.data
             if (data.online === false) {
             message.channel.send({ embed: new Discord.MessageEmbed() 
-            	.setColor('#00DFFF')
+            	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline, try again latur kk')
               .setDescription('🔹 Note: If info being displayed wrongly, try again in 5 minutes!')
             	.setTimestamp()
@@ -61,7 +61,7 @@ const commands = {
                         else if (ok < 50) ok = ping+' [Bad]'
 
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
-                     			.setColor('#00DFFF')
+                     			.setColor('#DD6E0F')
                       			.setTitle('\\🟢 '+arg2+' is online')
 			                	.setDescription(data.motd.clean[0])
 			                	.setThumbnail(imgRes.url)
