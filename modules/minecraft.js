@@ -40,6 +40,8 @@ const commands = {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#00DFFF')
             	.setTitle('\\🔴 '+arg2+' is offline, try again latur kk')
+              .addFields(
+              { name: '​', value: '🔹 Note: If info being displayed wrongly, try again in 5 minutes!'})
             	.setTimestamp()
             })
             } else if (data.online === true) {
