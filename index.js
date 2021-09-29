@@ -2,6 +2,9 @@ const Discord = require('discord.js')
 const Distube = require('distube')
 
 const dotenv = require('dotenv')
+const fs = require('fs')
+const path = require('path')
+
 dotenv.config()
 
 const token = process.env.BOT_TOKEN
@@ -11,11 +14,11 @@ const distube = new Distube(client, { emitNewSongOnly: true})
 
 const chessState = require('./chess/chessBoard')
 const {loadImages} = require('./chess/images')
-
 const chessCommands = require('./chess/commands')
-const musicCommands = require('./modules/music')
-const utilCommands = require('./modules/utilities')
-const mcCommands = require('./modules/minecraft')
+
+//const musicCommands = require('./modules/music')
+//const utilCommands = require('./modules/utilities')
+//const mcCommands = require('./modules/minecraft')
 
 let config = require('./config.json')
 
@@ -42,12 +45,17 @@ client.on("message", async message => {
       }
 
   } else if (prefixed === prefix) {
-    const command = musicCommands[cmd] || utilCommands[cmd] || mcCommands[cmd]
-      if (command) {
-       command(message, arg2, distube)
-      }
+    fs.readdir('./modules', function (err, files) {
+      if (err) return console.log(err)
+        files.forEach(function (file, index) {
+          const module = require('./modules/'+file)
+          const command = module[cmd]
+          if (command) {
+              command(message, arg2, distube)
+          }
+      })
+    }) 
   }
-  
 })
 
 distube
