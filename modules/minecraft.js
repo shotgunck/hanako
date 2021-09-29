@@ -16,7 +16,7 @@ const commands = {
             .setTitle(arg2)
             .setImage(data.config.url)
             })
-        }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki'))
+        }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki!'))
     },
 
     achieve: message => {
