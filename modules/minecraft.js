@@ -56,9 +56,9 @@ const commands = {
                    			const ping = pingRes.data.ping
                         let ok = parseInt(ping)
 
-                        if (ok > 499) ok = ping+' [Bad]'
-                        else if (ok < 500 && ok > 149) ok = ping+' [Avg]'
-                        else if (ok < 150) ok = ping+' [OK]'
+                        if (ok > 499) ok = ping+'ms [Bad]'
+                        else if (ok < 500 && ok > 149) ok = ping+'ms [Avg]'
+                        else if (ok < 150) ok = ping+'ms [OK]'
 
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#DD6E0F')
