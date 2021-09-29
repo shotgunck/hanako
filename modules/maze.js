@@ -10,6 +10,7 @@ const commands = {
 					.setLabel('Up')
 					.setStyle('PRIMARY'),
 			)
+    console.log('aa')
     message.channel.send({ components: [row] })
   }
 }
