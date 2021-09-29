@@ -51,14 +51,14 @@ const commands = {
                		base64string: !data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon.substr(22, data.icon.length)
                	})
               	.then(imgRes => { 
-               		axios.get('https://minecraft-api.com/api/ping/response/'+data.hostname+'/'+data.port+'/json')
+               		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
                			.then(pingRes => {
-                   			const ping = pingRes.data.response
+                   			const ping = pingRes.data.ping
                         let ok = parseInt(ping)
 
-                        if (ok > 89) ok = ping+' [OK]'
-                        else if (ok < 90 && ok > 49) ok = ping+' [Avg]'
-                        else if (ok < 50) ok = ping+' [Bad]'
+                        if (ok > 499) ok = ping+' [Bad]'
+                        else if (ok < 500 && ok > 99) ok = ping+' [Avg]'
+                        else if (ok < 100) ok = ping+' [OK]'
 
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#DD6E0F')
