@@ -56,9 +56,8 @@ distube
       queue.autoplay = false
   })
   .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
-  .on("error", (message, err) => message.channel.send("\\❌ Ah shite error: `" + err + "`"));
-
   })
+  .on("error", (message, err) => message.channel.send("\\❌ Ah shite error: `" + err + "`"));
 
 const init = async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
