@@ -57,8 +57,8 @@ const commands = {
                         let ok = parseInt(ping)
 
                         if (ok > 499) ok = ping+' [Bad]'
-                        else if (ok < 500 && ok > 99) ok = ping+' [Avg]'
-                        else if (ok < 100) ok = ping+' [OK]'
+                        else if (ok < 500 && ok > 149) ok = ping+' [Avg]'
+                        else if (ok < 150) ok = ping+' [OK]'
 
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#DD6E0F')
