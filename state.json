@@ -3,8 +3,8 @@
 ["bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn"],
 [null,null,null,null,null,null,null,null],
 [null,null,null,null,null,null,null,null],
-[null,null,null,null,null,null,null,null],
+[null,null,null,null,"bking",null,null,null],
 [null,null,null,null,null,null,null,null],
 ["wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn"],
-["wrook","wknight","wbishop","wqueen","bking","wbishop","wknight","wrook"]
+["wrook","wknight","wbishop","wqueen",null,"wbishop","wknight","wrook"]
 ]

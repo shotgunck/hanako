@@ -40,8 +40,8 @@ const commands = {
 
     help: message => {
       message.channel.send({ embed: new Discord.MessageEmbed()
-        .setColor('#00DFFF')
-        .setTitle('nigloo chess')
+        .setColor('#DD6E0F')
+        .setTitle('Hanako Chess')
         .setThumbnail('https://i.imgur.com/XZMFwU1.png')
         .addFields(
           { name: '​', value: '♟ **Prefix:** `c!`\n----------------------------------------\n\n'+
