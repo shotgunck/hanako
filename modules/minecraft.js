@@ -66,7 +66,7 @@ const commands = {
 			                	.setDescription(data.motd.clean[0])
 			                	.setThumbnail(imgRes.url)
                        			.addFields(
-                       			{ name: '​', value: '**\\➕ Info: **'+'\n'+
+                       			{ name: '​', value: '**➕ Info: **'+'\n'+
                        			'-------------------------------\n\n'+
 			                	'**Version**: '+data.version+
                        			'\n**Players in game:** '+data.players.online+

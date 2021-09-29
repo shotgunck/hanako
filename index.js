@@ -51,13 +51,13 @@ client.on("message", async message => {
 })
 
 distube
-  .on('finish', message => message.channel.send("\\😴 **Queue ended.**"))
-  .on("playSong", (message, queue, song) => {message.channel.send('\\🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!');
+  .on('finish', message => message.channel.send("😴 **Queue ended.**"))
+  .on("playSong", (message, queue, song) => {message.channel.send('🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!');
       queue.autoplay = false
   })
   .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
   })
-  .on("error", (message, err) => message.channel.send("\\❌ Ah shite error: `" + err + "`"));
+  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`"));
 
 const init = async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])

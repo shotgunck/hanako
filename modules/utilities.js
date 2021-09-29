@@ -10,7 +10,7 @@ let prefix = config.prefix
 
 const commands = {
     chess: async message => {
-        message.channel.send('\\♟ Prefix for chess is specified as `c!`, type `c! help` for more ight')
+        message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! help` for more ight')
     },
     
     help: async message => {

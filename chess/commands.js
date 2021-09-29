@@ -16,7 +16,7 @@ const commands = {
         return message.reply('There\'s a match going on bru, spectate them')
       }
 
-      message.channel.send('\\♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => m.delete({timeout: 10001}))
+      message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => m.delete({timeout: 10001}))
 
       message.react('♟')
       
@@ -35,7 +35,7 @@ const commands = {
   
     end: message => {
       chessState.board = null
-      message.channel.send("\\♟ Match ended by **"+message.author.username+"**. Latest result can be observed from the latest board image!")
+      message.channel.send("♟ Match ended by **"+message.author.username+"**. Latest result can be observed from the latest board image!")
     },
 
     help: message => {
@@ -56,7 +56,7 @@ const commands = {
     },
 
     move: async message => {
-      if (!chessState.board) return message.channel.send('\\♟ Start a match first pls')
+      if (!chessState.board) return message.channel.send('♟ Start a match first pls')
   
         const msgNoPrefix = message.content.replace(commandPrefix, '')
         const fromTo = message.content.split(' ')
