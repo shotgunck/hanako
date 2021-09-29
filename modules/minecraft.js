@@ -53,11 +53,12 @@ const commands = {
                		axios.get('https://minecraft-api.com/api/ping/response/'+data.hostname+'/'+data.port+'/json')
                			.then(pingRes => {
                    			const ping = pingRes.data.response
-                        let ok
-                        if (parseInt(ping) > 89) ok = ping+' [OK]'
-                        else if (parseInt(ping) < 90 && parseInt(ping) > 49) ok = ping+' [Avg]'
-                        else if (parseInt(ping) < 50) ok = ping+' [Bad]'
-                        
+                        let ok = parseInt(ping)
+
+                        if (ok > 89) ok = ping+' [OK]'
+                        else if (ok < 90 && ok > 49) ok = ping+' [Avg]'
+                        else if (ok < 50) ok = ping+' [Bad]'
+
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#00DFFF')
                       			.setTitle('\\🟢 '+arg2+' is online')
