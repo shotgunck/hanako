@@ -1,5 +1,5 @@
 ![Image](https://i.imgur.com/j0CgA16.png)
-# nigloo
+# hanako
 A multi-purpose discord bot written in JavaScript
 
 ## Uses
@@ -9,4 +9,3 @@ A multi-purpose discord bot written in JavaScript
 
 ## To-do
 * A compiler
-* Thinking of a better name
