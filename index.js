@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
+const DiscordButton = require('discord-buttons')
 
 const dotenv = require('dotenv')
 const fs = require('fs')
@@ -11,14 +12,11 @@ const token = process.env.BOT_TOKEN
 
 const client = new Discord.Client()
 const distube = new Distube(client, { emitNewSongOnly: true})
+DiscordButton(client)
 
 const chessState = require('./chess/chessBoard')
 const {loadImages} = require('./chess/images')
 const chessCommands = require('./chess/commands')
-
-//const musicCommands = require('./modules/music')
-//const utilCommands = require('./modules/utilities')
-//const mcCommands = require('./modules/minecraft')
 
 let config = require('./config.json')
 

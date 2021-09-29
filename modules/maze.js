@@ -1,18 +1,16 @@
-
-
+const Discord = require('discord.js')
+const DiscordButton = require('discord-buttons')
 
 const commands = {
   maze: async(message) => {
-    const row = new MessageActionRow()
-			.addComponents(
-				new MessageButton()
-					.setCustomId('primary')
-					.setLabel('Up')
-					.setStyle('PRIMARY'),
-			)
-    console.log('aa')
-    message.channel.send({ components: [row] })
+    let button = new DiscordButton.MessageButton()
+        .setStyle('red')
+        .setLabel('Up') 
+        .setID('click_to_function') 
+        .setDisabled()
+    
+    message.channel.send('sup babe', button);
   }
 }
 
-module.exports
+module.exports = commands
