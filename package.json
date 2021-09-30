@@ -1,7 +1,7 @@
 {
-  "name": "nigloo-js-1",
+  "name": "hanako",
   "version": "1.0.0",
-  "description": "",
+  "description": "a multi-purpose discord bot written in js",
   "main": "index.js",
   "engines": {
     "node": "14.x"

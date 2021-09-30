@@ -13,7 +13,7 @@ const commands = {
       if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
 
       const filter = distube.setFilter(message, arg2)
-      message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`');
+      message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`! Wait me apply..,');
     },
 
     lyrics: async(message, arg2, distube) => {
