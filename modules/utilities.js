@@ -62,7 +62,7 @@ const commands = {
     },
 
     gato: async(message) => {
-        axios.get('https://api.jastinch.xyz/neko')
+        axios.get('https://cat.beansdrawer.com/api/breeds/image/random')
         .then(res => {
            message.channel.send({ embed: new Discord.MessageEmbed()
             .setColor('#DD6E0F')
