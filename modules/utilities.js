@@ -2,7 +2,7 @@
 
 
 const Discord = require('discord.js')
-const http = require('http')
+const axios = require('axios')
 
 const config = require('../config.json')
 
@@ -59,6 +59,17 @@ const commands = {
         } else {
             message.channel.send("Current prefix: ``"+prefix+"``\nTo change prefix, type ``"+prefix+" prefix [new-prefix]``\n\n**❗ In case you forgot what the prefix is,  see what I'm listening to!");
         }
+    },
+
+    gato: async(message) => {
+        axios.get('https://api.jastinch.xyz/neko')
+        .then(res => {
+           message.channel.send({ embed: new Discord.MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle('gato')
+            .setImage(res.data.urlimg)
+        })
+        })
     }
 }
 
