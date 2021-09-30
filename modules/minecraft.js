@@ -9,13 +9,24 @@ const config = require('../config.json')
 
 const commands = {
     mcskin: (message, arg2) => {
-        axios.get('https://www.mc-heads.net/body/'+arg2+'/270')
-        .then(data => {
-            message.channel.send({ embed: new Discord.MessageEmbed() 
-            .setColor('#DD6E0F')
-            .setTitle(arg2)
-            .setImage(data.config.url)
-            })
+      if (!arg2) return message.channel.send('🙄 Provide a Minecraft player\'s username,, like `'+config.prefix+' mcskin notch`')
+      message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => m.delete({timeout: 2000}))
+        axios.get('https://minecraft-api.com/api/skins/'+arg2+'/body/10.5/10/json')
+        .then(res => {
+            imgbb({
+               		apiKey: process.env.IMGBB_API_KEY,
+               		name: arg2,
+               		expiration: 3600,
+               		base64string: !res.data.skin ? 'https://www.ssbwiki.com/images/0/05/Steve_Minecraft.png' : res.data.skin
+               	})
+              	.then(imgRes => { 
+               		  message.channel.send({ embed: new Discord.MessageEmbed() 
+                    .setColor('#DD6E0F')
+                    .setTitle(arg2)
+                    .setImage(imgRes.url)
+                   })
+                })
+            
         }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki! || '+err))
     },
 
