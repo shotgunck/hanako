@@ -35,7 +35,6 @@ const commands = {
         
 		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
         .then(res => {
-            console.log(res)
             const data = res.data
             if (data.serverStatus === 'offline') {
             message.channel.send({ embed: new Discord.MessageEmbed() 
