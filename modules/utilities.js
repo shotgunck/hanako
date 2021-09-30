@@ -62,12 +62,12 @@ const commands = {
     },
 
     gato: async(message) => {
-        axios.get('https://cat.beansdrawer.com/api/breeds/image/random')
+        axios.get('https://aws.random.cat/meow?ref=apilist.fun')
         .then(res => {
            message.channel.send({ embed: new Discord.MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('gato')
-            .setImage(res.data.message)
+            .setImage(res.data.file)
         })
         })
     }
