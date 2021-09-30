@@ -16,7 +16,7 @@ const commands = {
             .setTitle(arg2)
             .setImage(data.config.url)
             })
-        }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki!'))
+        }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki! || '+err))
     },
 
     achieve: message => {
@@ -33,17 +33,18 @@ const commands = {
     ms: async (message, arg2) => {
         message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
         
-		axios.get('https://api.mcsrvstat.us/2/'+arg2)
+		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
         .then(res => {
+            console.log(res)
             const data = res.data
-            if (data.online === false) {
+            if (data.serverStatus === 'offline') {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline, try again latur kk')
-              .setDescription('🔹 Note: If info being displayed wrongly, try again in 5 minutes!')
+              .setDescription('🔹 If u see info being displayed wrongly, try again in 5 minutes!')
             	.setTimestamp()
             })
-            } else if (data.online === true) {
+            } else if (data.serverStatus === 'online') {
                	imgbb({
                		apiKey: process.env.IMGBB_API_KEY,
                		name: "mcservericon",
@@ -51,9 +52,7 @@ const commands = {
                		base64string: !data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon.substr(22, data.icon.length)
                	})
               	.then(imgRes => { 
-               		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
-               			.then(pingRes => {
-                   			const ping = pingRes.data.ping
+               		const ping = data.ping
                         let ok = parseInt(ping)
 
                         if (ok > 499) ok = ping+'ms [Bad]'
@@ -63,28 +62,27 @@ const commands = {
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#DD6E0F')
                       			.setTitle('\\🟢 '+arg2+' is online')
-			                	.setDescription(data.motd.clean[0])
+			                	.setDescription(data.motd.text)
 			                	.setThumbnail(imgRes.url)
                        			.addFields(
                        			{ name: '​', value: '**➕ Info: **'+'\n'+
                        			'-------------------------------\n\n'+
 			                	'**Version**: '+data.version+
-                       			'\n**Players in game:** '+data.players.online+
+                       			'\n**Players in game:** '+data.players+'/'+data.maxplayers+
                        			'\n**Ping**: '+ok+
                    				'\n\n'+
 			                    '-------------------------------'+
                				    '\n🔹 If u see info being displayed wrongly, try again in 5 minutes!'
                    				})
                    				.setTimestamp()
-                   			})
-              			})      
+                   			})     
                 })
-            	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again.'))
+            	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. || '+err))
         	}
       	})
 		.catch(err => {
         	console.log(err)
-        	message.channel.send('API error, pls wait for 5 minutes before trying again.')
+        	message.channel.send('API error, pls wait for 5 minutes before trying again. || '+err)
       	})
     }
 }
