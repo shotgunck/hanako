@@ -2,10 +2,36 @@
 
 
 const Discord = require('discord.js')
+const axios = require('axios')
 
 const config = require('../config.json')
 
 const commands = {
+    filter: async(message, arg2, distube) => {
+      if (!arg2) return message.channel.send('🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\nExample: `'+config.prefix+' filter reverse`')
+
+      if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
+
+      const filter = distube.setFilter(message, arg2)
+      message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`');
+    },
+
+    lyrics: async(message, arg2, distube) => {
+      let queue = distube.getQueue(message)
+      if (!queue) return message.channel.send("🕳 Play a sound so I can get the lyrics aight")
+
+      queue.songs.map((song, id) => {
+        let data = song.name.split(' - ')
+        axios.get('https://api.lyrics.ovh/v1/'+data[0]+'/'+data[1])
+        .then(res => {
+          message.channel.send('Lyrics for sound: **'+data[1]+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
+        })
+        .catch(err => {
+          message.channel.send('💤 No lyrics found.,. | '+err)
+        }) 
+      })
+    },
+
     play: async (message, arg2, distube) => {
         message.channel.startTyping(3)
         const voiceChannel = message.member.voice.channel
