@@ -31,6 +31,8 @@ const commands = {
     },
 
     ms: async (message, arg2) => {
+        if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
+
         message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
         
 		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
@@ -55,7 +57,7 @@ const commands = {
                         let ok = parseInt(ping)
 
                         if (ok > 499) ok = ping+'ms [Bad]'
-                        else if (ok < 500 && ok > 149) ok = ping+'ms [Avg]'
+                        else if (ok < 500 && ok > 149) ok = ping+'ms [avg]'
                         else if (ok < 150) ok = ping+'ms [OK]'
 
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
