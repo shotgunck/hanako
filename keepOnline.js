@@ -2,7 +2,7 @@ const express = require('express')
 const server = express()
 
 server.all('/', (_, res) => {
-    res.send('oui, bot is alive')
+    res.send('ight, hanako')
 })
 
 function keepAlive() {
