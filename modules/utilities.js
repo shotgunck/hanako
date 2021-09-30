@@ -67,7 +67,7 @@ const commands = {
            message.channel.send({ embed: new Discord.MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('gato')
-            .setImage(res.data.urlimg)
+            .setImage(res.data.message)
         })
         })
     }
