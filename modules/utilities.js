@@ -24,13 +24,15 @@ const commands = {
             { name: '​', value: '🎵 **Current prefix:** '+prefix+'\n'+
             '-------------------------------\n\n'+
             '**help** - Show this messenge\n\n'+
+            '**prefix** - Set a new prefix for me\n'+
 
             '**chess** - Info about chess\n'+
             '**mcskin** - Show skin of a Minecraft player\n'+
             '**achieve** - Achievement got!\n'+
             '**ms** - Get a minecraft server\'s status\n\n'+
 
-            '**prefix** - Set a new prefix for me\n'+
+            '**filter** - Set a sound filter\n'+
+            '**lyrics** - Display the current sound\'s lyrics\n'+
             '**play** - Play a sound or add into queue\n'+
             '**queue** - Show the current queue\n'+
             '**skip** - Skip to the next sound in queue\n'+
