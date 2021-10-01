@@ -85,9 +85,12 @@ const commands = {
             await distube.setRepeatMode(message, 1)
             message.channel.send('🔄 Current song is on repeat ight!')
         } else if (arg2 === 'off') {
-            await distube.setRepeatMode(message, 0);
+            await distube.setRepeatMode(message, 0)
             message.channel.send('🔄 Repeat mode is now `off`.')
-        }   
+        } else if (arg2 === 'q' || arg2 === 'queue') {
+            await distube.setRepeatMode(message, 2)
+            message.channel.send('🔄 Current queue is now on repeat!')
+        }  
     },
 
     volume: async (message, arg2, distube) => {

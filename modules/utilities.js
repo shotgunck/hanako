@@ -29,7 +29,8 @@ const commands = {
             '**chess** - Info about chess\n'+
             '**mcskin** - Show skin of a Minecraft player\n'+
             '**achieve** - Achievement got!\n'+
-            '**ms** - Get a minecraft server\'s status\n\n'+
+            '**ms** - Get a minecraft server\'s status\n'+
+            '**gato** - Random gato picture\n\n'+
 
             '**filter** - Set a sound filter\n'+
             '**lyrics** - Display the current sound\'s lyrics\n'+
@@ -53,13 +54,13 @@ const commands = {
             config.prefix = arg2
             prefix = config.prefix
 
-            message.channel.send("❗ My prefix is now changed to ``"+arg2+"``\n**❗ In case you forgot what the prefix is, see what I'm listening to!")
+            message.channel.send("❗ My prefix is now changed to ``"+arg2+"``\n❗ In case you forgot what the prefix is, see what I'm listening to!")
             if (arg2 == 'default') {
                 message.channel.send("⚠ Note: it will literally be ``default``, **__not__** ``oi``.")
             }
             message.client.user.setActivity(config.prefix+" help", { type: "LISTENING" });
         } else {
-            message.channel.send("Current prefix: ``"+prefix+"``\nTo change prefix, type ``"+prefix+" prefix [new-prefix]``\n\n**❗ In case you forgot what the prefix is,  see what I'm listening to!");
+            message.channel.send("Current prefix: ``"+prefix+"``\nTo change prefix, type ``"+prefix+" prefix [new-prefix]``\n\n❗ In case you forgot what the prefix is,  see what I'm listening to!");
         }
     },
 
