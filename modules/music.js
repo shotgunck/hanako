@@ -22,7 +22,7 @@ const commands = {
 
       queue.songs.map((song, id) => {
         let data = song.name.split(' - ')
-        axios.get('https://api.lyrics.ovh/v1/'+data[0]+'/'+data[1])
+        axios.get('https://api.jastinch.xyz/lyrics/?song='+data[1])
         .then(res => {
           message.channel.send('Lyrics for sound: **'+data[1]+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
         })
