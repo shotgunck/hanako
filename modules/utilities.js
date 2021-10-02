@@ -7,6 +7,7 @@ const axios = require('axios')
 const config = require('../config.json')
 
 let prefix = config.prefix
+const lock = true
 
 const commands = {
     chess: async message => {
@@ -71,6 +72,18 @@ const commands = {
             .setColor('#DD6E0F')
             .setTitle('gato')
             .setImage(res.data.file)
+        })
+        })
+    },
+
+    wa: async(message) => {
+      if (lock === true) return message.channel.send('noj,,,')
+      axios.get('https://api.waifu.pics/sfw/waifu')
+        .then(res => {
+           message.channel.send({ embed: new Discord.MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle('wa')
+            .setImage(res.data.url)
         })
         })
     }
