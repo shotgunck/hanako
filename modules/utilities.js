@@ -9,6 +9,9 @@ const config = require('../config.json')
 let prefix = config.prefix
 const lock = true
 
+const dotenv = require('dotenv')
+dotenv.config()
+
 const commands = {
     chess: async message => {
         message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! help` for more ight')
@@ -85,6 +88,13 @@ const commands = {
             .setTitle('wa')
             .setImage(res.data.url)
         })
+        })
+    },
+
+    '8ball': async(message) => {
+      axios.get(process.env.S_API_B1)
+        .then(res => {
+          message.channel.send(res.data[0].reply)
         })
     }
 }

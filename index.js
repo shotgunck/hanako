@@ -4,7 +4,6 @@ const DiscordButton = require('discord-buttons')
 
 const dotenv = require('dotenv')
 const fs = require('fs')
-const path = require('path')
 
 dotenv.config()
 
@@ -57,7 +56,7 @@ client.on("message", async message => {
 })
 
 distube
-  .on('finish', message => message.channel.send("😴 **Queue ended.**"))
+  .on('finish', message => message.channel.send("😴 **Queue ended.**").then(m => m.delete({timeout: 5000})))
   .on("playSong", (message, queue, song) => {message.channel.send('🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!');
       queue.autoplay = false
   })

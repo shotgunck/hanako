@@ -46,25 +46,26 @@ const commands = {
 
         message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
         
-		axios.get('https://mcapi.xdefcon.com/server/'+arg2+'/full/json')
+		axios.get('https://mcapi.us/server/status?ip='+arg2)
         .then(res => {
             const data = res.data
-            if (data.serverStatus === 'offline') {
+            if (data.online === false) {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
-            	.setTitle('\\🔴 '+arg2+' is offline, try again latur kk')
-              .setDescription('🔹 If u see info being displayed wrongly, try again in 5 minutes!')
+            	.setTitle('\\🔴 '+arg2+' is offline, try again in 5 minutes!')
+              .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!')
             	.setTimestamp()
             })
-            } else if (data.serverStatus === 'online') {
+            } else if (data.online === true) {
                	imgbb({
                		apiKey: process.env.IMGBB_API_KEY,
                		name: "mcservericon",
                		expiration: 3600,
-               		base64string: !data.icon ? 'https://i.imgur.com/cpfxvnE.png' : data.icon.substr(22, data.icon.length)
+               		base64string: !data.favicon ? 'https://i.imgur.com/cpfxvnE.png' : data.favicon.substr(22, data.favicon.length)
                	})
               	.then(imgRes => { 
-               		const ping = data.ping
+               		  const ping = data.duration / 1000000
+                  const players = data.players
                         let ok = parseInt(ping)
 
                         if (ok > 499) ok = ping+'ms [Bad]'
@@ -74,20 +75,22 @@ const commands = {
                    			message.channel.send({ embed: new Discord.MessageEmbed() 
                      			.setColor('#DD6E0F')
                       			.setTitle('\\🟢 '+arg2+' is online')
-			                	.setDescription(data.motd.text)
+			                	.setDescription(data.motd)
 			                	.setThumbnail(imgRes.url)
                        			.addFields(
-                       			{ name: '​', value: '**➕ Info: **'+'\n'+
+                       			{ name: '​', value: '**🔹 Info: **'+'\n'+
                        			'-------------------------------\n\n'+
-			                	'**Version**: '+data.version+
-                       			'\n**Players in game:** '+data.players+'/'+data.maxplayers+
-                       			'\n**Ping**: '+ok+
-                   				'\n\n'+
+			                	'**Version**:  '+data.server.name+
+                        '\n\n**Ping**:  '+ok+
+                       			'\n\n**Players in game:**  '+players.now+'/'+players.max+
+                            '\n - '+(!players.sample[0]? 'unable to display player list' : players.sample[0].name)+
+                            (!players.sample[1]? '\n\n' : players.sample[1].name+'\n\n' )+
+                       			
 			                    '-------------------------------'+
-               				    '\n🔹 If u see info being displayed wrongly, try again in 5 minutes!'
+               				    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
                    				})
                    				.setTimestamp()
-                   			})     
+                   			}) 
                 })
             	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. || '+err))
         	}
