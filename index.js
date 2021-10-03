@@ -19,6 +19,13 @@ let config = require('./config.json')
 client.once("ready", () => {
   console.log("im on")
   client.user.setActivity(config.prefix+" help", { type: "LISTENING" })
+
+  client.api.applications(client.user.id).guilds('802005325196558356').commands.post({
+        data: {
+            name: "help",
+            description: "Show the help page,"
+        }
+    })
 })
 
 client.on("message", async message => {
