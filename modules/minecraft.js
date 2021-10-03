@@ -83,11 +83,11 @@ const commands = {
 			           	'**Version**:  '+data.server.name+
                         '\n\n**Ping**:  '+ok+
                     	'\n\n**Players in game:**  '+players.now+'/'+players.max+
-                        (!players.sample[0]? '' : '\n - '+players.sample[0].name)+
-                        (!players.sample[1]? '' : '\n - '+players.sample[1].name)+
-                        (!players.sample[2]? '' : '\n - '+players.sample[2].name)+
-                        (!players.sample[3]? '' : '\n - '+players.sample[3].name)+
-                        (!players.sample[4]? '' : '\n - '+players.sample[4].name)+
+                        (!players.sample[0]? '' : '\n • '+players.sample[0].name)+
+                        (!players.sample[1]? '' : '\n • '+players.sample[1].name)+
+                        (!players.sample[2]? '' : '\n • '+players.sample[2].name)+
+                        (!players.sample[3]? '' : '\n • '+players.sample[3].name)+
+                        (!players.sample[4]? '' : '\n • '+players.sample[4].name)+
                         '\n\n-------------------------------'+
                		    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
                    		})
