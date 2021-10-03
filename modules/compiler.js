@@ -1,7 +1,5 @@
-
-
-
 // Not yet implemented
+
 const Discord = require('discord.js')
 const request = require('request')
 

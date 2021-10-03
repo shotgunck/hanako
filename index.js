@@ -1,20 +1,17 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
-const DiscordButton = require('discord-buttons')
 
-const dotenv = require('dotenv')
 const fs = require('fs')
-
+const dotenv = require('dotenv')
 dotenv.config()
 
 const token = process.env.BOT_TOKEN
 
 const client = new Discord.Client()
 const distube = new Distube(client, { emitNewSongOnly: true})
-DiscordButton(client)
 
-const chessState = require('./chess/chessBoard')
 const {loadImages} = require('./chess/images')
+const chessState = require('./chess/chessBoard')
 const chessCommands = require('./chess/commands')
 
 let config = require('./config.json')
@@ -37,19 +34,16 @@ client.on("message", async message => {
 
   if (prefixed === "c!") {
     const command = chessCommands[cmd] || chessCommands.move
-      if (command) {
-        command(message, subcontents)
-      }
-
+    if (command) {
+      command(message, subcontents)
+    }
   } else if (prefixed === prefix) {
     fs.readdir('./modules', function (err, files) {
       if (err) return console.log(err)
-        files.forEach(function (file, index) {
-          const module = require('./modules/'+file)
-          const command = module[cmd]
-          if (command) {
-              command(message, arg2, distube)
-          }
+        
+      files.forEach(function (file, _) {
+        const command = require('./modules/'+file)[cmd]
+        if (command) command(message, arg2, distube)
       })
     }) 
   }

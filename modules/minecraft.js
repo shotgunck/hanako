@@ -53,7 +53,7 @@ const commands = {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline, try again in 5 minutes!')
-              .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!')
+                .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!')
             	.setTimestamp()
             })
             } else if (data.online === true) {
@@ -64,43 +64,42 @@ const commands = {
                		base64string: !data.favicon ? 'https://i.imgur.com/cpfxvnE.png' : data.favicon.substr(22, data.favicon.length)
                	})
               	.then(imgRes => { 
-               		  const ping = data.duration / 1000000
-                  const players = data.players
-                        let ok = parseInt(ping)
+               		const ping = data.duration / 1000000
+                    const players = data.players
+                    let ok = parseInt(ping)
 
-                        if (ok > 499) ok = ping+'ms [Bad]'
-                        else if (ok < 500 && ok > 149) ok = ping+'ms [avg]'
-                        else if (ok < 150) ok = ping+'ms [OK]'
+                    if (ok > 499) ok = ping+'ms [Bad]'
+                    else if (ok < 500 && ok > 149) ok = ping+'ms [avg]'
+                    else if (ok < 150) ok = ping+'ms [OK]'
 
-                   			message.channel.send({ embed: new Discord.MessageEmbed() 
-                     			.setColor('#DD6E0F')
-                      			.setTitle('\\🟢 '+arg2+' is online')
-			                	.setDescription(data.motd)
-			                	.setThumbnail(imgRes.url)
-                       			.addFields(
-                       			{ name: '​', value: '**🔹 Info: **'+'\n'+
-                       			'-------------------------------\n\n'+
-			                	'**Version**:  '+data.server.name+
+                   	message.channel.send({ embed: new Discord.MessageEmbed() 
+                    	.setColor('#DD6E0F')
+                    	.setTitle('\\🟢 '+arg2+' is online')
+			           	.setDescription(data.motd)
+			           	.setThumbnail(imgRes.url)
+                    	.addFields(
+                    	{ name: '​', value: '**🔹 Info: **'+'\n'+
+                    	'-------------------------------\n\n'+
+			           	'**Version**:  '+data.server.name+
                         '\n\n**Ping**:  '+ok+
-                       			'\n\n**Players in game:**  '+players.now+'/'+players.max+
-                            (!players.sample[0]? '' : '\n - '+players.sample[0].name)+
-                            (!players.sample[1]? '' : '\n - '+players.sample[1].name)+
-                            (!players.sample[2]? '' : '\n - '+players.sample[2].name)+
-                            (!players.sample[3]? '' : '\n - '+players.sample[3].name)+
-                            (!players.sample[4]? '' : '\n - '+players.sample[4].name)+
-                       			
-			                    '\n\n-------------------------------'+
-               				    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
-                   				})
-                   				.setTimestamp()
-                   			}) 
+                    	'\n\n**Players in game:**  '+players.now+'/'+players.max+
+                        (!players.sample[0]? '' : '\n - '+players.sample[0].name)+
+                        (!players.sample[1]? '' : '\n - '+players.sample[1].name)+
+                        (!players.sample[2]? '' : '\n - '+players.sample[2].name)+
+                        (!players.sample[3]? '' : '\n - '+players.sample[3].name)+
+                        (!players.sample[4]? '' : '\n - '+players.sample[4].name)+
+                        '\n\n-------------------------------'+
+               		    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
+                   		})
+                   		.setTimestamp()
+                   	}) 
                 })
-            	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. || '+err))
+            	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. | '+err))
         	}
       	})
 		.catch(err => {
         	console.log(err)
-        	message.channel.send('API error, pls wait for 5 minutes before trying again. || '+err)
+        	message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err)
       	})
     }
 }

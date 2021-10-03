@@ -1,6 +1,3 @@
-
-
-
 const Discord = require('discord.js')
 const axios = require('axios')
 
@@ -9,26 +6,23 @@ const config = require('../config.json')
 const commands = {
     filter: async(message, arg2, distube) => {
       if (!arg2) return message.channel.send('🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\nExample: `'+config.prefix+' filter reverse`')
-
       if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
 
-      const filter = distube.setFilter(message, arg2)
-      message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`! Wait me apply..,');
+      const filter = await distube.setFilter(message, arg2)
+      message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`! Wait me apply..,')
     },
 
     lyrics: async(message, arg2, distube) => {
       let queue = distube.getQueue(message)
       if (!queue) return message.channel.send("🕳 Play a sound so I can get the lyrics aight")
 
-      queue.songs.map((song, id) => {
+      queue.songs.map((song, _) => {
         let data = song.name.split(' - ')
         axios.get('https://api.jastinch.xyz/lyrics/?song='+data[1])
         .then(res => {
           message.channel.send('Lyrics for sound: **'+data[1]+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
         })
-        .catch(err => {
-          message.channel.send('💤 No lyrics found.,. | '+err)
-        }) 
+        .catch(err => message.channel.send('💤 No lyrics found.,. | '+err)) 
       })
     },
 
@@ -42,9 +36,7 @@ const commands = {
         
         if (!arg2) return message.channel.send("Play what mf,.,")
         
-        const args = message.content.slice(config.prefix.length).trim().split(/ +/g)
-        distube.play(message, args.join(" "))
-    
+        await distube.play(message, message.content.slice(config.prefix.length).trim().split(/ +/g).join(" "))
         message.channel.stopTyping()
     },
 
@@ -60,8 +52,8 @@ const commands = {
         if (!message.member.voice.channel) return message.channel.send("🙄 You're not listening..,")
         if (!distube.getQueue(message)) return message.channel.send("No song to skip,, Play some!!")
         
-        distube.skip(message);
-        message.channel.send('\\⏯ **Skipped!**')
+        await distube.skip(message)
+        message.channel.send('⏯ **Skipped!**')
     },
 
     queue: async (message, _, distube) => {
@@ -100,7 +92,7 @@ const commands = {
         if (!arg2) {
             message.channel.send("⚠ Select a volume level mf!!")
         } else if (parseInt(arg2) < 301 && parseInt(arg2) > -1) {
-            await distube.setVolume(message, arg2);
+            await distube.setVolume(message, arg2)
             message.channel.send("🔢 Oki volume has been set to `"+arg2+"`")
         } else {
             message.channel.send("💢 Volume can only be set from `0` to `300`")

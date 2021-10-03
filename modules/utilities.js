@@ -1,6 +1,3 @@
-
-
-
 const Discord = require('discord.js')
 const axios = require('axios')
 
@@ -71,11 +68,11 @@ const commands = {
     gato: async(message) => {
         axios.get('https://aws.random.cat/meow?ref=apilist.fun')
         .then(res => {
-           message.channel.send({ embed: new Discord.MessageEmbed()
-            .setColor('#DD6E0F')
-            .setTitle('gato')
-            .setImage(res.data.file)
-        })
+            message.channel.send({ embed: new Discord.MessageEmbed()
+                .setColor('#DD6E0F')
+                .setTitle('gato')
+                .setImage(res.data.file)
+            })
         })
     },
 
@@ -83,19 +80,17 @@ const commands = {
       if (lock === true) return message.channel.send('noj,,,')
       axios.get('https://api.waifu.pics/sfw/waifu')
         .then(res => {
-           message.channel.send({ embed: new Discord.MessageEmbed()
-            .setColor('#DD6E0F')
-            .setTitle('wa')
-            .setImage(res.data.url)
-        })
+            message.channel.send({ embed: new Discord.MessageEmbed()
+                .setColor('#DD6E0F')
+                .setTitle('wa')
+                .setImage(res.data.url)
+            })
         })
     },
 
     '8ball': async(message) => {
       axios.get(process.env.S_API_B1)
-        .then(res => {
-          message.channel.send(res.data[0].reply)
-        })
+        .then(res => message.channel.send(res.data[0].reply))
     }
 }
 
