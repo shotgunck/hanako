@@ -22,12 +22,6 @@ client.once("ready", () => {
   console.log("im on")
   client.user.setActivity(config.prefix+" help", { type: "LISTENING" })
 
-  slash.get().then(res => {
-    res.forEach(obj => {
-        slash.delete(obj.id)
-    })
-  })
-
   let ms = new DiscordSC.CommandBuilder()
     .setName("ms")
     .setDescription('Display info of a Minecraft Server')
@@ -38,7 +32,7 @@ client.once("ready", () => {
     .setType(DiscordSC.CommandType.STRING)
 
   ms.addOption(msChoice)
-  slash.create(ms, "802005325196558356" /* Guild ID */)
+  slash.create(ms, "802005325196558356")
 })
 
 client.on("message", async message => {
@@ -91,8 +85,9 @@ slash.on("slashInteraction", interaction => {
   interaction.callback("siudgiufugsdui")
 });
 
-async() => {
+async function init() {
     await Promise.all([loadImages(), chessState.loadBoard()])
     require('./keepOnline.js')()
     client.login(token)
-}()
+}
+init()
