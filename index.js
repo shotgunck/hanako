@@ -1,5 +1,6 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
+const DiscordSC = require('discord.js-slash-command')
 
 const fs = require('fs')
 const dotenv = require('dotenv')
@@ -9,6 +10,7 @@ const token = process.env.BOT_TOKEN
 
 const client = new Discord.Client()
 const distube = new Distube(client, { emitNewSongOnly: true})
+const slash = new DiscordSC.Slash(client)
 
 const {loadImages} = require('./chess/images')
 const chessState = require('./chess/chessBoard')
@@ -20,12 +22,23 @@ client.once("ready", () => {
   console.log("im on")
   client.user.setActivity(config.prefix+" help", { type: "LISTENING" })
 
-  client.api.applications(client.user.id).guilds('802005325196558356').commands.post({
-        data: {
-            name: "help",
-            description: "Show the help page,"
-        }
+  slash.get().then(res => {
+    res.forEach(obj => {
+        slash.delete(obj.id)
     })
+  })
+
+  let ms = new DiscordSC.CommandBuilder()
+    .setName("ms")
+    .setDescription('Display info of a Minecraft Server')
+  let msChoice = new DiscordSC.CommandBuilder()
+    .setName('address')
+    .setDescription('Server address')
+    .setRequired(true)
+    .setType(DiscordSC.CommandType.STRING)
+
+  ms.addOption(msChoice)
+  slash.create(ms, "802005325196558356" /* Guild ID */)
 })
 
 client.on("message", async message => {
@@ -63,11 +76,23 @@ distube
   })
   .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
   })
-  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`"));
+  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`"))
 
-const init = async () => {
+slash.on("slashInteraction", interaction => {
+  console.log(interaction.command.options[0].value)
+  fs.readdir('./modules', function (err, files) {       
+    files.forEach(function (file, _) {
+      const command = require('./modules/'+file)[interaction.command.name]
+      if (command) {
+        command(interaction, interaction.command.options[0].value, distube)
+      }
+    })
+  })
+  interaction.callback("siudgiufugsdui")
+});
+
+async() => {
     await Promise.all([loadImages(), chessState.loadBoard()])
     require('./keepOnline.js')()
     client.login(token)
-}
-init()
+}()
