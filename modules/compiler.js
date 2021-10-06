@@ -29,6 +29,13 @@ const langVersion = {
 
 const commands = {
     compile: async (message, arg2) => {
+      if (!arg2 || arg2.startsWith('```')) {
+        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | bash`\n\n'+'**Example:**\noi compile lua \\```lua'+
+          '\nprint(\'comg\')\n'+
+        '\\```'
+        )
+      }
+
       const subcontents = message.content.split(' ')
       const cmd = message.content.slice(config.prefix.length).trim().split(/ +/g).shift().toLowerCase()
       const arg3 = cmd === subcontents[1] ? subcontents[3] : subcontents[2]
