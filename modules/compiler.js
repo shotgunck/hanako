@@ -49,8 +49,8 @@ const commands = {
       const res = await axios.post('https://api.jdoodle.com/v1/execute', program)
       const output = res.data.output
       message.channel.send(new Discord.MessageEmbed()
-            .setTitle("**__Output:__**")
-            .setColor("33FFB3")
+            .setTitle("**💠 Output:**")
+            .setColor("#DD6E0F")
             .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': output)
             .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
             .setTimestamp()
