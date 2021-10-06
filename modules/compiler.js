@@ -7,14 +7,36 @@ dotenv.config()
 
 const config = require('../config.json')
 
-
+const langVersion = {
+  java: 3,
+  c: 4,
+  cpp: 4,
+  php: 3,
+  perl: 3,
+  python3: 3,
+  ruby: 3,
+  go: 3,
+  bash: 3,
+  sql: 3,
+  csharp: 3,
+  objc: 3,
+  swift: 3,
+  brainfuck: 0,
+  lua: 2,
+  rust: 3,
+  nodejs: 3,
+}
 
 const commands = {
     compile: async (message, arg2) => {
+      const subcontents = message.content.split(' ')
+      const cmd = message.content.slice(config.prefix.length).trim().split(/ +/g).shift().toLowerCase()
+      const arg3 = cmd === subcontents[1] ? subcontents[3] : subcontents[2]
+      if (!langVersion[arg2]) return message.channel.send('need real lang')
       const program = {
-        script: arg2.replace(/```/g, '').replace(/^.+\n/, ''),
-        language: arg2.match(/\b\w+\b/g)[0],
-        versionIndex: "0",
+        script: arg3.replace(/```/g, '').replace(/^.+\n/, ''),
+        language: arg2,
+        versionIndex: langVersion[arg2],
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET
       }
