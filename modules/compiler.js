@@ -9,9 +9,9 @@ const commands = {
     compile: async (message, arg2) => {
         hastebin(arg2.replace(/```/g, '').replace(/^.+\n/, ''), arg2.replace(/```/g, ''))
         .then(function(res) {
-          console.log(res.)
+          console.log(res.split('\n')[0])
           var program = {
-            script : res,
+            script : res.split('\n')[0],
             language: message.content.replace(/oi compile ```/g, ''),
             versionIndex: "2",
             clientId: process.env.CLIENT_ID,
