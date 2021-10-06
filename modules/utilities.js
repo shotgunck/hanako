@@ -28,6 +28,7 @@ const commands = {
             '**prefix** - Set a new prefix for me\n'+
 
             '**chess** - Info about chess\n'+
+            '**compile** - Code compiler\n'+
             '**mcskin** - Show skin of a Minecraft player\n'+
             '**achieve** - Achievement got!\n'+
             '**ms** - Get a minecraft server\'s status\n'+

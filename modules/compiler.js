@@ -1,4 +1,4 @@
-// Not yet implemented
+// Might need cleanup
 const Discord = require('discord.js')
 const request = require('request')
 
@@ -36,8 +36,6 @@ const commands = {
         )
       }
 
-      const subcontents = message.content.split(' ')
-      const cmd = message.content.slice(config.prefix.length).trim().split(/ +/g).shift().toLowerCase()
       const source = message.content.substr(config.prefix.length + 9 + arg2.length, message.content.length)
 
       const program = {
