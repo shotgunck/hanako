@@ -1,33 +1,35 @@
 // Not yet implemented
 
-const Discord = require('discord.js')
-const request = require('request')
-
-const dotenv = require('dotenv')
-dotenv.config()
-
-const compiler = require('jdoodlecoderunner')
+const { c, cpp, node, python, java } = require('compile-run')
 
 const commands = {
     compile: async (message, arg2) => {
-        let args = message.content.substring(2).split(" ");
-        var program = {
-            script : "",
-            language: "lua",
-            versionIndex: "0",
-            clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_ID
-        }
-        request({
-            url: 'https://api.jdoodle.com/v1/execute',
-            method: "POST",
-            json: program
-        },
-        function (error, response, body) {
-            console.log('error:', error)
-            console.log('statusCode:', response && response.statusCode)
-            console.log('body:', body)
-        })
+       if (arg2.startsWith('```js') || arg2.startsWith('```javascript') ) {
+         node.runSource(message.content.replace(/```/g, '').replace(/^.+\n/, ''))
+         .then(res => {
+           message.channel.send('**Output:** \n\n`'+res.stdout+'`')
+         })
+       } else if (arg2.startsWith('```java')) {
+         java.runSource(message.content.replace(/```/g, '').replace(/^.+\n/, ''))
+         .then(res => {
+           message.channel.send('**Output:** \n\n`'+res.stdout+'`')
+         })
+       } else if (arg2.startsWith('```c')) {
+         c.runSource(message.cjsontent.replace(/```/g, '').replace(/^.+\n/, ''))
+         .then(res => {
+           message.channel.send('**Output:** \n\n`'+res.stdout+'`')
+         })
+       } else if (arg2.startsWith('```cpp') || arg2.startsWith('```c++')) {
+         cpp.runSource(message.content.replace(/```/g, '').replace(/^.+\n/, ''))
+         .then(res => {
+           message.channel.send('**Output:** \n\n`'+res.stdout+'`')
+         })
+       } else if (arg2.startsWith('```py') || arg2.startsWith('```python') ) {
+         python.runSource(message.content.replace(/```/g, '').replace(/^.+\n/, ''))
+         .then(res => {
+           message.channel.send('**Output:** \n\n`'+res.stdout+'`')
+         })
+       }
     }
 }
 
