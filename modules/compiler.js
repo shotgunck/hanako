@@ -1,21 +1,24 @@
-// Some
+// Not yet implemented
 const request = require('request')
+const hastebin = require('hastebin-gen')
 
 const dotenv = require('dotenv')
 dotenv.config()
 
 const commands = {
     compile: async (message, arg2) => {
-        let args = message.content.substring(2).split(" ");
-        var program = {
-            script : message.content.replace(/```/g, '').replace(/^.+\n/, ''),
-            language: message.content.replace(/```/g, ''),
+        hastebin(arg2.replace(/```/g, '').replace(/^.+\n/, ''), arg2.replace(/```/g, ''))
+        .then(function(res) {
+          console.log(res.)
+          var program = {
+            script : res,
+            language: message.content.replace(/oi compile ```/g, ''),
             versionIndex: "2",
             clientId: process.env.CLIENT_ID,
             clientSecret: process.env.CLIENT_SECRET
         }
         request({
-            url: 'https://api.jdoodle.com/v1/execute',
+            url: 'https://api.jdoodle.com/execute',
             method: "POST",
             json: program
         },
@@ -23,6 +26,7 @@ const commands = {
             console.log('error:', error)
             console.log('statusCode:', response && response.statusCode)
             console.log('body:', body)
+        })
         })
     }
 }
