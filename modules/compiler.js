@@ -1,6 +1,6 @@
 // Might need cleanup
 const Discord = require('discord.js')
-const request = require('request')
+const axios = require('axios')
 
 const dotenv = require('dotenv')
 dotenv.config()
@@ -46,49 +46,16 @@ const commands = {
         clientSecret: process.env.CLIENT_SECRET
       }
       const before = Date.now()
-      
-      request.post({
-        url: "https://api.jdoodle.com/v1/execute",
-        json: program,
-      })
-      .on("error", reqErr => {
-        message.channel.send('Executing error encountered:', reqErr)
-      })
-      .on("data", data => {
-        let parsedData
-        try {
-          parsedData = JSON.parse(data.toString())
-        } catch(err) {
-          parsedData = {
-            output: "💠 **Output formatting error, the raw output of the program will be displayed:** \n\n"+data.toString()
-          }
-        }
-        if (parsedData.error) {
-          message.channel.send('Parsing error encountered:', parsedData.error)
-        } else {
-          message.channel.send(new Discord.MessageEmbed()
+      const res = await axios.post('https://api.jdoodle.com/v1/execute', program)
+      const output = res.data.output
+      message.channel.send(new Discord.MessageEmbed()
             .setTitle("**__Output:__**")
             .setColor("33FFB3")
-            .setDescription(parsedData.output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': parsedData.output)
+            .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': output)
             .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
             .setTimestamp()
           )
-        }
-      })
     }
 }
 
 module.exports = commands
-
-/*
-request({
-              url: 'https://api.jdoodle.com/execute',
-              method: "POST",
-              json: program
-            },
-            function (error, response, body) {
-              console.log('error:', error)
-              console.log('statusCode:', response && response.statusCode)
-              console.log('body:', body)
-            })
-            */
