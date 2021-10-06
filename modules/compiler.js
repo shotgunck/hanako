@@ -29,7 +29,7 @@ const langVersion = {
 
 const commands = {
     compile: async (message, arg2) => {
-      if (!arg2 || arg2.startsWith('```')) {
+      if (!arg2 || arg2.startsWith('```') || !langVersion[arg2] ) {
         return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | bash`\n\n'+'**Example:**\noi compile lua \\```lua'+
           '\nprint(\'comg\')\n'+
         '\\```'
@@ -38,36 +38,42 @@ const commands = {
 
       const subcontents = message.content.split(' ')
       const cmd = message.content.slice(config.prefix.length).trim().split(/ +/g).shift().toLowerCase()
-      const arg3 = cmd === subcontents[1] ? subcontents[3] : subcontents[2]
-      if (!langVersion[arg2]) return message.channel.send('need real lang')
+      const source = message.content.substr(config.prefix.length + 9 + arg2.length, message.content.length)
+
       const program = {
-        script: arg3.replace(/```/g, '').replace(/^.+\n/, ''),
+        script: source.replace(/^.+\n/g, '').replace(/```/, ''),
         language: arg2,
         versionIndex: langVersion[arg2],
         clientId: process.env.CLIENT_ID,
         clientSecret: process.env.CLIENT_SECRET
       }
+      const before = Date.now()
+      
       request.post({
-        url: "https://api.jdoodle.com/execute",
+        url: "https://api.jdoodle.com/v1/execute",
         json: program,
       })
-      .on("error", err => {
-        message.channel.send('Executing error encountered:', error)
+      .on("error", reqErr => {
+        message.channel.send('Executing error encountered:', reqErr)
       })
       .on("data", data => {
-        const parsedData = JSON.parse(data.toString())
+        let parsedData
+        try {
+          parsedData = JSON.parse(data.toString())
+        } catch(err) {
+          parsedData = {
+            output: "💠 **Output formatting error, the raw output of the program will be displayed:** \n\n"+data.toString()
+          }
+        }
         if (parsedData.error) {
           message.channel.send('Parsing error encountered:', parsedData.error)
         } else {
-          let output = ''
-          for (var i = 0; i < parsedData.output.length; i++) {
-            if (parsedData.output[i] == "\n") output += "\n"
-            else output += parsedData.output[i]
-          }
           message.channel.send(new Discord.MessageEmbed()
             .setTitle("**__Output:__**")
             .setColor("33FFB3")
-            .setDescription(output)
+            .setDescription(parsedData.output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': parsedData.output)
+            .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
+            .setTimestamp()
           )
         }
       })
