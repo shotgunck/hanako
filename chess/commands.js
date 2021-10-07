@@ -1,5 +1,3 @@
-
-
 const Discord = require("discord.js")
 
 const chessState = require('./chessBoard.js')
@@ -30,7 +28,7 @@ const commands = {
           }
           }).catch(() => {
             message.channel.send('k no chess then...').then(m => m.delete({timeout: 5000}))
-          });   
+          })  
     },
   
     end: message => {
@@ -52,7 +50,7 @@ const commands = {
           '----------------------------------------\n' },
         )
         .setTimestamp()
-      });
+      })
     },
 
     move: async message => {
@@ -112,8 +110,8 @@ const commands = {
             }
         }
         message.channel.send(`Invalid command,, valid command looks like: \`${commandPrefix}set b8 wqueen\`` +
-            `. The valid piece names are: \`${piecesWithNone.join(', ')}\``);
+            `. The valid piece names are: \`${piecesWithNone.join(', ')}\``)
     }
-};
+}
 
 module.exports = commands

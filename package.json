@@ -26,7 +26,6 @@
     "fs": "0.0.1-security",
     "imgbb-uploader": "^1.3.3",
     "install": "^0.13.0",
-    "jdoodlecoderunner": "^1.0.1",
     "node": "^14.0.0",
     "request": "^2.88.2",
     "youtube-dl": "^3.5.0",
