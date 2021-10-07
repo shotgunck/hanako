@@ -27,8 +27,8 @@
     "imgbb-uploader": "^1.3.3",
     "install": "^0.13.0",
     "node": "^14.0.0",
-    "request": "^2.88.2",
     "youtube-dl": "^3.5.0",
+    "youtube-dl-exec": "^1.2.14",
     "ytdl-core": "^4.9.1",
     "ytsearcher": "^1.2.4"
   },
