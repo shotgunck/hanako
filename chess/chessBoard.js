@@ -63,7 +63,7 @@ const saveBoard = () => {
     return fs.writeFile('state.json', json, function(_, _){})
 }
 
-const chessState = {
+module.exports = {
     board,
     newBoard: () => {
         board = newBoard()
@@ -79,5 +79,3 @@ const chessState = {
         }
     }
 }
-
-module.exports = chessState

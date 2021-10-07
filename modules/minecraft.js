@@ -7,25 +7,25 @@ dotenv.config()
 
 const config = require('../config.json')
 
-const commands = {
+module.exports = {
     mcskin: (message, arg2) => {
       if (!arg2) return message.channel.send('🙄 Provide a Minecraft player\'s username,, like `'+config.prefix+' mcskin notch`')
       message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => m.delete({timeout: 2000}))
         axios.get('https://minecraft-api.com/api/skins/'+arg2+'/body/10.5/10/json')
         .then(res => {
             imgbb({
-               		apiKey: process.env.IMGBB_API_KEY,
-               		name: arg2,
-               		expiration: 3600,
-               		base64string: !res.data.skin ? 'https://www.ssbwiki.com/images/0/05/Steve_Minecraft.png' : res.data.skin
-               	})
-              	.then(imgRes => { 
-               		  message.channel.send({ embed: new Discord.MessageEmbed() 
+            	apiKey: process.env.IMGBB_API_KEY,
+                name: arg2,
+               	expiration: 3600,
+               	base64string: !res.data.skin ? 'https://www.ssbwiki.com/images/0/05/Steve_Minecraft.png' : res.data.skin
+            })
+            .then(imgRes => { 
+           		message.channel.send({ embed: new Discord.MessageEmbed() 
                     .setColor('#DD6E0F')
                     .setTitle(arg2)
                     .setImage(imgRes.url)
-                   })
                 })
+            })
             
         }).catch(err => message.channel.send('📛 Player API is experiencing errors, try again in 5 minutes oki! || '+err))
     },
@@ -35,8 +35,8 @@ const commands = {
         axios.get('https://minecraft-api.com/api/achivements/cooked_salmon/achievement..got/'+args)
         .then(data => {
             message.channel.send({ embed: new Discord.MessageEmbed() 
-            .setColor('#DD6E0F')
-            .setImage(data.config.url)
+                .setColor('#DD6E0F')
+                .setImage(data.config.url)
             })
         })
     },
@@ -44,7 +44,7 @@ const commands = {
     ms: async (message, arg2) => {
         if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
 
-        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2000}))
+        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2500}))
         
 		axios.get('https://mcapi.us/server/status?ip='+arg2)
         .then(res => {
@@ -98,10 +98,7 @@ const commands = {
         	}
       	})
 		.catch(err => {
-        	console.log(err)
         	message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err)
       	})
     }
 }
-
-module.exports = commands

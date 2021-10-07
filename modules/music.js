@@ -3,7 +3,7 @@ const axios = require('axios')
 
 const config = require('../config.json')
 
-const commands = {
+module.exports = {
     filter: async(message, arg2, distube) => {
       if (!arg2) return message.channel.send('🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\nExample: `'+config.prefix+' filter reverse`')
       if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
@@ -99,5 +99,3 @@ const commands = {
         }
     }
 }
-
-module.exports = commands
