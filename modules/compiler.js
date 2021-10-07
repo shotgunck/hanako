@@ -33,13 +33,14 @@ const langVersion = {
   octave: 3
 }
 
-const commands = {
-    compile: async (message, arg2) => {
-      if (!arg2 || arg2.startsWith('```') || !langVersion[arg2] ) {
-        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | clojure | coffeescript | elixir | lolcode | kotlin | groovy | octave`\n\n'+'**Example:**\noi compile lua \\```lua'+
+const errorLog = '📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | clojure | coffeescript | elixir | lolcode | kotlin | groovy | octave`\n\n'+'**Example:**\noi compile lua \\```lua'+
           '\nprint(\'comg\')\n'+
         '\\```'
-        )
+
+const commands = {
+    compile: async (message, arg2) => {
+      if (!arg2 || arg2.startsWith('```') || langVersion[arg2] === null ) {
+        return message.channel.send(errorLog)
       }
 
       const source = message.content.substr(config.prefix.length + 9 + arg2.length, message.content.length)
@@ -52,15 +53,18 @@ const commands = {
         clientSecret: process.env.CLIENT_SECRET
       }
       const before = Date.now()
-      const res = await axios.post('https://api.jdoodle.com/v1/execute', program)
-      const output = res.data.output
-      message.channel.send(new Discord.MessageEmbed()
+      axios.post('https://api.jdoodle.com/v1/execute', program)
+        .then(res => {
+          const output = res.data.output
+          message.channel.send(new Discord.MessageEmbed()
             .setTitle("**💠 Output:**")
             .setColor("#DD6E0F")
             .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': output)
             .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
             .setTimestamp()
           )
+        })
+        .catch(error => message.channel.send(errorLog+'\n\n'+error))
     }
 }
 
