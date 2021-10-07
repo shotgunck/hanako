@@ -27,7 +27,7 @@ const langVersion = {
   nodejs: 3,
   coffeescript: 3,
   elixir: 3,
-  lolcode: 3,
+  lolcode: 0,
   kotlin: 2,
   groovy: 3,
   octave: 3
