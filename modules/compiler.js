@@ -16,7 +16,7 @@ const langVersion = {
   python3: 3,
   ruby: 3,
   go: 3,
-  bash: 3,
+  clojure: 2,
   sql: 3,
   csharp: 3,
   objc: 3,
@@ -30,7 +30,7 @@ const langVersion = {
 const commands = {
     compile: async (message, arg2) => {
       if (!arg2 || arg2.startsWith('```') || !langVersion[arg2] ) {
-        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | bash`\n\n'+'**Example:**\noi compile lua \\```lua'+
+        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | clojure`\n\n'+'**Example:**\noi compile lua \\```lua'+
           '\nprint(\'comg\')\n'+
         '\\```'
         )
