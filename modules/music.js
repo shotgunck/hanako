@@ -36,7 +36,6 @@ const commands = {
         
         if (!arg2) return message.channel.send("Play what mf,.,")
         
-        console.log(message.content.slice(config.prefix.length + 5).trim().split(/ +/g).join(" "))
         await distube.play(message, message.content.slice(config.prefix.length + 5).trim().split(/ +/g).join(" "))
         message.channel.stopTyping()
     },
