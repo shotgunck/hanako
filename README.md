@@ -6,7 +6,7 @@ A multi-purpose discord bot written in JavaScript
 * Host a chess game
 * Play sounds in voice channel
 * Minecraft related
-* Code compiler (currently 17 languages)
+* Code compiler (currently 22 languages)
 
 ## To-do
 * Compiler related

@@ -25,12 +25,17 @@ const langVersion = {
   lua: 2,
   rust: 3,
   nodejs: 3,
+  coffeescript: 3,
+  elixir: 3,
+  lolcode: 3,
+  kotlin: 2,
+  groovy: 3
 }
 
 const commands = {
     compile: async (message, arg2) => {
       if (!arg2 || arg2.startsWith('```') || !langVersion[arg2] ) {
-        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | clojure`\n\n'+'**Example:**\noi compile lua \\```lua'+
+        return message.channel.send('📜❌ Pls state a valid lang! The following syntax are valid: `c | cpp | csharp | objc | java | nodejs | lua | rust | python3 | ruby | brainfuck | go | swift | perl | php | sql | clojure | coffeescript | elixir | lolcode | kotlin | groovy`\n\n'+'**Example:**\noi compile lua \\```lua'+
           '\nprint(\'comg\')\n'+
         '\\```'
         )
