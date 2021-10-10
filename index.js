@@ -70,7 +70,7 @@ distube
   })
   .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
   })
-  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`"))
+  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`", {split: true}))
 
 slash.on("slashInteraction", interaction => {
   console.log(interaction.command.options[0].value)
