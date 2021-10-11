@@ -4,7 +4,7 @@ const axios = require('axios')
 const config = require('../config.json')
 
 let prefix = config.prefix
-const lock = true
+const lock = false
 
 const dotenv = require('dotenv')
 dotenv.config()
