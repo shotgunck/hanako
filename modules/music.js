@@ -18,9 +18,10 @@ module.exports = {
 
       queue.songs.map((song, _) => {
         let data = song.name.split(' - ')
-        axios.get('https://api.jastinch.xyz/lyrics/?song='+data[1])
+        const songName = !data[1]? data[0] : data[1]
+        axios.get('https://api.jastinch.xyz/lyrics/?song='+songName)
         .then(res => {
-          message.channel.send('Lyrics for sound: **'+data[1]+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
+          message.channel.send('Lyrics for sound: **'+songName+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
         })
         .catch(err => message.channel.send('💤 No lyrics found.,. | '+err)) 
       })
