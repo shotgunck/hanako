@@ -66,6 +66,7 @@ module.exports = {
               	.then(imgRes => { 
                		const ping = data.duration / 1000000
                     const players = data.players
+                    const sample = players.sample
                     let ok = parseInt(ping)
 
                     if (ok > 499) ok = ping+'ms [Bad]'
@@ -83,11 +84,11 @@ module.exports = {
 			           	'**Version**:  '+data.server.name+
                         '\n\n**Ping**:  '+ok+
                     	'\n\n**Players in game:**  '+players.now+'/'+players.max+
-                        (!players.sample[0]? '' : '\n • '+players.sample[0].name)+
-                        (!players.sample[1]? '' : '\n • '+players.sample[1].name)+
-                        (!players.sample[2]? '' : '\n • '+players.sample[2].name)+
-                        (!players.sample[3]? '' : '\n • '+players.sample[3].name)+
-                        (!players.sample[4]? '' : '\n • '+players.sample[4].name)+
+                        (!sample[0]? '' : '\n • '+sample[0].name)+
+                        (!sample[1]? '' : '\n • '+sample[1].name)+
+                        (!sample[2]? '' : '\n • '+sample[2].name)+
+                        (!sample[3]? '' : '\n • '+sample[3].name)+
+                        (!sample[4]? '' : '\n • '+sample[4].name)+
                         '\n\n-------------------------------'+
                		    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
                    		})
