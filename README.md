@@ -13,4 +13,4 @@ A multi-purpose Discord bot written in JavaScript
 * Slash commands
 
 ## Credits
-The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot)
+The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).
