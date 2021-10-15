@@ -1,4 +1,4 @@
-![Image](https://i.imgur.com/RZKGQ7z.png)
+![Image](https://i.imgur.com/Ycnuv4I.png)
 # hanako
 A multi-purpose discord bot written in JavaScript
 
