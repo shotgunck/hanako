@@ -41,6 +41,24 @@ module.exports = {
         message.channel.stopTyping()
     },
 
+    pause: async(message, _, distube) => {
+        if (!message.member.voice.channel) return message.channel.send("🤏 You have to be listening first alr")
+        if (!distube.getQueue(message)) return message.channel.send("🗑 There are no sound around,.")
+        if (distube.isPaused(message)) return message.channel.send('💢 Queue is already paused! Type `'+config.prefix+' resume` to resume.')
+
+        await distube.pause(message)
+        message.channel.send('⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.')
+    },
+
+    resume: async(message, _, distube) => {
+        if (!message.member.voice.channel) return message.channel.send("🤏 You have to be listening first alr")
+        if (!distube.getQueue(message)) return message.channel.send("🗑 No sound to resume,.")
+        if (!distube.isPaused(message)) return message.channel.send('💢 Queue is playing!!').then(m => m.delete({timeout: 5000}))
+
+        await distube.resume(message)
+        message.channel.send('⏯ Queue resumed!').then(m => m.delete({timeout: 5000}))
+    },
+
     stop: async (message, _, distube) => {
         if (!message.member.voice.channel) return message.channel.send("🤏 Can't stop me, u need to be in the channel!")
         if (!distube.getQueue(message)) return ("🗑 There are no songs around,.")
