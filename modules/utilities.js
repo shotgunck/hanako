@@ -37,6 +37,7 @@ module.exports = {
             **filter** - Set a sound filter
             **lyrics** - Display the current sound's lyrics
             **play** - Play a sound or add into queue
+            **pause/resume** - Pause/Resume the current queue (unstable)
             **queue** - Show the current queue
             **skip** - Skip to the next sound in queue
             **stop** - Stop the playing sound
