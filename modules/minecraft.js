@@ -98,8 +98,6 @@ module.exports = {
             	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. | '+err))
         	}
       	})
-		.catch(err => {
-        	message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err)
-      	})
+		.catch(err => message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err))
     }
 }
