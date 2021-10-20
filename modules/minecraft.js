@@ -63,8 +63,10 @@ module.exports = {
                		expiration: 3600,
                		base64string: !data.favicon ? 'https://i.imgur.com/cpfxvnE.png' : data.favicon.substr(22, data.favicon.length)
                	})
-              	.then(imgRes => { 
-               		const ping = data.duration / 1000000
+              	.then(imgRes => {
+                  const cacheTime = parseInt(data.last_updated) + 300
+                 	
+                   const ping = data.duration / 1000000
                     const players = data.players
                     const sample = players.sample
                     let ok = parseInt(ping)
@@ -89,8 +91,7 @@ module.exports = {
                         (!sample[2]? '' : '\n • '+sample[2].name)+
                         (!sample[3]? '' : '\n • '+sample[3].name)+
                         (!sample[4]? '' : '\n • '+sample[4].name)+
-                        '\n\n-------------------------------'+
-               		    '\n🔸 If u see info being displayed wrongly, try again in 5 minutes!'
+                        '\n\n-------------------------------'+'\n🔸 This is a cached result. Please check again <t:'+cacheTime+':R>!'
                    		})
                    		.setTimestamp()
                    	}) 
