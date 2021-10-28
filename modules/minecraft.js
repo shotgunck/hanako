@@ -71,8 +71,9 @@ module.exports = {
                     const sample = players.sample
                     let ok = parseInt(ping)
 
-                    if (ok > 499) ok = ping+'ms [Bad]'
-                    else if (ok < 500 && ok > 149) ok = ping+'ms [avg]'
+                    if (ok > 1000) ok = ping+'ms [WTF]'
+                    else if (ok > 399 && ok < 999) ok = ping+'ms [Bad]'
+                    else if (ok < 400 && ok > 149) ok = ping+'ms [avg]'
                     else if (ok < 150) ok = ping+'ms [OK]'
 
                    	message.channel.send({ embed: new Discord.MessageEmbed() 
