@@ -27,11 +27,12 @@ module.exports = {
             **help** - Show this messenge
             **prefix** - Set a new prefix for me
 
+            **8ball** - Answer your questions [y/n]
             **chess** - Info about chess
             **compile** - Code compiler
             **mcskin** - Show skin of a Minecraft player
             **achieve** - Achievement got!
-            **ms** - Get a minecraft server's status
+            **ms** - Get a Minecraft server's status
             **gato** - Random gato picture
 
             **filter** - Set a sound filter
@@ -82,11 +83,15 @@ module.exports = {
       if (lock === true) return message.channel.send('noj,,,')
       axios.get('https://api.waifu.pics/sfw/waifu')
         .then(res => {
-            message.channel.send({ embed: new Discord.MessageEmbed()
+            if (message.channel.nsfw) {
+              message.channel.send({ embed: new Discord.MessageEmbed()
                 .setColor('#DD6E0F')
                 .setTitle('wa')
                 .setImage(res.data.url)
-            })
+              })
+            } else {
+              message.channel.send('Oui, nsfw channel only!')
+            }
         })
     },
 
