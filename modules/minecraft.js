@@ -43,7 +43,7 @@ module.exports = {
 
     ms: async (message, arg2) => {
         if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
-
+        var notCharacter = arg2.search(/[^\w.]/gm) == -1? true : false
         message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2500}))
         
 		axios.get('https://mcapi.us/server/status?ip='+arg2)
@@ -52,8 +52,8 @@ module.exports = {
             if (data.online === false) {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
-            	.setTitle('\\🔴 '+arg2+' is offline, try again in 5 minutes!')
-                .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!')
+            	.setTitle('\\🔴 '+arg2+' is offline')
+              .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
             	.setTimestamp()
             })
             } else if (data.online === true) {
