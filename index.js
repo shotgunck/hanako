@@ -2,6 +2,8 @@ const Discord = require('discord.js')
 const Distube = require('distube')
 const DiscordSC = require('discord.js-slash-command')
 
+const mongoose = require('mongoose')
+
 const fs = require('fs')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -85,9 +87,11 @@ slash.on("slashInteraction", interaction => {
   interaction.callback("siudgiufugsdui")
 });
 
-async function init() {
+(async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
     require('./keepOnline.js')()
+
+    mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
+
     client.login(token)
-}
-init()
+})()
