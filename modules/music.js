@@ -38,7 +38,7 @@ module.exports = {
         if (!arg2) return message.channel.send("Play what mf,.,")
         
         voiceChannel.join().then(connection => {
-            connection.voice.setDeaf(true)
+            connection.voice.setSelfDeaf(true)
         })
 
         await distube.play(message, message.content.slice(config.prefix.length + 5).trim().split(/ +/g).join(" "))
