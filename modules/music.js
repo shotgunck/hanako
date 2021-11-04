@@ -19,7 +19,7 @@ module.exports = {
       queue.songs.map((song, _) => {
         let data = song.name.split(' - ')
         const songName = !data[1]? data[0] : data[1]
-        axios.get('https://api.jastinch.xyz/lyrics/?song='+songName)
+        axios.get('https://api.jastinch.xyz/lyrics/?song='+songName.replace(/\([^)]*\)/gm, ''))
         .then(res => {
           message.channel.send('Lyrics for sound: **'+songName+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
         })

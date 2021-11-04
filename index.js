@@ -85,7 +85,7 @@ slash.on("slashInteraction", interaction => {
     })
   })
   interaction.callback("siudgiufugsdui")
-})
+});
 
 (async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
