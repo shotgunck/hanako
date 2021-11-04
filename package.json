@@ -28,6 +28,7 @@
     "install": "^0.13.0",
     "mongoose": "^6.0.12",
     "node": "^14.18.0",
+    "node-virustotal": "^3.35.0",
     "youtube-dl": "^3.5.0",
     "youtube-dl-exec": "^1.2.14",
     "ytdl-core": "^4.9.1",

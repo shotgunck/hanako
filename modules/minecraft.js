@@ -2,8 +2,7 @@ const Discord = require('discord.js')
 const axios = require('axios')
 const imgbb = require('imgbb-uploader')
 
-const dotenv = require('dotenv')
-dotenv.config()
+require('dotenv').config()
 
 const config = require('../config.json')
 

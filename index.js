@@ -5,8 +5,7 @@ const DiscordSC = require('discord.js-slash-command')
 const mongoose = require('mongoose')
 
 const fs = require('fs')
-const dotenv = require('dotenv')
-dotenv.config()
+require('dotenv').config()
 
 const token = process.env.BOT_TOKEN
 

@@ -1,13 +1,12 @@
 const Discord = require('discord.js')
 const axios = require('axios')
 
+require('dotenv').config()
+
 const config = require('../config.json')
 
 let prefix = config.prefix
 const lock = false
-
-const dotenv = require('dotenv')
-dotenv.config()
 
 module.exports = {
     chess: async message => {
