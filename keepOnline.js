@@ -1,12 +1,7 @@
-const express = require('express')
-const server = express()
+const server = require('express')()
 
-server.all('/', (_, res) => {
-    res.send('ight, hanako')
-})
+server.all('/', (_, res) => res.send('ight, hanako'))
 
-function keepAlive() {
+module.exports = function () {
     server.listen(3000, ()=>{})
 }
-
-module.exports = keepAlive
