@@ -65,18 +65,17 @@ module.exports = {
                	})
               	.then(imgRes => {
                   const cacheTime = parseInt(data.last_updated) + 300
-                 	
-                   const ping = data.duration / 1000000
-                    const players = data.players
-                    const sample = players.sample
-                    let ok = parseInt(ping)
+                 	const ping = data.duration / 1000000
+                  const players = data.players
+                  const sample = players.sample
+                  let ok = parseInt(ping)
 
-                    if (ok > 1000) ok = ping+'ms [WTF]'
-                    else if (ok > 399 && ok < 999) ok = ping+'ms [Bad]'
-                    else if (ok < 400 && ok > 149) ok = ping+'ms [avg]'
-                    else if (ok < 150) ok = ping+'ms [OK]'
+                  if (ok > 1000) ok = ping+'ms [WTF]'
+                  else if (ok > 399 && ok < 999) ok = ping+'ms [Bad]'
+                  else if (ok < 400 && ok > 149) ok = ping+'ms [avg]'
+                  else if (ok < 150) ok = ping+'ms [OK]'
 
-                   	message.channel.send({ embed: new Discord.MessageEmbed() 
+                  message.channel.send({ embed: new Discord.MessageEmbed() 
                     	.setColor('#DD6E0F')
                     	.setTitle('\\🟢 '+arg2+' is online')
 			           	.setDescription(data.motd)
