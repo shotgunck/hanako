@@ -9,8 +9,8 @@ A multi-purpose Discord bot written in JavaScript
 * Code compiler (Currently 23 languages)
 
 ## To-do
-* Compiler related
-* Slash commands
+* Mongo [mongoose] database implementation
+* Database usage
 
 ## Credits
 The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).
