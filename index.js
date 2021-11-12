@@ -66,7 +66,7 @@ client.on("message", async message => {
 
 distube
   .on('finish', message => message.channel.send("😴 **Queue ended.**").then(m => m.delete({timeout: 5000})))
-  .on("playSong", (message, queue, song) => {message.channel.send('🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!');
+  .on("playSong", (message, queue, song) => {message.channel.send('🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => m.delete({timeout: song.duration * 1000}))
       queue.autoplay = false
   })
   .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)

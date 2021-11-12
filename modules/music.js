@@ -28,7 +28,6 @@ module.exports = {
     },
 
     play: async (message, arg2, distube) => {
-        message.channel.startTyping(3)
         const voiceChannel = message.member.voice.channel
         if (!voiceChannel) return message.channel.send("Enter a voice channel pls!")
  
@@ -42,7 +41,6 @@ module.exports = {
         })
 
         await distube.play(message, message.content.slice(config.prefix.length + 5).trim().split(/ +/g).join(" "))
-        message.channel.stopTyping()
     },
 
     pause: async(message, _, distube) => {
