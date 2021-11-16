@@ -1,6 +1,5 @@
 const Discord = require('discord.js')
 const axios = require('axios')
-const imgbb = require('imgbb-uploader')
 
 require('dotenv').config()
 
@@ -43,59 +42,50 @@ module.exports = {
     ms: async (message, arg2) => {
         if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
         var notCharacter = arg2.search(/[^\w.]/gm) == -1? true : false
-        message.channel.send('Fetching, please wait...').then(msg => msg.delete({timeout: 2500}))
+        message.channel.send('🕹 Getting server info, please wait..').then(msg => msg.delete({timeout: 750}))
         
-		axios.get('https://mcapi.us/server/status?ip='+arg2)
+		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
         .then(res => {
             const data = res.data
-            if (data.online === false) {
+            if (!data.online) {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline')
               .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
             	.setTimestamp()
             })
-            } else if (data.online === true) {
-               	imgbb({
-               		apiKey: process.env.IMGBB_API_KEY,
-               		name: "mcservericon",
-               		expiration: 3600,
-               		base64string: !data.favicon ? 'https://i.imgur.com/cpfxvnE.png' : data.favicon.substr(22, data.favicon.length)
-               	})
-              	.then(imgRes => {
-                  const cacheTime = parseInt(data.last_updated) + 300
-                 	const ping = data.duration / 1000000
-                  const players = data.players
-                  const sample = players.sample
-                  let ok = parseInt(ping)
+            } else if (data.online) {
+                const ping = data.took
+                const players = data.players
+                const sample = players.sample
+                let ok = parseInt(ping)
 
-                  if (ok > 1000) ok = ping+'ms [WTF]'
-                  else if (ok > 399 && ok < 999) ok = ping+'ms [Bad]'
-                  else if (ok < 400 && ok > 149) ok = ping+'ms [avg]'
-                  else if (ok < 150) ok = ping+'ms [OK]'
+                if (ok > 1000) ok = ping+'ms [WTF]'
+                else if (ok > 399 && ok < 999) ok = ping+'ms [Bad]'
+                else if (ok < 400 && ok > 149) ok = ping+'ms [avg]'
+                else if (ok < 150 && ok > 24) ok = ping+'ms [OK]'
+                else if (ok < 25) ok = ping+'ms [fast af]'
 
-                  message.channel.send({ embed: new Discord.MessageEmbed() 
-                    	.setColor('#DD6E0F')
-                    	.setTitle('\\🟢 '+arg2+' is online')
-			           	.setDescription(data.motd)
-			           	.setThumbnail(imgRes.url)
-                    	.addFields(
+                message.channel.send({ embed: new Discord.MessageEmbed() 
+                	.setColor('#DD6E0F')
+                	.setTitle('\\🟢 '+arg2+' is online')
+			           	.setDescription(data.description)
+			           	.setThumbnail(data.favicon)
+                	.addFields(
                     	{ name: '​', value: '**🔹 Info: **'+'\n'+
                     	'-------------------------------\n\n'+
-			           	'**Version**:  '+data.server.name+
+			           	'**Version**:  '+data.version.name+
                         '\n\n**Ping**:  '+ok+
-                    	'\n\n**Players in game:**  '+players.now+'/'+players.max+
+                    	'\n\n**Players in game:**  '+players.online+'/'+players.max+
                         (!sample[0]? '' : '\n • '+sample[0].name)+
                         (!sample[1]? '' : '\n • '+sample[1].name)+
                         (!sample[2]? '' : '\n • '+sample[2].name)+
                         (!sample[3]? '' : '\n • '+sample[3].name)+
                         (!sample[4]? '' : '\n • '+sample[4].name)+
-                        '\n\n-------------------------------'+'\n🔸 This is a cached result. Please check again <t:'+cacheTime+':R>!'
+                        '\n\n-------------------------------'+'\n🔸 This is a cached result. Please check again in '+data.cache.ttl+' seconds!'
                    		})
                    		.setTimestamp()
                    	}) 
-                })
-            	.catch(err => message.channel.send('Image API error, pls wait for 5 minutes before trying again. | '+err))
         	}
       	})
 		.catch(err => message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err))
