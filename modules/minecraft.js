@@ -51,7 +51,7 @@ module.exports = {
             message.channel.send({ embed: new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline')
-              .setDescription('🔸 Make sure the address is a Minecraft server address and it\'s really exist!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
+              .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
             	.setTimestamp()
             })
             } else if (data.online) {
