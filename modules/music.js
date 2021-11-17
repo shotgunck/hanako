@@ -21,7 +21,7 @@ module.exports = {
       if (!arg2) return message.channel.send("🔎 Provide some lyrics!! Example: `"+config.prefix+' find how you want me to`')
       const content = message.content
 
-      lyrical.search(content.substr(config.prefix.length + 5, content.length))
+      findSong.search(content.substr(config.prefix.length + 5, content.length))
       .then(res => {
           const info = res.fullTitle.split('by')
           message.channel.send({ embed: new Discord.MessageEmbed()
