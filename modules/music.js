@@ -1,5 +1,10 @@
 const Discord = require('discord.js')
-const axios = require('axios')
+
+require('dotenv').config()
+
+const lsModule = require('@penfoldium/lyrics-search')
+const findSong = new lsModule(process.env.GENIUS_API)
+const { getLyrics } = require('genius-lyrics-api')
 
 const config = require('../config.json')
 
@@ -12,18 +17,46 @@ module.exports = {
       message.channel.send("🌫 Filter is now set to `" + (filter || 'off')+'`! Wait me apply..,')
     },
 
+    find: async(message, arg2) => {
+      if (!arg2) return message.channel.send("🔎 Provide some lyrics!! Example: `"+config.prefix+' find how you want me to`')
+      const content = message.content
+
+      lyrical.search(content.substr(config.prefix.length + 5, content.length))
+      .then(res => {
+          const info = res.fullTitle.split('by')
+          message.channel.send({ embed: new Discord.MessageEmbed()
+              .setColor('#DD6E0F')
+              .setTitle(info[0])
+              .setDescription('by'+info[1])
+              .setAuthor('Song:')
+              .setThumbnail(res.primaryArtist.header)
+              .addFields(
+                {name: '​', value: '[About song]('+res.url+')\n'+'[About author]('+res.primaryArtist.url+')'}
+               )
+              .setImage(res.songArtImage)
+          })
+      })
+      .catch(e => message.channel.send('❌ Request error! ' + e))
+    },
+
     lyrics: async(message, arg2, distube) => {
       let queue = distube.getQueue(message)
       if (!queue) return message.channel.send("🕳 Play a sound so I can get the lyrics aight")
 
       queue.songs.map((song, _) => {
         let data = song.name.split(' - ')
-        const songName = (!data[1]? data[0] : data[1]).replace(/\([^)]*\)/gm, '')
-        axios.get('https://api.jastinch.xyz/lyrics/?song='+songName)
-        .then(res => {
-          message.channel.send('Lyrics for sound: **'+songName+'**\n'+res.data.lyrics+'\n--------------------------------', {split: true})
-        })
-        .catch(err => message.channel.send('💤 No lyrics found.,. | '+err)) 
+        const songName = (!data[1]? data[0] : data[1]).replace(/\([^)]*\)/gm, '');
+        const artist = data[0].replace(/\([^)]*\)/gm, '');
+
+        const options = {
+          apiKey: process.env.GENIUS_API,
+	        title: songName,
+      	  artist: artist,
+      	  optimizeQuery: true
+        }
+        getLyrics(options).then(lyrics => {
+           message.channel.send(lyrics, {split: true})
+        }).catch(e => message.channel.send(e))
       })
     },
 
