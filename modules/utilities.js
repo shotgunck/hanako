@@ -21,9 +21,9 @@ module.exports = {
             .setDescription('created by shotgun#4239, written in JS')
             .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
             .addFields(
-            { name: '​', value: '🎵 **Current prefix:** '+prefix+'\n'+`
+            { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
             -------------------------------
-            **help** - Show this messenge
+            **help** - Show this message
             **prefix** - Set a new prefix for me
     
             **8ball** - Answer your questions [y/n]
@@ -34,7 +34,13 @@ module.exports = {
             **ms** - Get a Minecraft server's status
             **gato** - Random gato picture
             **wa** - wa?!
-
+            `
+            }),
+        new Discord.MessageEmbed()
+          .setColor('#DD6E0F')
+            .setTitle('🎶 Music commands')
+            .addFields(
+            { name: '​', value: `
             **filter** - Set a sound filter
             **find** - Give me a song lyrics and I'll find the song
             **lyrics** - Display the current sound's lyrics
