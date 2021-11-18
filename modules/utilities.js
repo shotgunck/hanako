@@ -29,15 +29,18 @@ module.exports = {
             **8ball** - Answer your questions [y/n]
             **chess** - Info about chess
             **compile** - Code compiler
-            **mcskin** - Show skin of a Minecraft player
+            **mcskin** - Show skin of a Minecraft player (not good rn)
             **achieve** - Achievement got!
             **ms** - Get a Minecraft server's status
             **gato** - Random gato picture
-    
+            **wa** - wa?!
+
             **filter** - Set a sound filter
+            **find** - Give me a song lyrics and I'll find the song
             **lyrics** - Display the current sound's lyrics
             **play** - Play a sound or add into queue
             **pause/resume** - Pause/Resume the current queue (unstable)
+            **remove** - Remove a song in given position from the queue
             **queue** - Show the current queue
             **skip** - Skip to the next sound in queue
             **stop** - Stop the playing sound

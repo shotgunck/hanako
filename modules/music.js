@@ -49,10 +49,10 @@ module.exports = {
         const artist = data[0].replace(/\([^)]*\)/gm, '');
 
         const options = {
-            apiKey: process.env.GENIUS_API,
+          apiKey: process.env.GENIUS_API,
 	        title: songName,
-      	    artist: artist,
-      	    optimizeQuery: true
+      	  artist: artist,
+      	  optimizeQuery: true
         }
         getLyrics(options).then(lyrics => {
            message.channel.send({content: lyrics, split: true})
@@ -81,6 +81,51 @@ module.exports = {
 
         await distube.pause(message)
         message.channel.send({content: '⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.'})
+    },
+    
+    queue: async (message, _, distube) => {
+        let queue = distube.getQueue(message)
+        if (!queue) return message.channel.send({content: '🕳 Queue empty..,'})
+
+        let q = ' '
+        await queue.songs.map((song, index) => {
+            q = q + `**${index+1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\`\n` 
+        })
+        message.channel.send({ embeds: [new Discord.MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle('Current Queue')
+            .addFields(
+              {name: 'Now playing:', value: q},
+            ) 
+        ]}) 
+    },
+
+    repeat: async (message, arg2, distube) => {
+        if (!message.member.voice.channel) return message.channel.send({content: '🙄 Join VC to repeat listening.,'})
+        if (!distube.getQueue(message)) return message.channel.send({content: '🕳 No song currently,,'})
+        
+        if (!arg2 || arg2 === 'on') {
+            await distube.setRepeatMode(message, 1)
+            message.channel.send({content: '🔄 Current song is on repeat ight!'})
+        } else if (arg2 === 'off') {
+            await distube.setRepeatMode(message, 0)
+            message.channel.send({content: '🔄 Repeat mode is now `off`.'})
+        } else if (arg2 === 'q' || arg2 === 'queue') {
+            await distube.setRepeatMode(message, 2)
+            message.channel.send({content: '🔄 Current queue is now on repeat!'})
+        }  
+    },
+    
+    remove: async(message, arg2, distube) => {
+        let queue = distube.getQueue(message)
+        if (!queue) return message.channel.send({content: '🥔 Queue is empty rn so no remove!'})
+        if (!arg2) return message.channel.send({content: '🆔 Select a song position to remove from the queue!'})
+
+        const index = parseInt(arg2) - 1
+        const toRemove = queue.songs[index].name
+        
+        await queue.songs.splice(index, 1)
+        message.channel.send({content: '💨 **'+toRemove+'** has been removed from queue oki'})
     },
 
     resume: async(message, _, distube) => {
@@ -111,37 +156,6 @@ module.exports = {
             await distube.stop(message)
             message.channel.send({content: '⏯ There\'s no song left in queue so I\'ll stop, bai!!'})
         }
-    },
-
-    queue: async (message, _, distube) => {
-        let queue = distube.getQueue(message)
-        if (!queue) return message.channel.send({content: '🕳 Queue empty..,'})
-
-        queue.songs.map((song, id) => {
-            message.channel.send({ embeds: [new Discord.MessageEmbed()
-                .setColor('#DD6E0F')
-                .setTitle('Current Queue')
-                .addFields(
-                    {name: 'Now playing:', value:  `**${id+1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\``},
-                ) 
-            ]})
-        })
-    },
-
-    repeat: async (message, arg2, distube) => {
-        if (!message.member.voice.channel) return message.channel.send({content: '🙄 Join VC to repeat listening.,'})
-        if (!distube.getQueue(message)) return message.channel.send({content: '🕳 No song currently,,'})
-        
-        if (!arg2 || arg2 === 'on') {
-            await distube.setRepeatMode(message, 1)
-            message.channel.send({content: '🔄 Current song is on repeat ight!'})
-        } else if (arg2 === 'off') {
-            await distube.setRepeatMode(message, 0)
-            message.channel.send({content: '🔄 Repeat mode is now `off`.'})
-        } else if (arg2 === 'q' || arg2 === 'queue') {
-            await distube.setRepeatMode(message, 2)
-            message.channel.send({content: '🔄 Current queue is now on repeat!'})
-        }  
     },
 
     volume: async (message, arg2, distube) => {
