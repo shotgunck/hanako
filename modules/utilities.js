@@ -10,11 +10,11 @@ const lock = false
 
 module.exports = {
     chess: async message => {
-        message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! help` for more ight')
+        message.channel.send({content: '♟ Prefix for chess is specified as `c!`, type `c! help` for more ight'})
     },
     
     help: async message => {
-        message.channel.send({ embed: new Discord.MessageEmbed()
+        message.channel.send({ embeds: [new Discord.MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('Hanako')
             .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
@@ -25,7 +25,7 @@ module.exports = {
             -------------------------------
             **help** - Show this messenge
             **prefix** - Set a new prefix for me
-
+    
             **8ball** - Answer your questions [y/n]
             **chess** - Info about chess
             **compile** - Code compiler
@@ -33,7 +33,7 @@ module.exports = {
             **achieve** - Achievement got!
             **ms** - Get a Minecraft server's status
             **gato** - Random gato picture
-
+    
             **filter** - Set a sound filter
             **lyrics** - Display the current sound's lyrics
             **play** - Play a sound or add into queue
@@ -47,55 +47,55 @@ module.exports = {
             })
             .setTimestamp()
             .setFooter('ight have fun')
-        })
+        ]})
     },
     
     prefix: async (message, arg2) => {
         if (arg2) {
-            if (arg2 === 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! help` for more,.')
+            if (arg2 === 'c!') return message.channel.send({content: '⚠♟ `c!` is preserved for chess game! Type `c! help` for more,.'})
             
             config.prefix = arg2
             prefix = config.prefix
 
-            message.channel.send("❗ My prefix is now changed to ``"+arg2+"``\n❗ In case you forgot what the prefix is, see what I'm listening to!")
+            message.channel.send({content: '❗ My prefix is now changed to `'+arg2+'`\n❗ In case you forgot what the prefix is, see what I\'m listening to!'})
             if (arg2 == 'default') {
-                message.channel.send("⚠ Note: it will literally be ``default``, **__not__** ``oi``.")
+                message.channel.send({content: '⚠ Note: it will literally be `default`, **__not__** `oi`.'})
             }
-            message.client.user.setActivity(prefix+" help", { type: "LISTENING" })
+            message.client.user.setActivity(prefix + ' help', { type: "LISTENING" })
         } else {
-            message.channel.send("Current prefix: ``"+prefix+"``\nTo change prefix, type ``"+prefix+" prefix [new-prefix]``\n\n❗ In case you forgot what the prefix is,  see what I'm listening to!")
+            message.channel.send({content: 'Current prefix: `'+prefix+'`\nTo change prefix, type `'+prefix+'` prefix [new-prefix]`\n\n❗ In case you forgot what the prefix is,  see what I\'m listening to!'})
         }
     },
 
     gato: async(message) => {
         axios.get('https://aws.random.cat/meow?ref=apilist.fun')
         .then(res => {
-            message.channel.send({ embed: new Discord.MessageEmbed()
+            message.channel.send({ embeds: [new Discord.MessageEmbed()
                 .setColor('#DD6E0F')
                 .setTitle('gato')
                 .setImage(res.data.file)
-            })
+            ]})
         })
     },
 
     wa: async(message) => {
-      if (lock === true) return message.channel.send('noj,,,')
+      if (lock) return message.channel.send({content: 'noj,,,'})
       axios.get('https://api.waifu.pics/sfw/waifu')
         .then(res => {
             if (message.channel.nsfw) {
-              message.channel.send({ embed: new Discord.MessageEmbed()
+              message.channel.send({ embeds: [new Discord.MessageEmbed()
                 .setColor('#DD6E0F')
                 .setTitle('wa')
                 .setImage(res.data.url)
-              })
+              ]})
             } else {
-              message.channel.send('Oui, nsfw channel only!')
+              message.channel.send({content: 'Oui, nsfw channel only!'})
             }
         })
     },
 
     '8ball': async(message) => {
       axios.get(process.env.S_API_B1)
-        .then(res => message.channel.send(res.data[0].reply))
+        .then(res => message.channel.send({content: res.data[0].reply}))
     }
 }

@@ -15,7 +15,7 @@ const errorLog = '📜❌ Pls state a valid lang! The following syntax are valid
 
 module.exports = {
   compile: async (message, arg2) => {
-    if (!arg2 || arg2.startsWith('```') || langVersion[arg2] === null ) return message.channel.send(errorLog)
+    if (!arg2 || arg2.startsWith('```') || langVersion[arg2] === null ) return message.channel.send({content: errorLog})
 
     const source = message.content.substr(config.prefix.length + 9 + arg2.length, message.content.length)
 
@@ -30,14 +30,14 @@ module.exports = {
     axios.post('https://api.jdoodle.com/v1/execute', program)
       .then(res => {
         const output = res.data.output
-        message.channel.send(new Discord.MessageEmbed()
+        message.channel.send({embeds: [new Discord.MessageEmbed()
           .setTitle("**💠 Output:**")
           .setColor("#DD6E0F")
           .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': output)
           .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
           .setTimestamp()
-        )
+        ]})
       })
-      .catch(error => message.channel.send(errorLog+'\n\n'+error))
+      .catch(error => message.channel.send({content: errorLog+'\n\n'+error}))
   }
 }

@@ -1,6 +1,5 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
-const DiscordSC = require('discord.js-slash-command')
 
 const mongoose = require('mongoose')
 
@@ -9,9 +8,8 @@ require('dotenv').config()
 
 const token = process.env.BOT_TOKEN
 
-const client = new Discord.Client()
-const distube = new Distube(client, { emitNewSongOnly: true})
-const slash = new DiscordSC.Slash(client)
+const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
+const distube = new Distube.default(client, { emitNewSongOnly: true})
 
 const {loadImages} = require('./chess/images')
 const chessState = require('./chess/chessBoard')
@@ -19,24 +17,12 @@ const chessCommands = require('./chess/commands')
 
 let config = require('./config.json')
 
-client.once("ready", () => {
-  console.log("im on")
-  client.user.setActivity(config.prefix+" help", { type: "LISTENING" })
-
-  let ms = new DiscordSC.CommandBuilder()
-    .setName("ms")
-    .setDescription('Display info of a Minecraft Server')
-  let msChoice = new DiscordSC.CommandBuilder()
-    .setName('address')
-    .setDescription('Server address')
-    .setRequired(true)
-    .setType(DiscordSC.CommandType.STRING)
-
-  ms.addOption(msChoice)
-  slash.create(ms, "802005325196558356")
+client.once('ready', () => {
+  console.log('im on')
+  client.user.setActivity(config.prefix+' help', { type: 'LISTENING' })
 })
 
-client.on("message", async message => {
+client.on('messageCreate', async message => {
   if (message.author.bot) return
   
   const prefix = config.prefix
@@ -47,7 +33,7 @@ client.on("message", async message => {
   const cmd = content.slice(prefix.length).trim().split(/ +/g).shift().toLowerCase()
   const arg2 = cmd === subcontents[1] ? subcontents[2] : subcontents[1]
 
-  if (prefixed === "c!") {
+  if (prefixed === 'c!') {
     const command = chessCommands[cmd] || chessCommands.move
     if (command) {
       command(message, subcontents)
@@ -65,32 +51,20 @@ client.on("message", async message => {
 })
 
 distube
-  .on('finish', message => message.channel.send("😴 **Queue ended.**").then(m => m.delete({timeout: 5000})))
-  .on("playSong", (message, queue, song) => {message.channel.send('🎶**'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => m.delete({timeout: song.duration * 1000}))
-      queue.autoplay = false
-  })
-  .on("addSong", (message, _, song) => {message.channel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
-  })
-  .on("error", (message, err) => message.channel.send("❌ Ah shite error: `" + err + "`", {split: true}))
-
-slash.on("slashInteraction", interaction => {
-  console.log(interaction.command.options[0].value)
-  fs.readdir('./modules', function (err, files) {       
-    files.forEach(function (file, _) {
-      const command = require('./modules/'+file)[interaction.command.name]
-      if (command) {
-        command(interaction, interaction.command.options[0].value, distube)
-      }
+  .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => m.delete({timeout: 5000})))
+  .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => message.delete(), song.duration * 1000)))
+  .on('addSong', (queue, song) => {
+    queue.songs.map((_, id) => {
+      if (id != 0) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
     })
   })
-  interaction.callback("siudgiufugsdui")
-});
+  .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`", split: true}));
 
 (async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
     require('./keepOnline.js')()
 
-    mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
+    //mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
 
     client.login(token)
 })()
