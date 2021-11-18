@@ -8,7 +8,7 @@ const config = require('../config.json')
 module.exports = {
     mcskin: (message, arg2) => {
       if (!arg2) return message.channel.send('🙄 Provide a Minecraft player\'s username,, like `'+config.prefix+' mcskin notch`')
-      message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => m.delete({timeout: 2000}))
+      message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => setTimeout(() => m.delete(), 2000))
         axios.get('https://minecraft-api.com/api/skins/'+arg2+'/body/10.5/10/json')
         .then(res => {
             imgbb({
@@ -42,7 +42,7 @@ module.exports = {
     ms: async (message, arg2) => {
         if (!arg2) return message.channel.send({content: '💢 Pls provide a Minecraft server bru'})
         var notCharacter = arg2.search(/[^\w.]/gm) == -1? true : false
-        message.channel.send({content: '🕹 Getting server info, please wait..'}).then(msg => msg.delete({timeout: 750}))
+        message.channel.send({content: '🕹 Getting server info, please wait..'}).then(m => setTimeout(() => m.delete(), 800))
         
 		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
         .then(res => {
@@ -73,18 +73,19 @@ module.exports = {
 			           	.setThumbnail(data.favicon)
                 	.addFields(
                     	{ name: '​', value: '**🔹 Info: **'+'\n'+
-                    	'-------------------------------\n\n'+
-			           	'**Version**:  '+data.version.name+
+                      	'-------------------------------\n\n'+
+			           	      '**Version**:  '+data.version.name+
                         '\n\n**Ping**:  '+ok+
-                    	'\n\n**Players in game:**  '+players.online+'/'+players.max+
+                    	  '\n\n**Players in game:**  '+players.online+'/'+players.max+
                         (!sample[0]? '' : '\n • '+sample[0].name)+
                         (!sample[1]? '' : '\n • '+sample[1].name)+
                         (!sample[2]? '' : '\n • '+sample[2].name)+
                         (!sample[3]? '' : '\n • '+sample[3].name)+
                         (!sample[4]? '' : '\n • '+sample[4].name)+
                         '\n\n-------------------------------'+'\n🔸 This is a cached result. Please check again in '+data.cache.ttl+' seconds!'
-                   		})
-                   		.setTimestamp()
+                   		}
+                  )
+                  .setTimestamp()
                 ]}) 
         	}
       	})

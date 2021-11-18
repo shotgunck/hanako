@@ -52,7 +52,7 @@ client.on('messageCreate', async message => {
 
 distube
   .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => m.delete({timeout: 5000})))
-  .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => message.delete(), song.duration * 1000)))
+  .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
   .on('addSong', (queue, song) => {
     queue.songs.map((_, id) => {
       if (id != 0) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
