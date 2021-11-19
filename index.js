@@ -37,9 +37,7 @@ client.on('messageCreate', async message => {
       command(message, subcontents)
     }
   } else if (prefixed === prefix) {
-    fs.readdir('./modules', function (err, files) {
-      if (err) return console.log(err)
-        
+    fs.readdir('./modules', function (_, files) {        
       files.forEach(function (file, _) {
         const command = require('./modules/'+file)[cmd]
         if (command) command(message, arg2, distube)
@@ -49,7 +47,7 @@ client.on('messageCreate', async message => {
 })
 
 distube
-  .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => m.delete({timeout: 5000})))
+  .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => setTimeout(() => m.delete(), 5000)))
   .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
   .on('addSong', (queue, song) => {
     queue.songs.map((_, id) => {
