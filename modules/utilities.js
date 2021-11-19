@@ -106,5 +106,12 @@ module.exports = {
     '8ball': async(message) => {
       axios.get(process.env.S_API_B1)
         .then(res => message.channel.send({content: res.data[0].reply}))
+    },
+
+    msgSplit: (msg) => {
+      return [
+        msg.substring(0, 2000),
+        msg.substring(2000, msg.length)
+      ]
     }
 }

@@ -52,11 +52,9 @@ distube
   .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => setTimeout(() => m.delete(), 5000)))
   .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
   .on('addSong', (queue, song) => {
-    queue.songs.map((_, id) => {
-      if (id != 0) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
-    })
+    if (!queue.songs.length == 1) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
   })
-  .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`", split: true}));
+  .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`"}));
 
 (async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])

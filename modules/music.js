@@ -7,13 +7,16 @@ const findSong = new lsModule(process.env.GENIUS_API)
 const { getLyrics } = require('genius-lyrics-api')
 
 const config = require('../config.json')
+const util = require('./utilities.js')
 
 module.exports = {
     filter: async(message, arg2, distube) => {
-      if (!arg2) return message.channel.send({content: '🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\nExample: `'+config.prefix+' filter reverse`' })
       if (!distube.getQueue(message)) return message.channel.send({content:'\\🌫 Oui play some sound to set filter ight' })
+      if (!arg2) return message.channel.send({content: '🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\n\nExample: `'+config.prefix+' filter reverse | oi filter 3d echo`\nMention the filter type again to turn that filter off uwu' })
 
-      const filter = await distube.setFilter(message, arg2)
+      const filters = message.content.substr(config.prefix.length+8, message.content.length).match(/\w+/gm)
+      
+      const filter = await distube.setFilter(message, filters)
       message.channel.send({content: '🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,'})
     },
 
@@ -43,21 +46,21 @@ module.exports = {
       let queue = distube.getQueue(message)
       if (!queue) return message.channel.send({content: '🕳 Play a sound so I can get the lyrics aight'})
 
-      queue.songs.map((song, _) => {
-        let data = song.name.split(' - ')
-        const songName = (!data[1]? data[0] : data[1]).replace(/\([^)]*\)/gm, '');
-        const artist = data[0].replace(/\([^)]*\)/gm, '');
+      let data = queue.songs[0].name.split(' - ')
+      const songName = (!data[1]? data[0] : data[1]).replace(/\([^)]*\)/gm, '');
+      const artist = data[0].replace(/\([^)]*\)/gm, '');
 
-        const options = {
-          apiKey: process.env.GENIUS_API,
-	        title: songName,
-      	  artist: artist,
-      	  optimizeQuery: true
-        }
-        getLyrics(options).then(lyrics => {
-           message.channel.send({content: lyrics, split: true})
-        }).catch(err => message.channel.send({content: err}))
-      })
+      const options = {
+        apiKey: process.env.GENIUS_API,
+	      title: songName,
+        artist: artist,
+        optimizeQuery: true
+      }
+      
+      getLyrics(options).then(res => {
+        const lyrics = util.msgSplit(res)
+        message.channel.send({content: !lyrics ? '⭕ No lyrics found for the song sob' : lyrics[0]+lyrics[1]})
+      }).catch(err => message.channel.send({content: err}))
     },
 
     play: async (message, arg2, distube) => {
@@ -134,7 +137,7 @@ module.exports = {
         if (!distube.isPaused(message)) return message.channel.send({content: '💢 Queue is playing!!'}).then(m => m.delete({timeout: 5000}))
 
         await distube.resume(message)
-        message.channel.send({content: '⏯ Queue resumed!'}).then(m => m.delete({timeout: 5000}))
+        message.channel.send({content: '⏯ Queue resumed!'}).then(m => setTimeout(() => m.delete, 5000))
     },
 
     stop: async (message, _, distube) => {
