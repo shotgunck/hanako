@@ -1,15 +1,13 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
 
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
 
 const fs = require('fs')
 require('dotenv').config()
 
-const token = process.env.BOT_TOKEN
-
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
-const distube = new Distube.default(client, { emitNewSongOnly: true})
+const distube = new Distube.default(client, {emitNewSongOnly: true})
 
 const {loadImages} = require('./chess/images')
 const chessState = require('./chess/chessBoard')
@@ -17,7 +15,7 @@ const chessCommands = require('./chess/commands')
 
 let config = require('./config.json')
 
-client.once('ready', () => {
+client.on('ready', () => {
   console.log('im on')
   client.user.setActivity(config.prefix+' help', { type: 'LISTENING' })
 })
@@ -62,9 +60,9 @@ distube
 
 (async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
-    require('./keepOnline.js')()
+    require("http").createServer((_, res) => res.end('hanako ight')).listen()
 
     //mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
 
-    client.login(token)
+    client.login(process.env.BOT_TOKEN)
 })()
