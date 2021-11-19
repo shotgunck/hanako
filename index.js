@@ -1,3 +1,5 @@
+console.log(process.version)
+
 const Discord = require('discord.js')
 const Distube = require('distube')
 
@@ -61,6 +63,6 @@ distube
     require("http").createServer((_, res) => res.end('hanako ight')).listen()
 
     //mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
-
+    
     client.login(process.env.BOT_TOKEN)
 })()
