@@ -6,7 +6,7 @@ require('dotenv').config()
 const config = require('../config.json')
 
 module.exports = {
-    mcskin: (message, arg2) => {
+    mcskin: (message, _, arg2) => {
       if (!arg2) return message.channel.send('🙄 Provide a Minecraft player\'s username,, like `'+config.prefix+' mcskin notch`')
       message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => setTimeout(() => m.delete(), 2000))
         axios.get('https://minecraft-api.com/api/skins/'+arg2+'/body/10.5/10/json')
@@ -28,8 +28,8 @@ module.exports = {
         }).catch(err => message.channel.send({content: '📛 Player API is experiencing errors, try again in 5 minutes oki! || '+err}))
     },
 
-    achieve: message => {
-        const args = message.content.slice(config.prefix.length+8).trim().split(/ +/g).join('..')
+    achieve: (message, main) => {
+        const args = main.slice(7).trim().split(/ +/g).join('..')
         axios.get('https://minecraft-api.com/api/achivements/cooked_salmon/achievement..got/'+args)
         .then(data => {
             message.channel.send({ embeds: [new Discord.MessageEmbed() 
@@ -39,7 +39,7 @@ module.exports = {
         })
     },
 
-    ms: async (message, arg2) => {
+    ms: async (message, _, arg2) => {
         if (!arg2) return message.channel.send({content: '💢 Pls provide a Minecraft server bru'})
         var notCharacter = arg2.search(/[^\w.]/gm) == -1? true : false
         message.channel.send({content: '🕹 Getting server info, please wait..'}).then(m => setTimeout(() => m.delete(), 800))

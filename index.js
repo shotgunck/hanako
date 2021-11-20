@@ -9,7 +9,6 @@ const fs = require('fs')
 require('dotenv').config()
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
-const distube = new Distube.default(client, {emitNewSongOnly: true})
 
 const {loadImages} = require('./chess/images')
 const chessState = require('./chess/chessBoard')
@@ -26,39 +25,34 @@ client.on('messageCreate', async message => {
   if (message.author.bot) return
   
   const prefix = config.prefix
-  const content = message.content
-  const subcontents = content.split(' ')
-  const prefixed = content.substr(0, prefix.length).toLowerCase()
+  var prefixed = false
+  message.content.split(' && ').map(async thread => {
+    const main = thread.replace(prefix + ' ', '')
+    const subcontents = main.split(' ')
+    prefixed = thread.substr(0, prefix.length).toLowerCase()
 
-  const cmd = content.slice(prefix.length).trim().split(/ +/g).shift().toLowerCase()
-  const arg2 = cmd === subcontents[1] ? subcontents[2] : subcontents[1]
+    const cmd = main.split(/ +/g).shift().toLowerCase()
+    const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
 
-  if (prefixed === 'c!') {
-    const command = chessCommands[cmd] || chessCommands.move
-    if (command) {
-      command(message, subcontents)
-    }
-  } else if (prefixed === prefix) {
-    fs.readdir('./modules', function (_, files) {        
-      files.forEach(function (file, _) {
-        const command = require('./modules/'+file)[cmd]
-        if (command) command(message, arg2, distube)
+    if (prefixed == 'c!') {
+      const command = chessCommands[cmd] || chessCommands.move
+      if (command) return command(message, subcontents)
+    } else if (prefixed == prefix || prefixed) {
+      prefixed = true
+      await fs.readdir('./modules', function (_, files) {        
+        files.forEach(async function (file) {
+          const command = require('./modules/'+file)[cmd]
+          if (command) command(message, main, arg2)
+        })
       })
-    }) 
-  }
-})
-
-distube
-  .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => setTimeout(() => m.delete(), 5000)))
-  .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
-  .on('addSong', (queue, song) => {
-    if (!queue.songs.length == 1) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
+    }
   })
-  .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`"}));
+});
 
 (async () => {
     await Promise.all([loadImages(), chessState.loadBoard()])
-    require("http").createServer((_, res) => res.end('hanako ight')).listen()
+    require('http').createServer((_, res) => res.end('hanako ight')).listen()
+    require('./modules/music').init(client)
 
     //mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
     

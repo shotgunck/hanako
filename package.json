@@ -29,7 +29,8 @@
     "genius-lyrics-api": "^3.2.0",
     "install": "^0.13.0",
     "mongoose": "^6.0.12",
-    "youtube-dl": "^3.5.0",
+    "npm": "^8.1.4",
+    "reconlx": "^2.5.1",
     "youtube-dl-exec": "^1.2.14",
     "ytdl-core": "^4.9.1",
     "ytsearcher": "^1.2.4"
@@ -46,10 +47,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shotgunck/nigloo.git"
+    "url": "git+https://github.com/shotgunck/hanako.git"
   },
   "bugs": {
-    "url": "https://github.com/shotgunck/nigloo/issues"
+    "url": "https://github.com/shotgunck/hanako/issues"
   },
-  "homepage": "https://github.com/shotgunck/nigloo#readme"
+  "homepage": "https://github.com/shotgunck/hanako#readme"
 }
