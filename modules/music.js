@@ -20,7 +20,6 @@ module.exports = {
         .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => setTimeout(() => m.delete(), 5000)))
         .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
         .on('addSong', (queue, song) => {
-          console.log(queue.songs.length)
           if (queue.songs.length >= 2) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
         })
         .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`"}));
@@ -33,7 +32,7 @@ module.exports = {
       const filters = main.substr(7, main.length).match(/\w+/gm)
       
       const filter = await distube.setFilter(message, filters)
-      message.channel.send({content: '🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,'})
+      return message.channel.send({content: '🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,'})
     },
 
     find: async(message, main, arg2) => {
@@ -88,14 +87,17 @@ module.exports = {
         if (!arg2) return message.channel.send({content: 'Play what mf,.,'})
 
         distube.voices.join(message.member.voice.channel)
+        distube.voices.get(message).setSelfDeaf(true)
 
         await distube.play(message, main.substring(4, main.length))
     },
 
-    pause: async(message) => {
+    pause: async message => {
+        const queue = distube.getQueue(message)
+        
         if (!message.member.voice.channel) return message.channel.send({content: '🤏 You have to be listening first alr'})
-        if (!distube.getQueue(message)) return message.channel.send({content: '🗑 There are no sound around,.'})
-        if (distube.isPaused(message)) return message.channel.send({content: '💢 Queue is already paused! Type `'+config.prefix+' resume` to resume.'})
+        if (!queue) return message.channel.send({content: '🗑 There are no sound around,.'})
+        if (queue.paused) return message.channel.send({content: '🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!'})
 
         await distube.pause(message)
         message.channel.send({content: '⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.'})
@@ -147,9 +149,11 @@ module.exports = {
     },
 
     resume: async(message) => {
+        let queue = distube.getQueue(message)
+
         if (!message.member.voice.channel) return message.channel.send({content: '🤏 You have to be listening first alr'})
-        if (!distube.getQueue(message)) return message.channel.send({content: '🗑 No sound to resume,.'})
-        if (!distube.isPaused(message)) return message.channel.send({content: '💢 Queue is playing!!'}).then(m => setTimeout(() => m.delete, 5000))
+        if (!queue) return message.channel.send({content: '🗑 No sound to resume,.'})
+        if (!queue.paused) return message.channel.send({content: '🙄 Queue is already playing trl'})
 
         await distube.resume(message)
         message.channel.send({content: '⏯ Queue resumed!'}).then(m => setTimeout(() => m.delete, 5000))

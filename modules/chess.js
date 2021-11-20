@@ -1,9 +1,9 @@
 const Discord = require("discord.js")
 
-const chessState = require('./chessBoard.js')
+const chessState = require('../chess/chessBoard')
 
-const { parseChessMove, parseChessCoord } = require('./util.js')
-const { pieces } = require('./images.js')
+const { parseChessMove, parseChessCoord } = require('../chess/util')
+const { pieces } = require('../chess/images')
 
 const commandPrefix = 'c!'
 const piecesWithNone = pieces.concat('none')
@@ -36,8 +36,8 @@ module.exports = {
     message.channel.send("♟ Match ended by **"+message.author.username+"**. Latest result can be observed from the latest board image!")
   },
 
-  help: message => {
-    message.channel.send({ embed: new Discord.MessageEmbed()
+  h: message => {
+    message.channel.send({ embeds: [new Discord.MessageEmbed()
       .setColor('#DD6E0F')
       .setTitle('Hanako Chess')
       .setThumbnail('https://i.imgur.com/XZMFwU1.png')
@@ -51,7 +51,7 @@ module.exports = {
         ----------------------------------------` },
       )
       .setTimestamp()
-    })
+    ]})
   },
 
   move: async message => {

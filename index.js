@@ -1,7 +1,4 @@
-console.log(process.version)
-
 const Discord = require('discord.js')
-const Distube = require('distube')
 
 //const mongoose = require('mongoose')
 
@@ -12,9 +9,8 @@ const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD
 
 const {loadImages} = require('./chess/images')
 const chessState = require('./chess/chessBoard')
-const chessCommands = require('./chess/commands')
 
-let config = require('./config.json')
+const config = require('./config.json')
 
 client.on('ready', () => {
   console.log('im on')
@@ -26,7 +22,8 @@ client.on('messageCreate', async message => {
   
   const prefix = config.prefix
   var prefixed = false
-  message.content.split(' && ').map(async thread => {
+
+  message.content.split(' && ').forEach(async thread => {
     const main = thread.replace(prefix + ' ', '')
     const subcontents = main.split(' ')
     prefixed = thread.substr(0, prefix.length).toLowerCase()
@@ -34,18 +31,17 @@ client.on('messageCreate', async message => {
     const cmd = main.split(/ +/g).shift().toLowerCase()
     const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
 
-    if (prefixed == 'c!') {
-      const command = chessCommands[cmd] || chessCommands.move
-      if (command) return command(message, subcontents)
-    } else if (prefixed == prefix || prefixed) {
-      prefixed = true
-      await fs.readdir('./modules', function (_, files) {        
-        files.forEach(async function (file) {
-          const command = require('./modules/'+file)[cmd]
-          if (command) command(message, main, arg2)
-        })
-      })
+    const module = function() {
+        if (prefixed == prefix || prefixed == 'c!' || prefixed) {
+          prefixed = true
+          return fs.readdirSync('./modules').find(module => {
+              const command = require('./modules/' + module)[cmd]
+              if (command) return command
+          })
+        }
     }
+
+    await module()? require('./modules/' + module())[cmd](message, main, arg2) : message.channel.send({content: '⭕ Command not found sob'}).then(m => setTimeout(() => m.delete(), 5000) )
   })
 });
 

@@ -1,8 +1,8 @@
 const fs = require('fs')
 const nodeCanvas =  require('canvas')
 
-const { makeSimpleErrorHandler } = require('./util.js')
-const { images } = require('./images.js')
+const { makeSimpleErrorHandler } = require('./util')
+const { images } = require('./images')
 
 let board;
 
@@ -42,7 +42,7 @@ const renderBoard = async () => {
 
     const buf = canvas.toBuffer('image/png', { compressionLevel: 9 })
     const fileName = 'comg.png' //Date.now() + '.png';
-    fs.writeFile(fileName, buf, function(err, result){})
+    fs.writeFile(fileName, buf, function(_, _){})
     return fileName
 };
 

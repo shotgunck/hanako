@@ -1,4 +1,4 @@
-const { MessageEmbed, Permissions } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 const axios = require('axios')
 const { pagination } = require('reconlx')
 
@@ -11,87 +11,87 @@ const lock = false
 
 module.exports = {
     chess: async message => {
-        message.channel.send({content: '♟ Prefix for chess is specified as `c!`, type `c! help` for more ight'})
+        message.channel.send({content: '♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight'})
     },
     
     help: async message => {
-        //return message.channel.send({content: 'Help page under rework uwu'})
+      //return message.channel.send({content: 'Help page is under rework comg'})
          
-        const pages = [new MessageEmbed()
-            .setColor('#DD6E0F')
-            .setTitle('Hanako')
-            .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
-            .setDescription('created by shotgun#4239, written in JS')
-            .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
-            .addFields(
-            { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
+      const pages = [new MessageEmbed()
+        .setColor('#DD6E0F')
+        .setTitle('Hanako')
+        .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
+        .setDescription('created by shotgun#4239, written in JS')
+        .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
+        .addFields(
+          { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
             -------------------------------
-            **help**‎ ‎ ‎ ‎ - Show this message
-            **prefix**‎ ‎ - Set a new prefix for me
+            **help**‎ ‎ ‎ ‎ - Show this message
+            **prefix**‎ ‎ - Set a new prefix for me
     
-            **chess**‎ ‎ ‎ - Info about chess
-            **compile**‎ - Code compiler
-            **mcskin**‎ ‎ - Show skin of a Minecraft player (not good rn)
-            **achieve**‎ - Achievement got!
-            **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
-            **gato**‎ ‎ ‎ ‎ - Random gato picture
-            **wa**‎ ‎ ‎ ‎ ‎ ‎ - wa?!
+            **chess**‎ ‎ ‎ - Info about chess
+            **compile**‎ - Code compiler
+            **mcskin**‎ ‎ - Show skin of a Minecraft player (not good rn)
+            **achieve**‎ - Achievement got!
+            **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
+            **gato**‎ ‎ ‎ ‎ - Random gato picture
+            **wa**‎ ‎ ‎ ‎ ‎ ‎ - wa?!
             -------------------------------
             `
-            }),
-        new MessageEmbed()
-          .setColor('#DD6E0F')
-            .setTitle('🎶 Music commands')
-            .setDescription('Play some music in voice channels igh')
-            .addFields(
-            { name: '​', value: `
+          }),
+      new MessageEmbed()
+        .setColor('#DD6E0F')
+        .setTitle('🎶 Music commands')
+        .setDescription('Play some music in voice channels igh')
+        .addFields(
+          { name: '​', value: `
             -------------------------------
-            **filter**‎ - Set a sound filter
-            **find**‎ ‎ ‎ - Give me a song lyrics and I'll find the song
-            **lyrics**‎ - Display the current sound's lyrics
-            **play**‎ ‎ ‎ - Play a sound or add into queue
-            **pause**‎ ‎ - Pause the current queue (unstable)
-            **resume**‎ ‎- Resume the current queue (unstable)
-            **remove**‎ - Remove a song in given position from the queue
-            **queue**‎ ‎ - Show the current queue
-            **skip**‎ ‎ ‎ - Skip to the next sound in queue
-            **stop**‎ ‎ ‎ - Stop the queue
-            **volume**‎ - Set the bot's volume
+            **filter**‎ - Set a sound filter
+            **find**‎ ‎ ‎ - Give me a song lyrics and I'll find the song
+            **lyrics**‎ - Display the current sound's lyrics
+            **play**‎ ‎ ‎ - Play a sound or add into queue
+            **pause**‎ ‎ - Pause the current queue (unstable)
+            **resume**‎ ‎- Resume the current queue (unstable)
+            **remove**‎ - Remove a song in given position from the queue
+            **queue**‎ ‎ - Show the current queue
+            **skip**‎ ‎ ‎ - Skip to the next sound in queue
+            **stop**‎ ‎ ‎ - Stop the queue
+            **volume**‎ - Set the bot's volume
             -------------------------------
             `
-            })
-            .setTimestamp(),
+          })
+        .setTimestamp(),
             
-        new MessageEmbed()
-          .setColor('#DD6E0F')
-            .setTitle('♐ Moderation commands')
-            .setDescription('CommandCleanup down sometimes')
-            .addFields(
-            { name: '​', value: `
+      new MessageEmbed()
+        .setColor('#DD6E0F')
+        .setTitle('♐ Moderation commands')
+        .setDescription('CommandCleanup down sometimes')
+        .addFields(
+          { name: '​', value: `
             -------------------------------
             **purge** - Purge messages
             -------------------------------
             `
-            })
-            .setTimestamp()
-            .setFooter('ight have fun')
-        ]
+          })
+        .setTimestamp()
+        .setFooter('ight have fun')
+      ]
 
-        pagination({
-          author: message.author,
-          channel: message.channel,
-          embeds: pages,
-          button: [
-            {name: 'previous', emoji: '⬅', style: 'DANGER'},
-            {name: 'next', emoji: '➡', style: 'PRIMARY'}
-          ],
-          time: 10000
-        })
+      pagination({
+        author: message.author,
+        channel: message.channel,
+        embeds: pages,
+        button: [
+          {name: 'previous', emoji: '⬅', style: 'DANGER'},
+          {name: 'next', emoji: '➡', style: 'PRIMARY'}
+        ],
+        time: 20000
+      }).catch(message.reply({content: '🏥 Interaction failed, try request again pls'}))
     },
     
     prefix: async (message, _, arg2) => {
         if (arg2) {
-            if (arg2 === 'c!') return message.channel.send({content: '⚠♟ `c!` is preserved for chess game! Type `c! help` for more,.'})
+            if (arg2 === 'c!') return message.channel.send({content: '⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.'})
             
             config.prefix = arg2
             prefix = config.prefix
@@ -112,7 +112,7 @@ module.exports = {
       
       const amount = parseInt(arg2) + 1
       if (amount > 0 && amount < 101) {
-        message.channel.bulkDelete(amount, true).then(res => {
+        message.channel.bulkDelete(amount, true).then(_ => {
           message.channel.send({embeds: [new MessageEmbed()
             .setColor('#AA11EE')
             .setDescription('♐ Purged '+(amount - 1)+' messages!')
