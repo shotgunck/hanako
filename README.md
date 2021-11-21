@@ -14,7 +14,7 @@ A multi-purpose Discord bot written in JavaScript
 ```bash
 !play && ! play && play
 
-.ping && purge 10 && . ms hypixel.net
+.chess && purge 10 && . ms hypixel.net
 ```
 
 ## To-do
