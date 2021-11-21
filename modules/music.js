@@ -89,7 +89,7 @@ module.exports = {
         distube.voices.join(message.member.voice.channel)
         distube.voices.get(message).setSelfDeaf(true)
 
-        await distube.play(message, main.substring(4, main.length))
+        await distube.play(message, main.replace(/play /gm, ''))
     },
 
     pause: async message => {
@@ -184,7 +184,7 @@ module.exports = {
         if (!message.member.voice.channel) return message.channel.send('🙄 Join voice channel first pls')
         if (!distube.getQueue(message)) return message.channel.send('No song around tho,,')
         
-        let level = parseInt(arg2)
+        const level = parseInt(arg2)
         if (!arg2) {
             message.channel.send('⚠ Select a volume level mf!!')
         } else if (level < 301 && level > -1) {

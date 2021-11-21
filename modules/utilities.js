@@ -31,7 +31,7 @@ module.exports = {
     
             **chess**‎ ‎ ‎ - Info about chess
             **compile**‎ - Code compiler
-            **mcskin**‎ ‎ - Show skin of a Minecraft player (not good rn)
+            **mcskin**‎ ‎ - Show skin of a Minecraft player
             **achieve**‎ - Achievement got!
             **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
             **gato**‎ ‎ ‎ ‎ - Random gato picture
@@ -50,8 +50,8 @@ module.exports = {
             **find**‎ ‎ ‎ - Give me a song lyrics and I'll find the song
             **lyrics**‎ - Display the current sound's lyrics
             **play**‎ ‎ ‎ - Play a sound or add into queue
-            **pause**‎ ‎ - Pause the current queue (unstable)
-            **resume**‎ ‎- Resume the current queue (unstable)
+            **pause**‎ ‎ - Pause the current queue
+            **resume**‎ ‎- Resume the current queue
             **remove**‎ - Remove a song in given position from the queue
             **queue**‎ ‎ - Show the current queue
             **skip**‎ ‎ ‎ - Skip to the next sound in queue
@@ -69,7 +69,9 @@ module.exports = {
         .addFields(
           { name: '​', value: `
             -------------------------------
+
             **purge** - Purge messages
+            
             -------------------------------
             `
           })
