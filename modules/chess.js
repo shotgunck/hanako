@@ -14,7 +14,7 @@ module.exports = {
       return message.reply('There\'s a match going on bru, spectate them')
     }
 
-    message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => m.delete({timeout: 10001}))
+    message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => m.delete({timeout: 10000}))
 
     message.react('♟')
     
@@ -33,7 +33,7 @@ module.exports = {
 
   end: message => {
     chessState.board = null
-    message.channel.send("♟ Match ended by **"+message.author.username+"**. Latest result can be observed from the latest board image!")
+    message.channel.send('♟ Match ended by **'+message.author.username+'**. Latest result can be observed from the latest board image!')
   },
 
   h: message => {
@@ -44,7 +44,7 @@ module.exports = {
       .addFields(
         { name: '​', value: '♟ **Prefix:** `c!`\n'+`
         ----------------------------------------
-        **c! help** - Show this message
+        **c! h** - Show this message
         **c! new [who] [who]** - New match, who vs who
         **c! ax by** - Move the piece at position`+' `ax` '+'to position'+' `by`'+`
         **c! end** - End the current match

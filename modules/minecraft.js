@@ -29,9 +29,9 @@ module.exports = {
     },
 
     ms: async (message, _, arg2) => {
-        if (!arg2) return message.channel.send({content: '💢 Pls provide a Minecraft server bru'})
+        if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
         var notCharacter = arg2.search(/[^\w.]/gm) == -1? true : false
-        message.channel.send({content: '🕹 Getting server info, please wait..'}).then(m => setTimeout(() => m.delete(), 800))
+        message.channel.send('🕹 Getting server info, please wait..').then(m => setTimeout(() => m.delete(), 800))
         
 		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
         .then(res => {
@@ -40,7 +40,7 @@ module.exports = {
             message.channel.send({ embeds: [new Discord.MessageEmbed() 
             	.setColor('#DD6E0F')
             	.setTitle('\\🔴 '+arg2+' is offline')
-                .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
+              .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.]/gm, '')+'`'))
             	.setTimestamp()
             ]})
             } else if (data.online) {
@@ -78,6 +78,6 @@ module.exports = {
                 ]}) 
         	}
       	})
-		.catch(err => message.channel.send({content: 'API error, pls wait for 5 minutes before trying again. | '+err}))
+		    .catch(err => message.channel.send('API error, pls wait for 5 minutes before trying again. | '+err))
     }
 }

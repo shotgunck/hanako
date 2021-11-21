@@ -1,14 +1,11 @@
 const Discord = require('discord.js')
 
-//const mongoose = require('mongoose')
-
+const mongoose = require('mongoose')
 const fs = require('fs')
+
 require('dotenv').config()
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
-
-const {loadImages} = require('./chess/images')
-const chessState = require('./chess/chessBoard')
 
 const config = require('./config.json')
 
@@ -34,23 +31,26 @@ client.on('messageCreate', async message => {
     const module = function() {
         if (prefixed == prefix || prefixed == 'c!' || prefixed) {
           prefixed = true
-          return fs.readdirSync('./modules').find(module => {
-              const command = require('./modules/' + module)[cmd]
+          return fs.readdirSync('./modules').find(modul => {
+              const command = require('./modules/' + modul)[cmd]
               if (command) return command
           })
         }
-    }
+    }()
 
-    await module()? require('./modules/' + module())[cmd](message, main, arg2) : message.channel.send({content: '⭕ Command not found sob'}).then(m => setTimeout(() => m.delete(), 5000) )
+    if (!module) return message.channel.send('⭕ Command not found sob').then(m => setTimeout(() => m.delete(), 5000) )
+    await require('./modules/' + module)[cmd](message, main, arg2)
   })
 });
 
 (async () => {
-    await Promise.all([loadImages(), chessState.loadBoard()])
-    require('http').createServer((_, res) => res.end('hanako ight')).listen()
-    require('./modules/music').init(client)
-
-    //mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
+    await Promise.all([
+      require('./chess/images').loadImages(),
+      require('./chess/chessBoard').loadBoard(),
+      require('http').createServer((_, res) => res.end('hanako ight')).listen(),
+      require('./modules/music').init(client),
+      mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
+    ])
     
     client.login(process.env.BOT_TOKEN)
 })()

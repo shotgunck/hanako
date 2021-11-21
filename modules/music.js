@@ -17,26 +17,26 @@ module.exports = {
       distube = new Distube.default(client, {emitNewSongOnly: true})
 
       distube
-        .on('finish', queue => queue.textChannel.send({content: '😴 **Queue ended.**'}).then(m => setTimeout(() => m.delete(), 5000)))
-        .on('playSong', (queue, song) => queue.textChannel.send({content: '🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!'}).then(m => setTimeout(() => m.delete(), song.duration * 1000)))
+        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(), 5000)))
+        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)))
         .on('addSong', (queue, song) => {
-          if (queue.songs.length >= 2) queue.textChannel.send({content: `**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`})
+          if (queue.songs.length >= 2) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
         })
-        .on("error", (channel, err) => channel.send({content: "❌ Ah shite error: `" + err + "`"}));
+        .on("error", (channel, err) => channel.send("❌ Ah shite error: `" + err + "`"));
     },
 
     filter: async(message, main, arg2) => {
-      if (!distube.getQueue(message)) return message.channel.send({content:'\\🌫 Oui play some sound to set filter ight' })
-      if (!arg2) return message.channel.send({content: '🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\n\nExample: `'+config.prefix+' filter reverse | oi filter 3d echo`\nMention the filter type again to turn that filter off uwu' })
+      if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
+      if (!arg2) return message.channel.send('🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\n\nExample: `'+config.prefix+' filter reverse | oi filter 3d echo`\nMention the filter type again to turn that filter off uwu')
 
       const filters = main.substr(7, main.length).match(/\w+/gm)
       
       const filter = await distube.setFilter(message, filters)
-      return message.channel.send({content: '🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,'})
+      return message.channel.send('🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,')
     },
 
     find: async(message, main, arg2) => {
-      if (!arg2) return message.channel.send({content: '🔎 Provide some lyrics!! Example: `'+config.prefix+' find how you want me to`'})
+      if (!arg2) return message.channel.send('🔎 Provide some lyrics!! Example: `'+config.prefix+' find how you want me to`')
 
       findSong.search(main.substr(4, main.length))
       .then(res => {
@@ -53,12 +53,12 @@ module.exports = {
               .setImage(res.songArtImage)
           ]})
       })
-      .catch(e => message.channel.send({content: '❌ Request error! ' + e}))
+      .catch(e => message.channel.send('❌ Request error! ' + e))
     },
 
     lyrics: async(message) => {
       let queue = distube.getQueue(message)
-      if (!queue) return message.channel.send({content: '🕳 Play a sound so I can get the lyrics aight'})
+      if (!queue) return message.channel.send('🕳 Play a sound so I can get the lyrics aight')
 
       let data = queue.songs[0].name.split(' - ')
       const songName = (!data[1]? data[0] : data[1]).replace(/\([^)]*\)/gm, '');
@@ -73,18 +73,18 @@ module.exports = {
       
       getLyrics(options).then(res => {
         const lyrics = util.msgSplit(res)
-        message.channel.send({content: !lyrics ? '⭕ No lyrics found for the song sob' : lyrics[0]+lyrics[1]})
-      }).catch(err => message.channel.send({content: err}))
+        message.channel.send(!lyrics ? '⭕ No lyrics found for the song sob' : lyrics[0]+lyrics[1])
+      }).catch(err => message.channel.send(err))
     },
 
     play: async(message, main, arg2) => {
         const voiceChannel = message.member.voice.channel
-        if (!voiceChannel) return message.channel.send({content: 'Enter a voice channel pls!'})
+        if (!voiceChannel) return message.channel.send('Enter a voice channel pls!')
  
         const permissions = voiceChannel.permissionsFor(message.client.user)
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send({content: 'I don\'t have the permission to join or speak in the channel 😭'})
+        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
         
-        if (!arg2) return message.channel.send({content: 'Play what mf,.,'})
+        if (!arg2) return message.channel.send('Play what mf,.,')
 
         distube.voices.join(message.member.voice.channel)
         distube.voices.get(message).setSelfDeaf(true)
@@ -95,17 +95,17 @@ module.exports = {
     pause: async message => {
         const queue = distube.getQueue(message)
         
-        if (!message.member.voice.channel) return message.channel.send({content: '🤏 You have to be listening first alr'})
-        if (!queue) return message.channel.send({content: '🗑 There are no sound around,.'})
-        if (queue.paused) return message.channel.send({content: '🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!'})
+        if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
+        if (!queue) return message.channel.send('🗑 There is no sound around,.')
+        if (queue.paused) return message.channel.send('🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!')
 
         await distube.pause(message)
-        message.channel.send({content: '⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.'})
+        message.channel.send('⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.')
     },
     
     queue: async (message) => {
         let queue = distube.getQueue(message)
-        if (!queue) return message.channel.send({content: '🕳 Queue empty..,'})
+        if (!queue) return message.channel.send('🕳 Queue empty..,')
 
         let q = ' '
         await queue.songs.map((song, index) => {
@@ -121,77 +121,77 @@ module.exports = {
     },
 
     repeat: async (message, _, arg2) => {
-        if (!message.member.voice.channel) return message.channel.send({content: '🙄 Join VC to repeat listening.,'})
-        if (!distube.getQueue(message)) return message.channel.send({content: '🕳 No song currently,,'})
+        if (!message.member.voice.channel) return message.channel.send('🙄 Join VC to repeat listening.,')
+        if (!distube.getQueue(message)) return message.channel.send('🕳 No song currently,,')
         
         if (!arg2 || arg2 === 'on') {
             await distube.setRepeatMode(message, 1)
-            message.channel.send({content: '🔄 Current song is on repeat ight!'})
+            message.channel.send('🔄 Current song is on repeat ight!')
         } else if (arg2 === 'off') {
             await distube.setRepeatMode(message, 0)
-            message.channel.send({content: '🔄 Repeat mode is now `off`.'})
+            message.channel.send('🔄 Repeat mode is now `off`.')
         } else if (arg2 === 'q' || arg2 === 'queue') {
             await distube.setRepeatMode(message, 2)
-            message.channel.send({content: '🔄 Current queue is now on repeat!'})
+            message.channel.send('🔄 Current queue is now on repeat!')
         }  
     },
     
     remove: async(message, _, arg2) => {
         let queue = distube.getQueue(message)
-        if (!queue) return message.channel.send({content: '🥔 Queue is empty rn so no remove!'})
-        if (!arg2) return message.channel.send({content: '🆔 Select a song position to remove from the queue!'})
+        if (!queue) return message.channel.send('🥔 Queue is empty rn so no remove!')
+        if (!arg2) return message.channel.send('🆔 Select a song position to remove from the queue!')
 
         const index = parseInt(arg2) - 1
         const toRemove = queue.songs[index].name
         
         await queue.songs.splice(index, 1)
-        message.channel.send({content: '💨 **'+toRemove+'** has been removed from queue oki'})
+        message.channel.send('💨 **'+toRemove+'** has been removed from queue oki')
     },
 
     resume: async(message) => {
         let queue = distube.getQueue(message)
 
-        if (!message.member.voice.channel) return message.channel.send({content: '🤏 You have to be listening first alr'})
-        if (!queue) return message.channel.send({content: '🗑 No sound to resume,.'})
-        if (!queue.paused) return message.channel.send({content: '🙄 Queue is already playing trl'})
+        if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
+        if (!queue) return message.channel.send('🗑 No sound to resume,.')
+        if (!queue.paused) return message.channel.send('🙄 Queue is already playing trl')
 
         await distube.resume(message)
-        message.channel.send({content: '⏯ Queue resumed!'}).then(m => setTimeout(() => m.delete, 5000))
+        message.channel.send('⏯ Queue resumed!').then(m => setTimeout(() => m.delete, 5000))
     },
 
     stop: async (message) => {
-        if (!message.member.voice.channel) return message.channel.send({content: '🤏 Can\'t stop me, u need to be in the channel!'})
-        if (!distube.getQueue(message)) return message.channel.send({content: '🗑 There are no songs around,.'})
+        if (!message.member.voice.channel) return message.channel.send('🤏 Can\'t stop me, u need to be in the channel!')
+        if (!distube.getQueue(message)) return message.channel.send('🗑 There are no songs around,.')
 
         await distube.stop(message)
-        message.channel.send({content: '😴 All sounds have stopped and queue has been cleared. I\'m out,.,'})
+        message.channel.send('😴 All sounds have stopped and queue has been cleared. I\'m out,.,')
     },
 
     skip: async (message) => {
-        if (!message.member.voice.channel) return message.channel.send({content: '🙄 You\'re not listening..,'})
-        if (!distube.getQueue(message)) return message.channel.send({content: 'No song to skip,, Play some!!'})
+        if (!message.member.voice.channel) return message.channel.send('🙄 You\'re not listening..,')
+        if (!distube.getQueue(message)) return message.channel.send('No song to skip,, Play some!!')
         
         try {
             await distube.skip(message)
-            message.channel.send({content: '⏯ **Skipped!**'})
+            message.channel.send('⏯ **Skipped!**')
         } catch(_) {
             await distube.stop(message)
-            message.channel.send({content: '⏯ There\'s no song left in queue so I\'ll stop, bai!!'})
+            message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
         }
     },
 
     volume: async (message, _, arg2) => {
-        if (!message.member.voice.channel) return message.channel.send({content: '🙄 Join VC to change volume!'})
-        if (!distube.getQueue(message)) return message.channel.send({content: 'No song around tho,,'})
+        if (!message.member.voice.channel) return message.channel.send('🙄 Join voice channel first pls')
+        if (!distube.getQueue(message)) return message.channel.send('No song around tho,,')
         
         let level = parseInt(arg2)
         if (!arg2) {
-            message.channel.send({content: '⚠ Select a volume level mf!!'})
+            message.channel.send('⚠ Select a volume level mf!!')
         } else if (level < 301 && level > -1) {
             await distube.setVolume(message, level)
-            message.channel.send({content: '🔢 Oki volume has been set to `'+level+'`'})
+            message.channel.send('🔢 Oki volume has been set to `'+level+'`')
         } else {
-            message.channel.send({content: '💢 Volume can only be set from `0` to `300`'})
+            message.channel.send('💢 Volume can only be set from `0` to `300`')
         }
     }
 }

@@ -11,11 +11,11 @@ const lock = false
 
 module.exports = {
     chess: async message => {
-        message.channel.send({content: '♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight'})
+        message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight')
     },
     
     help: async message => {
-      //return message.channel.send({content: 'Help page is under rework comg'})
+      //return message.channel.send('Help page is under rework comg')
          
       const pages = [new MessageEmbed()
         .setColor('#DD6E0F')
@@ -86,29 +86,29 @@ module.exports = {
           {name: 'next', emoji: '➡', style: 'PRIMARY'}
         ],
         time: 20000
-      }).catch(message.reply({content: '🏥 Interaction failed, try request again pls'}))
+      }).catch(message.reply('🏥 Interaction failed, try request again pls'))
     },
     
     prefix: async (message, _, arg2) => {
         if (arg2) {
-            if (arg2 === 'c!') return message.channel.send({content: '⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.'})
+            if (arg2 == 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
             
             config.prefix = arg2
             prefix = config.prefix
 
-            message.channel.send({content: '❗ My prefix is now changed to `'+arg2+'`\n❗ In case you forgot what the prefix is, see what I\'m listening to!'})
+            message.channel.send('❗ My prefix is now changed to `'+arg2+'`\n❗ In case you forgot what the prefix is, see what I\'m listening to!')
             if (arg2 == 'default') {
-                message.channel.send({content: '⚠ Note: it will literally be `default`, **__not__** `oi`.'})
+                message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
             }
             message.client.user.setActivity(prefix + ' help', { type: "LISTENING" })
         } else {
-            message.channel.send({content: 'Current prefix: `'+prefix+'`\nTo change prefix, type `'+prefix+'` prefix [new-prefix]`\n\n❗ In case you forgot what the prefix is,  see what I\'m listening to!'})
+            message.channel.send('Current prefix: `'+prefix+'`\nTo change prefix, type `'+prefix+'` prefix [new-prefix]`\n\n❗ In case you forgot what the prefix is,  see what I\'m listening to!')
         }
     },
 
     purge: async(message, _, arg2) => {
-      if (message.author.id != message.guild.ownerId) return message.reply({content: '♐ Only owner can abuse the command ight'})
-      if (!arg2 || isNaN(arg2)) return message.channel.send({content: '♐ Provide an amount of messages to be purged in number!'})
+      if (message.author.id != message.guild.ownerId) return message.reply('♐ Only owner can abuse the command ight')
+      if (!arg2 || isNaN(arg2)) return message.channel.send('♐ Provide an amount of messages to be purged in number!')
       
       const amount = parseInt(arg2) + 1
       if (amount > 0 && amount < 101) {
@@ -126,7 +126,7 @@ module.exports = {
           ]}).then(m => setTimeout(() => m.delete(), 10000))
         })
       } else {
-        message.channel.send({content: '♐ You can only purge from 1 to 100 messages!'})
+        message.channel.send('♐ You can only purge from 1 to 100 messages!')
       }
     },
 
@@ -142,7 +142,7 @@ module.exports = {
     },
 
     wa: async(message) => {
-      if (lock) return message.channel.send({content: 'noj,,,'})
+      if (lock) return message.channel.send('noj,,,')
       axios.get('https://api.waifu.pics/sfw/waifu')
         .then(res => {
             if (message.channel.nsfw) {
@@ -152,7 +152,7 @@ module.exports = {
                 .setImage(res.data.url)
               ]})
             } else {
-              message.channel.send({content: 'Oui, nsfw channel only!'})
+              message.channel.send('Oui, nsfw channel only!')
             }
         })
     },
