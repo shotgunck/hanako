@@ -18,12 +18,8 @@ module.exports = {
 
       distube
         .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
-        .on('playSong', (queue, song) => {
-          queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000))
-        })
-        .on('addSong', (queue, song) => {
-          if (queue.songs.length >= 2) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
-        })
+        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)))
+        .on('addSong', (queue, song) => queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`))
         .on("error", (channel, err) => channel.send("❌ Ah shite error: `" + err + "`"));
     },
 
@@ -91,9 +87,7 @@ module.exports = {
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
         
         if (!arg2) return message.channel.send('Play what mf,.,')
-
-        console.log(!distube.getQueue(message))
-
+        
         distube.voices.join(message.member.voice.channel)
         distube.voices.get(message).setSelfDeaf(true)
 
