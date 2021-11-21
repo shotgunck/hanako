@@ -20,7 +20,7 @@ client.on('messageCreate', async message => {
   const prefix = config.prefix
   var prefixed = false
 
-  message.content.split(' && ').forEach(async thread => {
+  for (thread of message.content.split(' && ')) {
     prefixed = thread.substring(0, prefix.length).toLowerCase()
     if (prefixed == prefix || prefixed == 'c!' || prefixed) prefixed = true
     else return  
@@ -38,9 +38,9 @@ client.on('messageCreate', async message => {
       }) 
     }()
       
-    if (!module) return message.channel.send('⭕ Command not found sob').then(m => setTimeout(() => m.delete(), 5000) )
-    await require('./modules/' + module)[cmd](message, main, arg2)
-  })
+    if (!module) return
+    await require('./modules/' + module)[cmd](message, main, arg2)  
+  }
 });
 
 (async () => {

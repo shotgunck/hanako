@@ -47,6 +47,7 @@ module.exports = {
                 const ping = data.took
                 const players = data.players
                 const sample = players.sample
+                const desc = data.description
                 let ok = parseInt(ping)
 
                 if (ok > 1000) ok = ping+'ms [WTF]'
@@ -58,7 +59,7 @@ module.exports = {
                 message.channel.send({ embeds: [new Discord.MessageEmbed() 
                 	.setColor('#DD6E0F')
                 	.setTitle('\\🟢 '+arg2+' is online')
-			           	.setDescription(data.description)
+			           	.setDescription(desc.text? desc.text : desc)
 			           	.setThumbnail(data.favicon)
                 	.addFields(
                     	{ name: '​', value: '**🔹 Info: **'+'\n'+

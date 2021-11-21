@@ -17,8 +17,10 @@ module.exports = {
       distube = new Distube.default(client, {emitNewSongOnly: true})
 
       distube
-        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(), 5000)))
-        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)))
+        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
+        .on('playSong', (queue, song) => {
+          queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000))
+        })
         .on('addSong', (queue, song) => {
           if (queue.songs.length >= 2) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
         })
@@ -72,8 +74,12 @@ module.exports = {
       }
       
       getLyrics(options).then(res => {
+        if (!res) return message.reply('Could not find any lyrics for the sound sorry!')
         const lyrics = util.msgSplit(res)
-        message.channel.send(!lyrics ? '⭕ No lyrics found for the song sob' : lyrics[0]+lyrics[1])
+        lyrics.forEach(async lyricPart => {
+          if (!lyricPart || lyricPart.length == 0) return;
+          await message.channel.send(lyricPart)
+        })
       }).catch(err => message.channel.send(err))
     },
 
@@ -85,6 +91,8 @@ module.exports = {
         if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
         
         if (!arg2) return message.channel.send('Play what mf,.,')
+
+        console.log(!distube.getQueue(message))
 
         distube.voices.join(message.member.voice.channel)
         distube.voices.get(message).setSelfDeaf(true)
@@ -114,6 +122,7 @@ module.exports = {
         message.channel.send({ embeds: [new Discord.MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('Current Queue')
+            .setDescription('Total length - `' + queue.formattedDuration+'`')
             .addFields(
               {name: 'Now playing:', value: q},
             ) 
