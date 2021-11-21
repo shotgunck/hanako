@@ -65,7 +65,7 @@ module.exports = {
       new MessageEmbed()
         .setColor('#DD6E0F')
         .setTitle('♐ Moderation commands')
-        .setDescription('CommandCleanup down sometimes')
+        .setDescription('CommandCleanup is down sometimes')
         .addFields(
           { name: '​', value: `
             -------------------------------
@@ -86,7 +86,7 @@ module.exports = {
           {name: 'next', emoji: '➡', style: 'PRIMARY'}
         ],
         time: 20000
-      }).catch(message.reply('🏥 Interaction failed, try request again pls'))
+      })
     },
     
     prefix: async (message, _, arg2) => {
