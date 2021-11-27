@@ -1,25 +1,29 @@
 const Discord = require('discord.js')
 const Distube = require('distube')
+const { SpotifyPlugin } = require('@distube/spotify')
+const { getLyrics } = require('genius-lyrics-api')
+const { pagination } = require('reconlx')
+const lsModule = require('@penfoldium/lyrics-search')
 
 require('dotenv').config()
 
-const lsModule = require('@penfoldium/lyrics-search')
 const findSong = new lsModule(process.env.GENIUS_API)
-const { getLyrics } = require('genius-lyrics-api')
 
 const config = require('../config.json')
-const util = require('./utilities.js')
+const util = require('../helper.js')
 
 var distube
 
 module.exports = {
     init: (client) => {
-      distube = new Distube.default(client, {emitNewSongOnly: true})
+      distube = new Distube.default(client, {emitNewSongOnly: true, plugins: [new SpotifyPlugin()]})
 
       distube
         .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
-        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)))
-        .on('addSong', (queue, song) => queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`))
+        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)).catch(_ => console.log('caught in a purge')))
+        .on('addSong', (queue, song) => {
+          if (queue.songs.length > 1) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
+        })
         .on("error", (channel, err) => channel.send("❌ Ah shite error: `" + err + "`"));
     },
 
@@ -52,6 +56,16 @@ module.exports = {
           ]})
       })
       .catch(e => message.channel.send('❌ Request error! ' + e))
+    },
+
+    jump: async(message, _, arg2) => {
+      const voiceChannel = message.member.voice.channel
+      if (!voiceChannel) return message.channel.send('Enter a voice channel bu')
+
+      if (!arg2) return message.channel.send('🦘 Jump to where?')
+
+      await distube.jump(message, parseInt(arg2)-1).catch(_ => message.channel.send('The given position does not exist!'))
+      message.channel.send('➡ Jumped to position '+arg2+'!')
     },
 
     lyrics: async(message) => {
@@ -106,21 +120,32 @@ module.exports = {
     },
     
     queue: async (message) => {
-        let queue = distube.getQueue(message)
-        if (!queue) return message.channel.send('🕳 Queue empty..,')
+      let queue = distube.getQueue(message), pages = [], q = ''
+      if (!queue) return message.channel.send('🕳 Queue empty..,')
 
-        let q = ' '
-        await queue.songs.map((song, index) => {
-            q = q + `**${index+1}**. [${song.name}](${song.url}) - \`${song.formattedDuration}\`\n` 
-        })
-        message.channel.send({ embeds: [new Discord.MessageEmbed()
-            .setColor('#DD6E0F')
-            .setTitle('Current Queue')
-            .setDescription('Total length - `' + queue.formattedDuration+'`')
-            .addFields(
-              {name: 'Now playing:', value: q},
-            ) 
-        ]}) 
+      await queue.songs.map((song, index) => {
+          q = q + `**${index+1}**. ${song.name} - \`${song.formattedDuration}\`\n` 
+      })
+      const queueList = q.match(/(.*?\n){10}/gm) || [q]
+      for (list of queueList) {
+        pages.push(new Discord.MessageEmbed()
+          .setColor('#DD6E0F')
+          .setTitle('Current Queue')
+          .setDescription('Total length - `'+queue.formattedDuration+'`')
+          .addFields({ name: '​', value: list })
+        )
+      }
+
+      pagination({
+        author: message.author,
+        channel: message.channel,
+        embeds: pages,
+        button: [
+          {name: 'previous', emoji: '⬅', style: 'DANGER'},
+          {name: 'next', emoji: '➡', style: 'PRIMARY'}
+        ],
+        time: 120000
+      })
     },
 
     repeat: async (message, _, arg2) => {
@@ -159,7 +184,7 @@ module.exports = {
         if (!queue.paused) return message.channel.send('🙄 Queue is already playing trl')
 
         await distube.resume(message)
-        message.channel.send('⏯ Queue resumed!').then(m => setTimeout(() => m.delete, 5000))
+        message.channel.send('⏯ Queue resumed!')
     },
 
     stop: async (message) => {
@@ -174,13 +199,11 @@ module.exports = {
         if (!message.member.voice.channel) return message.channel.send('🙄 You\'re not listening..,')
         if (!distube.getQueue(message)) return message.channel.send('No song to skip,, Play some!!')
         
-        try {
-            await distube.skip(message)
-            message.channel.send('⏯ **Skipped!**')
-        } catch(_) {
-            await distube.stop(message)
-            message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
-        }
+        await distube.skip(message).catch(_ => {
+          distube.stop(message)
+          return message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
+        })
+        message.channel.send('⏯ **Skipped!**')
     },
 
     volume: async (message, _, arg2) => {

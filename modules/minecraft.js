@@ -30,9 +30,9 @@ module.exports = {
 
     ms: async (message, _, arg2) => {
         if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
-        var notCharacter = arg2.search(/[^\w.:]/gm) == -1? true : false
+        var notCharacter = arg2.search(/[^\w.:]/gm) == -1? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `'+arg2.replace(/[^\w.:]/gm, '')+'`'
         message.channel.send('🕹 Getting server info, please wait..').then(m => setTimeout(() => m.delete(), 800))
-        
+
 		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
         .then(res => {
             const data = res.data
@@ -40,7 +40,7 @@ module.exports = {
               message.channel.send({ embeds: [new Discord.MessageEmbed() 
             	  .setColor('#DD6E0F')
             	  .setTitle('\\🔴 '+arg2+' is offline')
-                .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n'+(notCharacter ? '🕐 Try again in 5 minutes!' :  '🔹 Did you mean: `'+arg2.replace(/[^\w.:]/gm, '')+'`'))
+                .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n' + notCharacter)
             	  .setTimestamp()
               ]})
             } else if (data.online) {
@@ -59,7 +59,7 @@ module.exports = {
                 message.channel.send({ embeds: [new Discord.MessageEmbed() 
                 	.setColor('#DD6E0F')
                 	.setTitle('\\🟢 '+arg2+' is online')
-			           	.setDescription(desc.text? desc.text : desc)
+			           	.setDescription(desc.extra? desc.extra[1].text : (desc.text? desc.text : desc))
 			           	.setThumbnail(data.favicon)
                 	.addFields(
                     	{ name: '​', value: '**🔹 Info: **'+'\n'+
