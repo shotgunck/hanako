@@ -1,5 +1,4 @@
 const Discord = require('discord.js')
-const { DiscordTogether } = require('discord-together')
 
 const axios = require('axios')
 const mongoose = require('mongoose')
@@ -8,7 +7,6 @@ const fs = require('fs')
 require('dotenv').config()
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
-client.discordTogether = new DiscordTogether(client)
 
 const config = require('./config.json')
 
@@ -50,8 +48,9 @@ client.on('messageCreate', async message => {
     await Promise.all([
       require('./chess/images').loadImages(),
       require('./chess/chessBoard').loadBoard(),
-      require('http').createServer((_, res) => res.end('hanako ight')).listen(),
       require('./modules/music').init(client),
+
+      require('http').createServer((_, res) => res.end('hanako ight')).listen(),
       mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
     ])
     

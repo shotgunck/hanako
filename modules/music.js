@@ -16,10 +16,10 @@ var distube
 
 module.exports = {
     init: (client) => {
-      distube = new Distube.default(client, {emitNewSongOnly: true, plugins: [new SpotifyPlugin()]})
+      distube = new Distube.default(client, {emitNewSongOnly: true, nsfw: true, plugins: [new SpotifyPlugin()], youtubeDL: false})
 
       distube
-        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
+        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)).catch(e => console.log(e)))
         .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)).catch(_ => console.log('caught in a purge')))
         .on('addSong', (queue, song) => {
           if (queue.songs.length > 1) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
