@@ -5,11 +5,51 @@ const { pagination } = require('reconlx')
 require('dotenv').config()
 
 const config = require('../config.json')
+const helper = require('../helper')
 
 let prefix = config.prefix
 const lock = false
 
 module.exports = {
+    bonding: async (message, _, arg2) => {
+      const app = helper.bondapp[arg2]
+      if (!arg2 || !app) return message.channel.send('💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
+      const channel = message.member.voice.channel
+        if (!channel) return message.channel.send('To bond, some of yall must join voice channels oki')
+        if (!channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.channel.send('I need the create invite permission pls')
+
+        const data = JSON.stringify({
+                max_age: 86400,
+                max_uses: 0,
+                target_application_id: app,
+                target_type: 2,
+                temporary: false,
+                validate: null
+          })
+        const headers = {
+              "Authorization": `Bot ${process.env.BOT_TOKEN}`,
+              "Content-Type": "application/json"
+          }
+        axios.post(`https://discord.com/api/v8/channels/${channel.id}/invites`, data, {headers}).then(res => {
+          const invite = res.data
+          if (invite.error || !invite.code) return message.channel.send('Can\'t bond rn, prob there\'s error or invalid code,,')
+
+          message.channel.send({embeds: [new MessageEmbed()
+            .setColor('#DD6e0F')
+            .setTitle('💕'+invite.guild.name+'\'s bonding time uwu')
+            .setDescription(`Selected activity: ${invite.target_application.name}`)
+            .addFields(
+              {name: invite.target_application.description || '(no description for this activity, but I assume youtube so have fun times watching!)', value: '​'},
+              {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
+            )
+            .setFooter('ight have fun')
+            .setTimestamp()
+          ]})
+        }).catch(e => {
+            message.channel.send('💔Cannot bond cus error :( `'+e+'`');
+        })
+    },
+
     chess: async message => {
         message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight')
     },

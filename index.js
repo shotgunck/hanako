@@ -1,11 +1,14 @@
 const Discord = require('discord.js')
+const { DiscordTogether } = require('discord-together')
 
+const axios = require('axios')
 const mongoose = require('mongoose')
 const fs = require('fs')
 
 require('dotenv').config()
 
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
+client.discordTogether = new DiscordTogether(client)
 
 const config = require('./config.json')
 
@@ -37,7 +40,7 @@ client.on('messageCreate', async message => {
         if (command) return command
       }) 
     }()
-      
+
     if (!module) return
     await require('./modules/' + module)[cmd](message, main, arg2)  
   }
