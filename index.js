@@ -1,6 +1,5 @@
 const Discord = require('discord.js')
 
-const axios = require('axios')
 const mongoose = require('mongoose')
 const fs = require('fs')
 
@@ -19,28 +18,26 @@ client.on('messageCreate', async message => {
   if (message.author.bot) return
   
   const prefix = config.prefix
-  var prefixed = false
+  const prefixed = message.content.substring(0, prefix.length).toLowerCase()
 
-  for (thread of message.content.split(' && ')) {
-    prefixed = thread.substring(0, prefix.length).toLowerCase()
-    if (prefixed == prefix || prefixed == 'c!' || prefixed) prefixed = true
-    else return  
-    
-    const main = thread.replace(RegExp(prefix, 'gm'), '').replace(/^\s/gm, '')
-    const subcontents = main.split(' ')
+  if (prefixed == prefix || prefixed == 'c!') {
+      for (thread of message.content.split(' && ')) {   
+      const main = thread.replace(RegExp(prefix, 'gm'), '').replace(/^\s/gm, '')
+      const subcontents = main.split(' ')
 
-    const cmd = main.split(/ +/g).shift().toLowerCase()
-    const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
+      const cmd = main.split(/ +/g).shift().toLowerCase()
+      const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
 
-    const module = function() {
-      return fs.readdirSync('./modules').find(modul => {
-        const command = require('./modules/' + modul)[cmd]
-        if (command) return command
-      }) 
-    }()
+      const module = function() {
+        return fs.readdirSync('./modules').find(modul => {
+          const command = require('./modules/' + modul)[cmd]
+          if (command) return command
+        }) 
+      }()
 
-    if (!module) return
-    await require('./modules/' + module)[cmd](message, main, arg2)  
+      if (!module) return
+      await require('./modules/' + module)[cmd](message, main, arg2)  
+    }
   }
 });
 

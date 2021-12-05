@@ -11,43 +11,46 @@ let prefix = config.prefix
 const lock = false
 
 module.exports = {
-    bonding: async (message, _, arg2) => {
+    bond: async (message, _, arg2) => {
       const app = helper.bondapp[arg2]
-      if (!arg2 || !app) return message.channel.send('💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
       const channel = message.member.voice.channel
-        if (!channel) return message.channel.send('To bond, some of yall must join voice channels oki')
-        if (!channel.permissionsFor(message.guild.me).has("CREATE_INSTANT_INVITE")) return message.channel.send('I need the create invite permission pls')
 
-        const data = JSON.stringify({
-                max_age: 86400,
-                max_uses: 0,
-                target_application_id: app,
-                target_type: 2,
-                temporary: false,
-                validate: null
-          })
-        const headers = {
-              "Authorization": `Bot ${process.env.BOT_TOKEN}`,
-              "Content-Type": "application/json"
-          }
-        axios.post(`https://discord.com/api/v8/channels/${channel.id}/invites`, data, {headers}).then(res => {
-          const invite = res.data
-          if (invite.error || !invite.code) return message.channel.send('Can\'t bond rn, prob there\'s error or invalid code,,')
+      if (!channel) return message.channel.send('💔To bond, some of yall must join voice channels oki')
+      if (!channel.permissionsFor(message.guild.me).has('CREATE_INSTANT_INVITE')) return message.channel.send('💕I need the create invite permission pls')
 
-          message.channel.send({embeds: [new MessageEmbed()
-            .setColor('#DD6e0F')
-            .setTitle('💕'+invite.guild.name+'\'s bonding time uwu')
-            .setDescription(`Selected activity: ${invite.target_application.name}`)
-            .addFields(
-              {name: invite.target_application.description || '(no description for this activity, but I assume youtube so have fun times watching!)', value: '​'},
-              {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
-            )
-            .setFooter('ight have fun')
-            .setTimestamp()
-          ]})
-        }).catch(e => {
-            message.channel.send('💔Cannot bond cus error :( `'+e+'`');
-        })
+      if (!arg2 || !app) return message.channel.send('💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
+
+      const data = JSON.stringify({
+          max_age: 86400,
+          max_uses: 0,
+          target_application_id: app,
+          target_type: 2,
+          temporary: false,
+          validate: null
+      })
+      const headers = {
+          "Authorization": `Bot ${process.env.BOT_TOKEN}`,
+          "Content-Type": "application/json"
+      }
+      
+      axios.post(`https://discord.com/api/v8/channels/${channel.id}/invites`, data, {headers}).then(res => {
+        const invite = res.data
+        if (invite.error || !invite.code) return message.channel.send('💔Can\'t bond rn, prob there\'s error or invalid code,,')
+
+        message.channel.send({embeds: [new MessageEmbed()
+          .setColor('#DD6e0F')
+          .setTitle('💞 '+invite.guild.name+'\'s bonding time uwu')
+          .setDescription(`Selected activity: ${invite.target_application.name}`)
+          .addFields(
+            {name: invite.target_application.description || '(no description for this activity yet,,)', value: '​'},
+            {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
+          )
+          .setFooter('have fun bonding')
+          .setTimestamp()
+        ]})
+      }).catch(e => {
+        message.channel.send('💔Cannot bond cus error :( `'+e+'`');
+      })
     },
 
     chess: async message => {
@@ -66,12 +69,13 @@ module.exports = {
         .addFields(
           { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
             -------------------------------
-            **help**‎ ‎ ‎ ‎ - Show this message
-            **prefix**‎ ‎ - Set a new prefix for me
+            **help**‎    - Show this message
+            **prefix**‎  - Set a new prefix for me
     
-            **chess**‎ ‎ ‎ - Info about chess
+            **bond**    - Bonding time with Discord activities
+            **chess**‎   - Info about chess
             **compile**‎ - Code compiler
-            **mcskin**‎ ‎ - Show skin of a Minecraft player
+            **mcskin**‎  - Show skin of a Minecraft player
             **achieve**‎ - Achievement got!
             **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
             **gato**‎ ‎ ‎ ‎ - Random gato picture

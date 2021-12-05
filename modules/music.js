@@ -19,7 +19,7 @@ module.exports = {
       distube = new Distube.default(client, {emitNewSongOnly: true, nsfw: true, plugins: [new SpotifyPlugin()], youtubeDL: false})
 
       distube
-        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)).catch(e => console.log(e)))
+        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
         .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)).catch(_ => console.log('caught in a purge')))
         .on('addSong', (queue, song) => {
           if (queue.songs.length > 1) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
@@ -149,19 +149,26 @@ module.exports = {
     },
 
     repeat: async (message, _, arg2) => {
-        if (!message.member.voice.channel) return message.channel.send('🙄 Join VC to repeat listening.,')
-        if (!distube.getQueue(message)) return message.channel.send('🕳 No song currently,,')
+        const queue = distube.getQueue(message)
         
-        if (!arg2 || arg2 === 'on') {
+        if (!message.member.voice.channel) return message.channel.send('🙄 Join VC to repeat listening.,')
+        if (!queue) return message.channel.send('🕳 No song currently,,')
+        
+        if (!arg2 || arg2 == 'on') {
             await distube.setRepeatMode(message, 1)
-            message.channel.send('🔄 Current song is on repeat ight!')
-        } else if (arg2 === 'off') {
+            message.channel.send('🔁 Current song is on repeat ight!')
+        } else if (arg2 == 'off') {
             await distube.setRepeatMode(message, 0)
-            message.channel.send('🔄 Repeat mode is now `off`.')
-        } else if (arg2 === 'q' || arg2 === 'queue') {
+            message.channel.send('🔁 Repeat mode is now `off`.')
+        } else if (arg2 == 'q' || arg2 == 'queue') {
             await distube.setRepeatMode(message, 2)
-            message.channel.send('🔄 Current queue is now on repeat!')
-        }  
+            message.channel.send('🔁 Current queue is now on repeat!')
+        } else if (parseInt(arg2) > 0) {
+            for (var i = 1; i <= parseInt(arg2); i++) {
+              queue.songs.splice(1, 0, queue.songs[0])
+            }
+            message.channel.send(`🔁 Current song will repeat for \`${arg2}\` times k`)
+        }
     },
     
     remove: async(message, _, arg2) => {
@@ -176,7 +183,16 @@ module.exports = {
         message.channel.send('💨 **'+toRemove+'** has been removed from queue oki')
     },
 
-    resume: async(message) => {
+    replay: async message => {
+        let queue = distube.getQueue(message)
+        if (!message.member.voice.channel) return message.channel.send('🤏 Make sure ur in the channel!')
+        if (!queue) return message.channel.send('🔄 Play some sound first!')
+
+        await queue.songs.splice(1, 0, queue.songs[0])
+        await  distube.skip(message)
+    },
+
+    resume: async message => {
         let queue = distube.getQueue(message)
 
         if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
@@ -215,7 +231,7 @@ module.exports = {
             message.channel.send('⚠ Select a volume level mf!!')
         } else if (level < 301 && level > -1) {
             await distube.setVolume(message, level)
-            message.channel.send('🔢 Oki volume has been set to `'+level+'`')
+            message.channel.send('🔉 Oki volume has been set to `'+level+'`')
         } else {
             message.channel.send('💢 Volume can only be set from `0` to `300`')
         }

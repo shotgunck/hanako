@@ -6,8 +6,9 @@ A multi-purpose Discord bot written in JavaScript
 * Host a chess game
 * Play sounds in voice channels and other musical stuff
 * Minecraft Server/player related
-* Code compiler (Currently 23 languages)
+* Code compiler (currently 23 languages)
 * Basic moderation
+* Host Discord activities
 
 ## Features
 * Compound commands: 
