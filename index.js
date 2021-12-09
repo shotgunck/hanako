@@ -11,7 +11,7 @@ const config = require('./config.json')
 
 client.on('ready', () => {
   console.log('im on')
-  client.user.setActivity(config.prefix+' help', { type: 'LISTENING' })
+  client.user.setPresence({status: "idle", activities: [{name: config.prefix+' help', type: 'LISTENING'}]})
 })
 
 client.on('messageCreate', async message => {

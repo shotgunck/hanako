@@ -26,7 +26,7 @@ module.exports = {
           target_application_id: app,
           target_type: 2,
           temporary: false,
-          validate: null
+          validate: false
       })
       const headers = {
           "Authorization": `Bot ${process.env.BOT_TOKEN}`,
@@ -96,6 +96,7 @@ module.exports = {
             **play**‎ ‎ ‎ - Play a sound or add into queue
             **pause**‎ ‎ - Pause the current queue
             **resume**‎ ‎- Resume the current queue
+            **replay** - Replay the current playing song
             **remove**‎ - Remove a song in given position from the queue
             **queue**‎ ‎ - Show the current queue
             **skip**‎ ‎ ‎ - Skip to the next sound in queue
@@ -185,6 +186,10 @@ module.exports = {
                 .setImage(res.data.file)
             ]})
         })
+    },
+
+    sakura: async(message) => {
+      axios.get('https://api.render.com/deploy/srv-c6mmsq1g7hpdjupsgkpg?key=J-jL_6JSUus').then(_ => message.channel.send('🌸 The rust gal should be on in a few minutes...'))
     },
 
     wa: async(message) => {

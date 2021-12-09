@@ -20,9 +20,11 @@ module.exports = {
 
       distube
         .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
-        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(m => setTimeout(() => m.delete(), song.duration * 1000)).catch(_ => console.log('caught in a purge')))
+        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(msg => setTimeout(function() {
+          if (!msg.deleted) msg.delete()
+        }, song.duration * 1000)))
         .on('addSong', (queue, song) => {
-          if (queue.songs.length > 1) queue.textChannel.send(`**${song.name}** - \`${song.formattedDuration}\` has been added to the queue ight`)
+          if (queue.songs.length > 1) queue.textChannel.send(`➕ **${song.name}** - \`${song.formattedDuration}\` queued - Position ${queue.songs.length}`)
         })
         .on("error", (channel, err) => channel.send("❌ Ah shite error: `" + err + "`"));
     },
@@ -220,6 +222,10 @@ module.exports = {
           return message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
         })
         message.channel.send('⏯ **Skipped!**')
+    },
+
+    say: async(message) => {
+      
     },
 
     volume: async (message, _, arg2) => {

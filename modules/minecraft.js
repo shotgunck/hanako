@@ -31,7 +31,7 @@ module.exports = {
     ms: async (message, _, arg2) => {
         if (!arg2) return message.channel.send('💢 Pls provide a Minecraft server bru')
         var notCharacter = arg2.search(/[^\w.:]/gm) == -1? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `'+arg2.replace(/[^\w.:]/gm, '')+'`'
-        message.channel.send('🕹 Getting server info, please wait..').then(m => setTimeout(() => m.delete(), 800))
+        message.channel.send('🕹 Getting server info, please wait.. (if it takes too long it\'s prob offline)').then(m => setTimeout(() => m.delete(), 2000))
 
 		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
         .then(res => {
@@ -46,7 +46,7 @@ module.exports = {
             } else if (data.online) {
                 const ping = data.took
                 const players = data.players
-                const sample = players.sample
+                const sample = players.sample | []
                 const desc = data.description
                 let ok = parseInt(ping)
 
