@@ -19,8 +19,7 @@ A multi-purpose Discord bot written in JavaScript
 ```
 
 ## To-do
-* Mongo [mongoose] database
-* Compound commands
+* Text-to-speech and speech-to-text
 
 ## Credits
 The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).

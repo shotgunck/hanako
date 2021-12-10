@@ -29,6 +29,7 @@
     "form-data": "^4.0.0",
     "fs": "0.0.1-security",
     "genius-lyrics-api": "^3.2.0",
+    "google-tts-api": "^2.0.2",
     "install": "^0.13.0",
     "mongoose": "^6.0.12",
     "npm": "^8.1.4",

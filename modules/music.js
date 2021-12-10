@@ -4,6 +4,7 @@ const { SpotifyPlugin } = require('@distube/spotify')
 const { getLyrics } = require('genius-lyrics-api')
 const { pagination } = require('reconlx')
 const lsModule = require('@penfoldium/lyrics-search')
+const tts = require('google-tts-api')
 
 require('dotenv').config()
 
