@@ -22,7 +22,7 @@ module.exports = {
       { max: 1, time: 10000 }).then(collected => {
         if (collected.first().emoji.name == '♟') {
           chessState.newBoard()
-          chessState.sendBoardImage(message, '**Match: **'+message.content.split(' ')[2]+' [light] __vs__ '+message.content.split(' ')[3]+' [dark]')
+          chessState.sendBoardImage(message, `**Match: **${message.content.split(' ')[2]} [light] __vs__ ${message.content.split(' ')[3]} [dark]`)
           chessState.saveBoard()
           message.reactions.removeAll()
         }
@@ -33,7 +33,7 @@ module.exports = {
 
   end: message => {
     chessState.board = null
-    message.channel.send('♟ Match ended by **'+message.author.username+'**. Latest result can be observed from the latest board image!')
+    message.channel.send(`♟ Match ended by **${message.author.username}**. Latest result can be observed from the latest board image!`)
   },
 
   h: message => {

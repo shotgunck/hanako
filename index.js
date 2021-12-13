@@ -5,18 +5,18 @@ const fs = require('fs')
 
 require('dotenv').config()
 
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"]}, {partials: ["MESSAGE", "CHANNEL", "REACTION"] })
+const client = new Discord.Client({ intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_VOICE_STATES']}, {partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
 
 const config = require('./config.json')
 
 client.on('ready', () => {
   console.log('im on')
-  client.user.setPresence({status: "idle", activities: [{name: config.prefix+' help', type: 'LISTENING'}]})
+  client.user.setPresence({status: 'idle', activities: [{name: config.prefix+' help', type: 'LISTENING'}]})
 })
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return
-  
+
   const prefix = config.prefix
   const prefixed = message.content.substring(0, prefix.length).toLowerCase()
 

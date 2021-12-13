@@ -7,13 +7,13 @@ const config = require('../config.json')
 
 module.exports = {
     mcskin: (message, _, arg2) => {
-      if (!arg2) return message.channel.send('🙄 Provide a Minecraft player\'s username,, like `'+config.prefix+' mcskin notch`')
-      message.channel.send('🔶 Getting **'+arg2+'** skin..,').then(m => setTimeout(() => m.delete(), 750))
+      if (!arg2) return message.channel.send(`🙄 Provide a Minecraft player's username,, like \`${config.prefix} mcskin notch\``)
+      message.channel.send(`🔶 Getting **${arg2}** skin..,`).then(m => setTimeout(() => m.delete(), 750))
       
       message.channel.send({ embeds: [new Discord.MessageEmbed() 
         .setColor('#DD6E0F')
         .setTitle(arg2)
-        .setImage('https://minotar.net/armor/body/'+arg2+'/150.png')
+        .setImage(`https://minotar.net/armor/body/${arg2}/150.png`)
       ]})
     },
 
@@ -33,20 +33,20 @@ module.exports = {
         var notCharacter = arg2.search(/[^\w.:]/gm) == -1? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `'+arg2.replace(/[^\w.:]/gm, '')+'`'
         message.channel.send('🕹 Getting server info, please wait.. (if it takes too long it\'s prob offline)').then(m => setTimeout(() => m.delete(), 2000))
 
-		axios.get('https://eu.mc-api.net/v3/server/ping/' + arg2)
+		axios.get(`https://eu.mc-api.net/v3/server/ping/${arg2}`)
         .then(res => {
             const data = res.data
             if (!data.online) {
               message.channel.send({ embeds: [new Discord.MessageEmbed() 
             	  .setColor('#DD6E0F')
             	  .setTitle('\\🔴 '+arg2+' is offline')
-                .setDescription('🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n' + notCharacter)
+                .setDescription(`🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n${notCharacter}`)
             	  .setTimestamp()
               ]})
             } else if (data.online) {
                 const ping = data.took
                 const players = data.players
-                const sample = players.sample | []
+                const sample = players.sample === null? [{name: ''}] : players.sample
                 const desc = data.description
                 let ok = parseInt(ping)
 
@@ -56,29 +56,28 @@ module.exports = {
                 else if (ok < 150 && ok > 24) ok = ping+'ms [OK]'
                 else if (ok < 25) ok = ping+'ms [fast af]'
 
+                let listoplayer = ''
+                sample.map(plr => {
+                  listoplayer += '\n•' + plr.name
+                })
+
                 message.channel.send({ embeds: [new Discord.MessageEmbed() 
                 	.setColor('#DD6E0F')
                 	.setTitle('\\🟢 '+arg2+' is online')
 			           	.setDescription(desc.extra? desc.extra[1].text : (desc.text? desc.text : desc))
 			           	.setThumbnail(data.favicon)
                 	.addFields(
-                    	{ name: '​', value: '**🔹 Info: **'+'\n'+
-                      	'-------------------------------\n\n'+
-			           	      '**Version**:  '+data.version.name+
-                        '\n\n**Ping**:  '+ok+
-                    	  '\n\n**Players in game:**  '+players.online+'/'+players.max+
-                        (!sample[0]? '' : '\n • '+sample[0].name)+
-                        (!sample[1]? '' : '\n • '+sample[1].name)+
-                        (!sample[2]? '' : '\n • '+sample[2].name)+
-                        (!sample[3]? '' : '\n • '+sample[3].name)+
-                        (!sample[4]? '' : '\n • '+sample[4].name)+
-                        '\n\n-------------------------------'+'\n🔸 This is a cached result. Please check again in '+data.cache.ttl+' seconds!'
+                    	{ name: '​', value: `**🔹 Info: **\n                -------------------------------\n
+			           	    **Version**:  ${data.version.name}
+                      \n**Ping**: ${ok}
+                    	\n**Players in game:**  ${players.online}/${players.max+listoplayer}
+                      \n-------------------------------\n🔸 This is a cached result. Please check again in ${data.cache.ttl} seconds!`
                    		}
                   )
                   .setTimestamp()
                 ]}) 
         	}
       	})
-		    .catch(err => message.reply('🏥 API error, pls wait for 5 minutes before trying again. | '+err))
+		    .catch(err => message.reply('🏥 Error!! '+err))
     }
 }

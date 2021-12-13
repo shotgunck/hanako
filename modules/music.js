@@ -14,34 +14,65 @@ const config = require('../config.json')
 const util = require('../helper.js')
 
 var distube
+var client
+
+function buttons(client, message) {
+  client.on('interactionCreate', async interact => {
+	    if (!interact.isButton()) return
+      let queue = distube.getQueue(message)
+	    
+      if (interact.customId == 'resumeB' && queue.paused) {
+        await distube.resume(message)
+        message.channel.send('⏯ Queue resumed!')
+      } else if (interact.customId == 'pauseB' && !queue.paused) {
+        await distube.pause(message)
+        message.channel.send('⏸ Queue paused! Click `Resume`` to resume k')
+      } else if (interact.customId == 'skipB') {
+        await distube.skip(message).catch(_ => {
+          distube.stop(message)
+          return message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
+        })
+        message.channel.send('⏯ **Skipped!**')
+      }
+  })
+}
 
 module.exports = {
-    init: (client) => {
-      distube = new Distube.default(client, {emitNewSongOnly: true, nsfw: true, plugins: [new SpotifyPlugin()], youtubeDL: false})
+    init: (cli) => {
+      distube = new Distube.default(cli, {emitNewSongOnly: true, nsfw: true, 
+      plugins: [new SpotifyPlugin()], youtubeDL: false, leaveOnEmpty: false})
+      client = cli
 
       distube
         .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
-        .on('playSong', (queue, song) => queue.textChannel.send('🎶 **'+song.name+'** - ``'+song.formattedDuration+'`` is now playing!').then(msg => setTimeout(function() {
-          if (!msg.deleted) msg.delete()
-        }, song.duration * 1000)))
+        .on('playSong', (queue, song) => queue.textChannel.send({content: `🎶 **${song.name}** - \`${song.formattedDuration}\` is now playing!`, components: [new Discord.MessageActionRow()
+		      .addComponents([
+          new Discord.MessageButton().setCustomId('pauseB').setLabel('Pause').setStyle('PRIMARY'),
+	        new Discord.MessageButton().setCustomId('resumeB').setLabel('Resume').setStyle('SUCCESS'),
+	        new Discord.MessageButton().setCustomId('skipB').setLabel('Skip').setStyle('SECONDARY')
+        ])]}).then(msg => {
+          setTimeout(function() {
+            if (!msg.deleted) msg.delete()
+          }, song.duration * 1000)
+        }))
         .on('addSong', (queue, song) => {
           if (queue.songs.length > 1) queue.textChannel.send(`➕ **${song.name}** - \`${song.formattedDuration}\` queued - Position ${queue.songs.length}`)
         })
-        .on("error", (channel, err) => channel.send("❌ Ah shite error: `" + err + "`"));
+        .on("error", (channel, err) => channel.send(`❌ Ah shite error: \`${err}\``))
     },
 
     filter: async(message, main, arg2) => {
       if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
-      if (!arg2) return message.channel.send('🌫 You can set the filter with: `3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax`\n\nExample: `'+config.prefix+' filter reverse | oi filter 3d echo`\nMention the filter type again to turn that filter off uwu')
+      if (!arg2) return message.channel.send(`🌫 You can set the filter with: \`3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax\`\n\nExample: \`${config.prefix}\` filter reverse | oi filter 3d echo\`\nMention the filter type again to turn that filter off uwu`)
 
       const filters = main.substr(7, main.length).match(/\w+/gm)
       
       const filter = await distube.setFilter(message, filters)
-      return message.channel.send('🌫 Filter is now set to `' + (filter || 'off')+'`! Wait me apply..,')
+      return message.channel.send(`🌫 Filter is now set to \`${filter || 'off'}\`! Wait me apply..,`)
     },
 
     find: async(message, main, arg2) => {
-      if (!arg2) return message.channel.send('🔎 Provide some lyrics!! Example: `'+config.prefix+' find how you want me to`')
+      if (!arg2) return message.channel.send(`🔎 Provide some lyrics!! Example: \`${config.prefix}\` find how you want me to`)
 
       findSong.search(main.substr(4, main.length))
       .then(res => {
@@ -53,7 +84,7 @@ module.exports = {
               .setAuthor('Song:')
               .setThumbnail(res.primaryArtist.header)
               .addFields(
-                {name: '​', value: '[About song]('+res.url+')\n'+'[About author]('+res.primaryArtist.url+')'}
+                {name: '​', value: `[About song](${res.url})\n[About author](${res.primaryArtist.url})`}
                )
               .setImage(res.songArtImage)
           ]})
@@ -101,7 +132,7 @@ module.exports = {
         if (!voiceChannel) return message.channel.send('Enter a voice channel pls!')
  
         const permissions = voiceChannel.permissionsFor(message.client.user)
-        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
+       if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
         
         if (!arg2) return message.channel.send('Play what mf,.,')
         
@@ -109,6 +140,7 @@ module.exports = {
         distube.voices.get(message).setSelfDeaf(true)
 
         await distube.play(message, main.replace(/play /gm, ''))
+        buttons(client, message)
     },
 
     pause: async message => {
@@ -119,7 +151,13 @@ module.exports = {
         if (queue.paused) return message.channel.send('🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!')
 
         await distube.pause(message)
-        message.channel.send('⏸ Current queue has been paused. Type `'+config.prefix+' resume` to resume.')
+        message.channel.send({content: `⏸ Current queue has been paused. Type \`${config.prefix} resume\` to resume.`, components: [new Discord.MessageActionRow()
+			    .addComponents(
+				      new Discord.MessageButton()
+					    .setCustomId('resumeButton')
+					    .setLabel('Resume')
+					    .setStyle('PRIMARY')
+			  )]})
     },
     
     queue: async (message) => {
@@ -238,7 +276,7 @@ module.exports = {
             message.channel.send('⚠ Select a volume level mf!!')
         } else if (level < 301 && level > -1) {
             await distube.setVolume(message, level)
-            message.channel.send('🔉 Oki volume has been set to `'+level+'`')
+            message.channel.send(`🔉 Oki volume has been set to \`${level}\``)
         } else {
             message.channel.send('💢 Volume can only be set from `0` to `300`')
         }

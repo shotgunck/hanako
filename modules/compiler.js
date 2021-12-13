@@ -29,10 +29,10 @@ module.exports = {
       .then(res => {
         const output = res.data.output
         message.channel.send({embeds: [new Discord.MessageEmbed()
-          .setTitle("**💠 Output:**")
-          .setColor("#DD6E0F")
+          .setTitle('**💠 Output:**')
+          .setColor('#DD6E0F')
           .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.'? '❌ I can not compile the given code due to non-supportive packages/libraries,,': output)
-          .setFooter('Finished in: '+(Date.now() - before).toString()+'ms')
+          .setFooter(`Finished in ${(Date.now() - before).toString()}ms`)
           .setTimestamp()
         ]})
       })

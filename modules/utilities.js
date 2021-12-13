@@ -143,13 +143,13 @@ module.exports = {
             config.prefix = arg2
             prefix = config.prefix
 
-            message.channel.send('❗ My prefix is now changed to `'+arg2+'`\n❗ In case you forgot what the prefix is, see what I\'m listening to!')
+            message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n❗ In case you forgot what the prefix is, see what I'm listening to!`)
             if (arg2 == 'default') {
                 message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
             }
             message.client.user.setActivity(prefix + ' help', { type: "LISTENING" })
         } else {
-            message.channel.send('Current prefix: `'+prefix+'`\nTo change prefix, type `'+prefix+'` prefix [new-prefix]`\n\n❗ In case you forgot what the prefix is,  see what I\'m listening to!')
+            message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n❗ In case you forgot what the prefix is,  see what I'm listening to!`)
         }
     },
 
@@ -162,7 +162,7 @@ module.exports = {
         message.channel.bulkDelete(amount, true).then(_ => {
           message.channel.send({embeds: [new MessageEmbed()
             .setColor('#AA11EE')
-            .setDescription('♐ Purged '+(amount - 1)+' messages!')
+            .setDescription(`♐ Purged ${amount - 1} messages!`)
             .setTimestamp()
           ]}).then(m => setTimeout(() => m.delete(), 2000))
         }).catch(err => {
@@ -186,10 +186,6 @@ module.exports = {
                 .setImage(res.data.file)
             ]})
         })
-    },
-
-    sakura: async(message) => {
-      axios.get('https://api.render.com/deploy/srv-c6mmsq1g7hpdjupsgkpg?key=J-jL_6JSUus').then(_ => message.channel.send('🌸 The rust gal should be on in a few minutes...'))
     },
 
     wa: async(message) => {
