@@ -15,6 +15,7 @@ const util = require('../helper.js')
 
 var distube
 var client
+var now_playing
 
 function buttons(client, message) {
   client.on('interactionCreate', async interact => {
@@ -26,11 +27,11 @@ function buttons(client, message) {
         message.channel.send('⏯ Queue resumed!')
       } else if (interact.customId == 'pauseB' && !queue.paused) {
         await distube.pause(message)
-        message.channel.send('⏸ Queue paused! Click `Resume`` to resume k')
+        message.channel.send('⏸ Queue paused! Click `Resume` to resume k')
       } else if (interact.customId == 'skipB') {
         await distube.skip(message).catch(_ => {
           distube.stop(message)
-          return message.channel.send('⏯ There\'s no song left in queue so I\'ll stop, bai!!')
+          return message.channel.send(`⏯ There's no song left in queue so I'll stop, bai!!`)
         })
         message.channel.send('⏯ **Skipped!**')
       }
@@ -44,16 +45,20 @@ module.exports = {
       client = cli
 
       distube
-        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => setTimeout(() => m.delete(),5000)))
+        .on('finish', queue => queue.textChannel.send('😴 **Queue ended.**').then(m => {
+          if (now_playing) now_playing.delete();
+          setTimeout(() => m.delete(),5000)
+        }))
         .on('playSong', (queue, song) => queue.textChannel.send({content: `🎶 **${song.name}** - \`${song.formattedDuration}\` is now playing!`, components: [new Discord.MessageActionRow()
 		      .addComponents([
           new Discord.MessageButton().setCustomId('pauseB').setLabel('Pause').setStyle('PRIMARY'),
 	        new Discord.MessageButton().setCustomId('resumeB').setLabel('Resume').setStyle('SUCCESS'),
 	        new Discord.MessageButton().setCustomId('skipB').setLabel('Skip').setStyle('SECONDARY')
-        ])]}).then(msg => {
-          setTimeout(function() {
-            if (!msg.deleted) msg.delete()
-          }, song.duration * 1000)
+        ])]}).then(async msg => {
+          if (now_playing && !now_playing.deleted) {
+            await now_playing.delete()
+            now_playing = msg
+          } else { now_playing = msg }
         }))
         .on('addSong', (queue, song) => {
           if (queue.songs.length > 1) queue.textChannel.send(`➕ **${song.name}** - \`${song.formattedDuration}\` queued - Position ${queue.songs.length}`)
@@ -151,13 +156,7 @@ module.exports = {
         if (queue.paused) return message.channel.send('🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!')
 
         await distube.pause(message)
-        message.channel.send({content: `⏸ Current queue has been paused. Type \`${config.prefix} resume\` to resume.`, components: [new Discord.MessageActionRow()
-			    .addComponents(
-				      new Discord.MessageButton()
-					    .setCustomId('resumeButton')
-					    .setLabel('Resume')
-					    .setStyle('PRIMARY')
-			  )]})
+        message.channel.send(`⏸ Current queue has been paused. Type \`${config.prefix} resume\` to resume.`)
     },
     
     queue: async (message) => {

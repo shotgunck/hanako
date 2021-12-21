@@ -20,37 +20,25 @@ module.exports = {
 
       if (!arg2 || !app) return message.channel.send('💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
 
-      const data = JSON.stringify({
-          max_age: 86400,
-          max_uses: 0,
-          target_application_id: app,
-          target_type: 2,
-          temporary: false,
-          validate: false
+      const invite = await message.member.voice.channel.createInvite({
+        maxAge: 86400,
+        maxUses: 0,
+        unique: true,
+        targetApplication: app,
+        targetType: 2
       })
-      const headers = {
-          "Authorization": `Bot ${process.env.BOT_TOKEN}`,
-          "Content-Type": "application/json"
-      }
-      
-      axios.post(`https://discord.com/api/v8/channels/${channel.id}/invites`, data, {headers}).then(res => {
-        const invite = res.data
-        if (invite.error || !invite.code) return message.channel.send('💔Can\'t bond rn, prob there\'s error or invalid code,,')
 
-        message.channel.send({embeds: [new MessageEmbed()
+      message.channel.send({embeds: [new MessageEmbed()
           .setColor('#DD6e0F')
-          .setTitle('💞 '+invite.guild.name+'\'s bonding time uwu')
-          .setDescription(`Selected activity: ${invite.target_application.name}`)
+          .setTitle(`:revolving_hearts: ${invite.guild.name}'s bonding time uwu`)
+          .setDescription(`Selected activity: ${invite.targetApplication.name}`)
           .addFields(
-            {name: invite.target_application.description || '(no description for this activity yet,,)', value: '​'},
+            {name: invite.targetApplication.summary || '(no description for this activity yet,,)', value: '​'},
             {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
           )
           .setFooter('have fun bonding')
           .setTimestamp()
-        ]})
-      }).catch(e => {
-        message.channel.send('💔Cannot bond cus error :( `'+e+'`');
-      })
+      ]})
     },
 
     chess: async message => {

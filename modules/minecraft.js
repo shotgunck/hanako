@@ -46,7 +46,7 @@ module.exports = {
             } else if (data.online) {
                 const ping = data.took
                 const players = data.players
-                const sample = players.sample === null? [{name: ''}] : players.sample
+                const sample = !players.sample ? [{name: ''}] : players.sample
                 const desc = data.description
                 let ok = parseInt(ping)
 
