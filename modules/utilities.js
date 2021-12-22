@@ -178,13 +178,13 @@ module.exports = {
 
     wa: async(message) => {
       if (lock) return message.channel.send('noj,,,')
-      axios.get('https://api.waifu.pics/sfw/waifu')
+      axios.get('https://api.waifu.im/sfw/waifu/')
         .then(res => {
             if (message.channel.nsfw) {
               message.channel.send({ embeds: [new MessageEmbed()
                 .setColor('#DD6E0F')
                 .setTitle('wa')
-                .setImage(res.data.url)
+                .setImage(res.data.images[0].url)
               ]})
             } else {
               message.channel.send('Oui, nsfw channel only!')
