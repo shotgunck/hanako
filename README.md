@@ -20,6 +20,7 @@ A multi-purpose Discord bot written in JavaScript
 
 ## To-do
 * Text-to-speech and speech-to-text
+* Slash commands
 
 ## Credits
 The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).

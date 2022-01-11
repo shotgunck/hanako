@@ -12,6 +12,7 @@
     "@discordjs/voice": "^0.7.5",
     "@distube/spotify": "^1.0.0",
     "@distube/youtube-dl": "^2.2.4",
+    "@distube/ytdl-core": "^4.9.4",
     "@penfoldium/lyrics-search": "github:penfoldium/lyrics-search",
     "avconv": "^3.1.0",
     "axios": "^0.21.4",

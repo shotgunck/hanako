@@ -39,7 +39,7 @@ function buttons(client, message) {
 }
 
 module.exports = {
-    init: (cli) => {
+    init: cli => {
       distube = new Distube.default(cli, {emitNewSongOnly: true, nsfw: true, 
       plugins: [new SpotifyPlugin()], youtubeDL: false, leaveOnEmpty: false})
       client = cli
@@ -107,7 +107,7 @@ module.exports = {
       message.channel.send('➡ Jumped to position '+arg2+'!')
     },
 
-    lyrics: async(message) => {
+    lyrics: async message => {
       let queue = distube.getQueue(message)
       if (!queue) return message.channel.send('🕳 Play a sound so I can get the lyrics aight')
 
@@ -137,14 +137,16 @@ module.exports = {
         if (!voiceChannel) return message.channel.send('Enter a voice channel pls!')
  
         const permissions = voiceChannel.permissionsFor(message.client.user)
-       if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
+        if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return message.channel.send('I don\'t have the permission to join or speak in the channel 😭')
         
-        if (!arg2) return message.channel.send('Play what mf,.,')
+        const source = message.attachments[0]? message.attachments[0].attachment : main.replace(/play /gm, '')
+
+        if (!source) return message.channel.send('Play what mf,.,')
         
         distube.voices.join(message.member.voice.channel)
         distube.voices.get(message).setSelfDeaf(true)
 
-        await distube.play(message, main.replace(/play /gm, ''))
+        await distube.play(message, source)
         buttons(client, message)
     },
 
@@ -159,7 +161,7 @@ module.exports = {
         message.channel.send(`⏸ Current queue has been paused. Type \`${config.prefix} resume\` to resume.`)
     },
     
-    queue: async (message) => {
+    queue: async message => {
       let queue = distube.getQueue(message), pages = [], q = ''
       if (!queue) return message.channel.send('🕳 Queue empty..,')
 
@@ -243,7 +245,7 @@ module.exports = {
         message.channel.send('⏯ Queue resumed!')
     },
 
-    stop: async (message) => {
+    stop: async message => {
         if (!message.member.voice.channel) return message.channel.send('🤏 Can\'t stop me, u need to be in the channel!')
         if (!distube.getQueue(message)) return message.channel.send('🗑 There are no songs around,.')
 
@@ -251,7 +253,7 @@ module.exports = {
         message.channel.send('😴 All sounds have stopped and queue has been cleared. I\'m out,.,')
     },
 
-    skip: async (message) => {
+    skip: async message => {
         if (!message.member.voice.channel) return message.channel.send('🙄 You\'re not listening..,')
         if (!distube.getQueue(message)) return message.channel.send('No song to skip,, Play some!!')
         
