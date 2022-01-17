@@ -6,16 +6,13 @@ const { pagination } = require('reconlx')
 const lsModule = require('@penfoldium/lyrics-search')
 const tts = require('google-tts-api')
 
-require('dotenv').config()
-
 const findSong = new lsModule(process.env.GENIUS_API)
 
-const config = require('../config.json')
-const util = require('../helper.js')
+const helper = require('../helper')
 
-var distube
-var client
-var now_playing
+let distube
+let client
+let now_playing
 
 function buttons(client, message) {
   client.on('interactionCreate', async interact => {
@@ -68,7 +65,7 @@ module.exports = {
 
     filter: async(message, main, arg2) => {
       if (!distube.getQueue(message)) return message.channel.send('\\🌫 Oui play some sound to set filter ight')
-      if (!arg2) return message.channel.send(`🌫 You can set the filter with: \`3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax\`\n\nExample: \`${config.prefix}\` filter reverse | oi filter 3d echo\`\nMention the filter type again to turn that filter off uwu`)
+      if (!arg2) return message.channel.send(`🌫 You can set the filter with: \`3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax\`\n\nExample: \`${await helper.prefix(message.guild.id)}\` filter reverse | oi filter 3d echo\`\nMention the filter type again to turn that filter off uwu`)
 
       const filters = main.substr(7, main.length).match(/\w+/gm)
       
@@ -77,7 +74,7 @@ module.exports = {
     },
 
     find: async(message, main, arg2) => {
-      if (!arg2) return message.channel.send(`🔎 Provide some lyrics!! Example: \`${config.prefix}\` find how you want me to`)
+      if (!arg2) return message.channel.send(`🔎 Provide some lyrics!! Example: \`${await helper.prefix(message.guild.id)} find how you want me to\``)
 
       findSong.search(main.substr(4, main.length))
       .then(res => {
@@ -124,7 +121,7 @@ module.exports = {
       
       getLyrics(options).then(res => {
         if (!res) return message.reply('Could not find any lyrics for the sound sorry!')
-        const lyrics = util.msgSplit(res)
+        const lyrics = helper.msgSplit(res)
         lyrics.forEach(async lyricPart => {
           if (!lyricPart || lyricPart.length == 0) return;
           await message.channel.send(lyricPart)
@@ -155,10 +152,10 @@ module.exports = {
         
         if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
         if (!queue) return message.channel.send('🗑 There is no sound around,.')
-        if (queue.paused) return message.channel.send('🙄 Queue is already paused!! Type `'+config.prefix+' resume` to resume!')
+        if (queue.paused) return message.channel.send(`🙄 Queue is already paused!! Type \`${await helper.prefix(message.guild.id)} resume\` to resume!`)
 
         await distube.pause(message)
-        message.channel.send(`⏸ Current queue has been paused. Type \`${config.prefix} resume\` to resume.`)
+        message.channel.send(`⏸ Current queue has been paused. Type \`${await helper.prefix(message.guild.id)} resume\` to resume.`)
     },
     
     queue: async message => {

@@ -9,17 +9,17 @@ const commandPrefix = 'c!'
 const piecesWithNone = pieces.concat('none')
 
 module.exports = {
-  new: message => {
+  new: async message => {
     if (chessState.board) {
       return message.reply('There\'s a match going on bru, spectate them')
     }
 
-    message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => m.delete({timeout: 10000}))
+    message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => setTimeout(() => m.delete, 10000))
 
-    message.react('♟')
+    await message.react('♟')
     
-    message.awaitReactions((reaction, user) => user.id == message.author.id && (reaction.emoji.name == '♟'),
-      { max: 1, time: 10000 }).then(collected => {
+    const filter = (reaction, user) => reaction.emoji.name === '♟' && user.id === message.author.id
+    message.awaitReactions({filter, max: 1, time: 10000 }).then(collected => {
         if (collected.first().emoji.name == '♟') {
           chessState.newBoard()
           chessState.sendBoardImage(message, `**Match: **${message.content.split(' ')[2]} [light] __vs__ ${message.content.split(' ')[3]} [dark]`)

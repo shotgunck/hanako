@@ -1,28 +1,40 @@
 const Discord = require('discord.js')
 
-const mongoose = require('mongoose')
 const fs = require('fs')
-
 require('dotenv').config()
 
-const client = new Discord.Client({ intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_VOICE_STATES']}, {partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
+const { Collection: MongoCollection, MongoClient } = require('mongodb')
+const { Collection, Fields } = require('quickmongo')
 
-const config = require('./config.json')
+const client = new Discord.Client({intents: 641}, {partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
+
+const mongo = new MongoClient(process.env.MONGODB_COMPASS)
+const schema = new Fields.ObjectField({
+    prefix: new Fields.StringField()
+})
+
+let db
+
+mongo.connect().then(() => {      
+    const mongoCollection = mongo.db().collection('JSON')
+    db = new Collection(mongoCollection, schema)
+    require('./modules/utilities').init(db)
+})
 
 client.on('ready', () => {
   console.log('im on')
-  client.user.setPresence({status: 'idle', activities: [{name: config.prefix+' help', type: 'LISTENING'}]})
+  client.user.setPresence({status: 'idle', activities: [{name: 'oi help', type: 'LISTENING'}]})
 })
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return
 
-  const prefix = config.prefix
+  const prefix = await db.get(message.guild.id, 'prefix') || 'oi'
   const prefixed = message.content.substring(0, prefix.length).toLowerCase()
 
   if (prefixed == prefix || prefixed == 'c!') {
       for (thread of message.content.split(' && ')) {   
-      const main = thread.replace(RegExp(prefix, 'gm'), '').replace(/^\s/gm, '')
+      const main = thread.replace(RegExp(prefixed == prefix? prefix : 'c!', 'gm'), '').replace(/^\s/gm, '')
       const subcontents = main.split(' ')
 
       const cmd = main.split(/ +/g).shift().toLowerCase()
@@ -47,9 +59,8 @@ client.on('messageCreate', async message => {
       require('./chess/chessBoard').loadBoard(),
       require('./modules/music').init(client),
 
-      require('http').createServer((_, res) => res.end('hanako ight')).listen(),
-      mongoose.connect(process.env.MONGODB_COMPASS, { useNewUrlParser: true, useUnifiedTopology: true })
+      require('http').createServer((_, res) => res.end('hanako ight')).listen()
     ])
-    
+  
     client.login(process.env.BOT_TOKEN)
 })()

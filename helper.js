@@ -1,3 +1,5 @@
+let db
+
 module.exports = {
   msgSplit: (msg) => {
     return [
@@ -20,5 +22,13 @@ module.exports = {
       checkers: '832013003968348200',
       puttparty: '763133495793942528',
       sketchyartist: '879864070101172255'
+  },
+
+  setdb: database => {
+    db = database
+  },
+
+  prefix: async guildId => {
+    return await db.get(guildId, 'prefix')
   }
 }

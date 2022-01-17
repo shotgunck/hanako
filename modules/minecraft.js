@@ -1,13 +1,11 @@
 const Discord = require('discord.js')
 const axios = require('axios')
 
-require('dotenv').config()
-
-const config = require('../config.json')
+const helper = require('../helper')
 
 module.exports = {
-    mcskin: (message, _, arg2) => {
-      if (!arg2) return message.channel.send(`🙄 Provide a Minecraft player's username,, like \`${config.prefix} mcskin notch\``)
+    mcskin: async (message, _, arg2) => {
+      if (!arg2) return message.channel.send(`🙄 Provide a Minecraft player's username,, like \`${await helper.prefix(message.guild.id)} mcskin notch\``)
       message.channel.send(`🔶 Getting **${arg2}** skin..,`).then(m => setTimeout(() => m.delete(), 750))
       
       message.channel.send({ embeds: [new Discord.MessageEmbed() 

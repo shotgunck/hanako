@@ -2,15 +2,18 @@ const { MessageEmbed } = require('discord.js')
 const axios = require('axios')
 const { pagination } = require('reconlx')
 
-require('dotenv').config()
-
-const config = require('../config.json')
 const helper = require('../helper')
 
-let prefix = config.prefix
+let prefix = 'oi'
+let db
 const lock = false
 
 module.exports = {
+    init: database => {
+      db = database
+      helper.setdb(database)
+    },
+
     bond: async (message, _, arg2) => {
       const app = helper.bondapp[arg2]
       const channel = message.member.voice.channel
@@ -127,17 +130,15 @@ module.exports = {
     prefix: async (message, _, arg2) => {
         if (arg2) {
             if (arg2 == 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
-            
-            config.prefix = arg2
-            prefix = config.prefix
-
-            message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n❗ In case you forgot what the prefix is, see what I'm listening to!`)
-            if (arg2 == 'default') {
+            db.set(message.guild.id, arg2, 'prefix').then(() => {
+              prefix = arg2
+              message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n`)
+              if (arg2 == 'default') {
                 message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
-            }
-            message.client.user.setActivity(prefix + ' help', { type: "LISTENING" })
+              }
+            })
         } else {
-            message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n❗ In case you forgot what the prefix is,  see what I'm listening to!`)
+            message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
         }
     },
 

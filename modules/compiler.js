@@ -1,8 +1,6 @@
 const Discord = require('discord.js')
 const axios = require('axios')
 
-require('dotenv').config()
-
 const langVersion = {
   java: 3, c: 4, cpp: 4, php: 3, perl: 3, python3: 3, ruby: 3, go: 3, clojure: 2, sql: 3, csharp: 3, objc: 3, swift: 3, brainfuck: 0, lua: 2, rust: 3, nodejs: 3, coffeescript: 3, elixir: 3, lolcode: 0, kotlin: 2, groovy: 3, octave: 3
 }
