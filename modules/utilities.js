@@ -47,7 +47,7 @@ module.exports = {
     chess: async message => {
         message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight')
     },
-    
+
     help: async message => {
       //return message.channel.send('Help page is under rework comg')
          
