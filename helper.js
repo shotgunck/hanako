@@ -1,7 +1,7 @@
 let db
 
 module.exports = {
-  msgSplit: (msg) => {
+  msgSplit(msg) {
     return [
       msg.substring(0, 1999),
       msg.substring(2000, 3999)
@@ -24,11 +24,15 @@ module.exports = {
       sketchyartist: '879864070101172255'
   },
 
-  setdb: database => {
+  setdb(database) {
     db = database
   },
 
-  prefix: async guildId => {
+  getdb() {
+    return db
+  },
+
+  async prefix(guildId) {
     return await db.get(guildId, 'prefix')
   }
 }

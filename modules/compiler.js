@@ -10,7 +10,7 @@ const errorLog = '📜❌ Pls state a valid lang! The following syntax are valid
         '\\```'
 
 module.exports = {
-  compile: async (message, main, arg2) => {
+  async compile(message, main, arg2) {
     if (!arg2 || arg2.startsWith('```') || langVersion[arg2] === null ) return message.channel.send(errorLog)
 
     const source = main.substr(8 + arg2.length, main.length)
@@ -33,7 +33,6 @@ module.exports = {
           .setFooter(`Finished in ${(Date.now() - before).toString()}ms`)
           .setTimestamp()
         ]})
-      })
-      .catch(error => message.channel.send(errorLog+'\n\n'+error))
+      }).catch(error => message.channel.send(errorLog+'\n\n'+error))
   }
 }

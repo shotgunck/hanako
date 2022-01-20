@@ -16,21 +16,21 @@ let now_playing
 
 function buttons(client, message) {
   client.on('interactionCreate', async interact => {
-	if (!interact.isButton()) return
+    if (!interact.isButton()) return
     let queue = distube.getQueue(message)
-	  
+    
     if (interact.customId == 'resumeB' && queue.paused) {
-      await distube.resume(message)
-      message.channel.send('⏯ Queue resumed!')
+        await distube.resume(message)
+        message.channel.send('⏯ Queue resumed!')
     } else if (interact.customId == 'pauseB' && !queue.paused) {
-      await distube.pause(message)
-      message.channel.send('⏸ Queue paused! Click `Resume` to resume k')
+        await distube.pause(message)
+        message.channel.send('⏸ Queue paused! Click `Resume` to resume k')
     } else if (interact.customId == 'skipB') {
-      await distube.skip(message).catch(_ => {
-        distube.stop(message)
-        return message.channel.send(`⏯ There's no song left in queue so I'll stop, bai!!`)
-      })
-      message.channel.send('⏯ **Skipped!**')
+        await distube.skip(message).catch(_ => {
+          distube.stop(message)
+          return message.channel.send(`⏯ There's no song left in queue so I'll stop, bai!!`)
+        })
+        message.channel.send('⏯ **Skipped!**')
     }
   })
 }
@@ -184,22 +184,20 @@ module.exports = {
     async find(message, main, arg2) {
       if (!arg2) return message.channel.send(`🔎 Provide some lyrics!! Example: \`${await helper.prefix(message.guild.id)} find how you want me to\``)
 
-      findSong.search(main.substr(4, main.length))
-      .then(res => {
-          const info = res.fullTitle.split('by')
-          message.channel.send({ embeds: [new Discord.MessageEmbed()
-              .setColor('#DD6E0F')
-              .setTitle(info[0])
-              .setDescription('by'+info[1])
-              .setAuthor('Song:')
-              .setThumbnail(res.primaryArtist.header)
-              .addFields(
-                {name: '​', value: `[About song](${res.url})\n[About author](${res.primaryArtist.url})`}
-               )
-              .setImage(res.songArtImage)
-          ]})
-      })
-      .catch(e => message.channel.send('❌ Request error! ' + e))
+      findSong.search(main.substr(4, main.length)).then(res => {
+        const info = res.fullTitle.split('by')
+        message.channel.send({ embeds: [new Discord.MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle(info[0])
+            .setDescription('by'+info[1])
+            .setAuthor('Song:')
+            .setThumbnail(res.primaryArtist.header)
+            .addFields(
+              {name: '​', value: `[About song](${res.url})\n[About author](${res.primaryArtist.url})`}
+             )
+            .setImage(res.songArtImage)
+        ]})
+      }).catch(e => message.channel.send('❌ Request error! ' + e))
     },
 
     async jump(message, _, arg2) {
@@ -229,8 +227,8 @@ module.exports = {
       
       getLyrics(options).then(res => {
         if (!res) return message.reply('Could not find any lyrics for the sound sorry!')
-        const lyrics = helper.msgSplit(res)
-        lyrics.forEach(async lyricPart => {
+
+        helper.msgSplit(res).forEach(async lyricPart => {
           if (!lyricPart || lyricPart.length == 0) return;
           await message.channel.send(lyricPart)
         })
@@ -255,37 +253,36 @@ module.exports = {
     remove, rm,
 
     async replay(message) {
-        let queue = distube.getQueue(message)
-        if (!message.member.voice.channel) return message.channel.send('🤏 Make sure ur in the channel!')
-        if (!queue) return message.channel.send('🔄 Play some sound first!')
+      let queue = distube.getQueue(message)
+      if (!message.member.voice.channel) return message.channel.send('🤏 Make sure ur in the channel!')
+      if (!queue) return message.channel.send('🔄 Play some sound first!')
 
-        await queue.songs.splice(1, 0, queue.songs[0])
-        await  distube.skip(message)
+      await queue.songs.splice(1, 0, queue.songs[0])
+      await  distube.skip(message)
     },
 
     async resume(message) {
-        let queue = distube.getQueue(message)
+      let queue = distube.getQueue(message)
 
-        if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
-        if (!queue) return message.channel.send('🗑 No sound to resume,.')
-        if (!queue.paused) return message.channel.send('🙄 Queue is already playing trl')
+      if (!message.member.voice.channel) return message.channel.send('🤏 You have to be listening first alr')
+      if (!queue) return message.channel.send('🗑 No sound to resume,.')
+      if (!queue.paused) return message.channel.send('🙄 Queue is already playing trl')
 
-        await distube.resume(message)
-        message.channel.send('⏯ Queue resumed!')
+      await distube.resume(message)
+      message.channel.send('⏯ Queue resumed!')
     },
 
     async stop(message) {
-        if (!message.member.voice.channel) return message.channel.send('🤏 Can\'t stop me, u need to be in the channel!')
-        if (!distube.getQueue(message)) return message.channel.send('🗑 There are no songs around,.')
+      if (!message.member.voice.channel) return message.channel.send('🤏 Can\'t stop me, u need to be in the channel!')
+      if (!distube.getQueue(message)) return message.channel.send('🗑 There are no songs around,.')
 
-        await distube.stop(message)
-        message.channel.send('😴 All sounds have stopped and queue has been cleared. I\'m out,.,')
+      await distube.stop(message)
+      message.channel.send('😴 All sounds have stopped and queue has been cleared. I\'m out,.,')
     },
 
     skip, s,
 
     async say(message, _, arg2) {
-      
     },
 
     volume, vol

@@ -3,18 +3,14 @@ const axios = require('axios')
 const { pagination } = require('reconlx')
 
 const helper = require('../helper')
-
 let prefix = 'oi'
-let db
-const lock = false
 
 module.exports = {
-    init: database => {
-      db = database
+    init (database) {
       helper.setdb(database)
     },
 
-    bond: async (message, _, arg2) => {
+    async bond(message, _, arg2) {
       const app = helper.bondapp[arg2]
       const channel = message.member.voice.channel
 
@@ -32,87 +28,88 @@ module.exports = {
       })
 
       message.channel.send({embeds: [new MessageEmbed()
-          .setColor('#DD6e0F')
-          .setTitle(`:revolving_hearts: ${invite.guild.name}'s bonding time uwu`)
-          .setDescription(`Selected activity: ${invite.targetApplication.name}`)
-          .addFields(
-            {name: invite.targetApplication.summary || '(no description for this activity yet,,)', value: '​'},
-            {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
-          )
-          .setFooter('have fun bonding')
-          .setTimestamp()
+        .setColor('#DD6e0F')
+        .setTitle(`:revolving_hearts: ${invite.guild.name}'s bonding time uwu`)
+        .setDescription(`Selected activity: ${invite.targetApplication.name}`)
+        .addFields(
+          {name: invite.targetApplication.summary || '(no description for this activity yet,,)', value: '​'},
+          {name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}`}
+        )
+        .setFooter('have fun bonding')
+        .setTimestamp()
       ]})
     },
 
-    chess: async message => {
-        message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight')
+    async chess(message) {
+      message.channel.send('♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight')
     },
 
-    help: async message => {
+    async help(message) {
       //return message.channel.send('Help page is under rework comg')
          
-      const pages = [new MessageEmbed()
-        .setColor('#DD6E0F')
-        .setTitle('Hanako')
-        .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
-        .setDescription('created by shotgun#4239, written in JS')
-        .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
-        .addFields(
-          { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
-            -------------------------------
-            **help**‎    - Show this message
-            **prefix**‎  - Set a new prefix for me
-    
-            **bond**    - Bonding time with Discord activities
-            **chess**‎   - Info about chess
-            **compile**‎ - Code compiler
-            **mcskin**‎  - Show skin of a Minecraft player
-            **achieve**‎ - Achievement got!
-            **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
-            **gato**‎ ‎ ‎ ‎ - Random gato picture
-            **wa**‎ ‎ ‎ ‎ ‎ ‎ - wa?!
-            -------------------------------
-            `
+      const pages = [
+        new MessageEmbed()
+          .setColor('#DD6E0F')
+          .setTitle('Hanako')
+          .setAuthor('', 'https://i.imgur.com/RZKGQ7z.png')
+          .setDescription('created by shotgun#4239, written in JS')
+          .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
+          .addFields(
+            { name: '​', value: '💭 **Current prefix:** '+prefix+'\n'+`
+              -------------------------------
+              **help**‎    - Show this message
+              **prefix**‎  - Set a new prefix for me
+          
+              **bond**    - Bonding time with Discord activities
+              **chess**‎   - Info about chess
+              **compile**‎ - Code compiler
+              **mcskin**‎  - Show skin of a Minecraft player
+              **achieve**‎ - Achievement got!
+              **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
+              **gato**‎ ‎ ‎ ‎ - Random gato picture
+              **wa**‎ ‎ ‎ ‎ ‎ ‎ - wa?!
+              -------------------------------
+              `
           }),
-      new MessageEmbed()
-        .setColor('#DD6E0F')
-        .setTitle('🎶 Music commands')
-        .setDescription('Play some music in voice channels igh')
-        .addFields(
-          { name: '​', value: `
-            -------------------------------
-            **filter**‎ - Set a sound filter
-            **find**‎ ‎ ‎ - Give me a song lyrics and I'll find the song
-            **lyrics**‎ - Display the current sound's lyrics
-            **play**‎ ‎ ‎ - Play a sound or add into queue
-            **pause**‎ ‎ - Pause the current queue
-            **resume**‎ ‎- Resume the current queue
-            **replay** - Replay the current playing song
-            **remove**‎ - Remove a song in given position from the queue
-            **queue**‎ ‎ - Show the current queue
-            **skip**‎ ‎ ‎ - Skip to the next sound in queue
-            **stop**‎ ‎ ‎ - Stop the queue
-            **volume**‎ - Set the bot's volume
-            -------------------------------
-            `
+        new MessageEmbed()
+          .setColor('#DD6E0F')
+          .setTitle('🎶 Music commands')
+          .setDescription('Play some music in voice channels igh')
+          .addFields(
+            { name: '​', value: `
+              -------------------------------
+              **filter**‎ - Set a sound filter
+              **find**‎ ‎ ‎ - Give me a song lyrics and I'll find the song
+              **lyrics**‎ - Display the current sound's lyrics
+              **play**‎ ‎ ‎ - Play a sound or add into queue
+              **pause**‎ ‎ - Pause the current queue
+              **resume**‎ ‎- Resume the current queue
+              **replay** - Replay the current playing song
+              **remove**‎ - Remove a song in given position from the queue
+              **queue**‎ ‎ - Show the current queue
+              **skip**‎ ‎ ‎ - Skip to the next sound in queue
+              **stop**‎ ‎ ‎ - Stop the queue
+              **volume**‎ - Set the bot's volume
+              -------------------------------
+              `
           })
-        .setTimestamp(),
+          .setTimestamp(),
             
-      new MessageEmbed()
-        .setColor('#DD6E0F')
-        .setTitle('♐ Moderation commands')
-        .setDescription('CommandCleanup is down sometimes')
-        .addFields(
-          { name: '​', value: `
-            -------------------------------
+        new MessageEmbed()
+          .setColor('#DD6E0F')
+          .setTitle('♐ Moderation commands')
+          .setDescription('CommandCleanup is down sometimes')
+          .addFields(
+            { name: '​', value: `
+              -------------------------------
 
-            **purge** - Purge messages
-            
-            -------------------------------
-            `
-          })
-        .setTimestamp()
-        .setFooter('ight have fun')
+              **purge** - Purge messages
+
+              -------------------------------
+              `
+            })
+          .setTimestamp()
+          .setFooter('ight have fun')
       ]
 
       pagination({
@@ -123,26 +120,27 @@ module.exports = {
           {name: 'previous', emoji: '⬅', style: 'DANGER'},
           {name: 'next', emoji: '➡', style: 'PRIMARY'}
         ],
-        time: 20000
+        time: 50000
       })
     },
     
-    prefix: async (message, _, arg2) => {
+    async prefix(message, _, arg2) {
         if (arg2) {
-            if (arg2 == 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
-            db.set(message.guild.id, arg2, 'prefix').then(() => {
-              prefix = arg2
-              message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n`)
-              if (arg2 == 'default') {
-                message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
-              }
-            })
+          if (arg2 == 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
+
+          helper.getdb().set(message.guild.id, arg2, 'prefix').then(() => {
+            prefix = arg2
+            message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n`)
+            if (arg2 == 'default') {
+              message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
+            }
+          })
         } else {
-            message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
+          message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
         }
     },
 
-    purge: async(message, _, arg2) => {
+    async purge(message, _, arg2) {
       if (message.author.id != message.guild.ownerId) return message.reply('♐ Only owner can abuse the command ight')
       if (!arg2 || isNaN(arg2)) return message.channel.send('♐ Provide an amount of messages to be purged in number!')
       
@@ -166,30 +164,27 @@ module.exports = {
       }
     },
 
-    gato: async(message) => {
-        axios.get('https://aws.random.cat/meow?ref=apilist.fun')
-        .then(res => {
-            message.channel.send({ embeds: [new MessageEmbed()
-                .setColor('#DD6E0F')
-                .setTitle('gato')
-                .setImage(res.data.file)
-            ]})
-        })
+    async gato(message) {
+      axios.get('https://aws.random.cat/meow?ref=apilist.fun').then(res => {
+        message.channel.send({ embeds: [new MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle('gato')
+            .setImage(res.data.file)
+        ]})
+      })
     },
 
-    wa: async(message) => {
-      if (lock) return message.channel.send('noj,,,')
-      axios.get('https://api.waifu.im/sfw/waifu/')
-        .then(res => {
-            if (message.channel.nsfw) {
-              message.channel.send({ embeds: [new MessageEmbed()
-                .setColor('#DD6E0F')
-                .setTitle('wa')
-                .setImage(res.data.images[0].url)
-              ]})
-            } else {
-              message.channel.send('Oui, nsfw channel only!')
-            }
-        })
+    async wa(message) {
+      axios.get('https://api.waifu.im/sfw/waifu/').then(res => {
+        if (message.channel.nsfw) {
+          message.channel.send({ embeds: [new MessageEmbed()
+            .setColor('#DD6E0F')
+            .setTitle('wa')
+            .setImage(res.data.images[0].url)
+          ]})
+        } else {
+          message.channel.send('Oui, nsfw channel only!')
+        }
+      })
     }
 }
