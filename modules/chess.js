@@ -1,4 +1,4 @@
-const Discord = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 
 const chessState = require('../chess/chessBoard')
 const { parseChessMove, parseChessCoord } = require('../chess/util')
@@ -11,20 +11,17 @@ module.exports = {
     async new(message) {
       if (chessState.board) return message.reply('There\'s a match going on bru, spectate them')
 
-      message.channel.send('♟ Oki click ♟ to start. You have `10 seconds` to react.').then(m => setTimeout(() => m.delete, 10000))
-      await message.react('♟')
+      message.channel.send('♟ Oki type `yes chess` to start. You have `10 seconds` to chat.').then(m => setTimeout(() => m.delete, 10000))
 
-      const filter = (reaction, user) => reaction.emoji.name == '♟' && user.id == message.author.id
-      message.awaitReactions({filter, max: 1, time: 10000 }).then(collected => {
-        if (collected.first().emoji.name == '♟') {
-          chessState.newBoard()
-          chessState.sendBoardImage(message, `**Match: **${message.content.split(' ')[2]} [light] __vs__ ${message.content.split(' ')[3]} [dark]`)
-          chessState.saveBoard()
-          message.reactions.removeAll()
-        }
-      }).catch(() => {
-        message.channel.send('k no chess then...').then(m => setTimeout(() => m.delete, 5000))
-      })  
+      const filter = m => m.content.startsWith('yes chess')
+      message.channel.awaitMessages({ filter, max: 1, time: 10_000, errors: ['time'] })
+      .then(_ => {
+        const player = message.content.split(' ')
+
+        chessState.newBoard()
+        chessState.sendBoardImage(message, `**Match: **${player[2]} [light] __vs__ ${player[3]} [dark]`)
+        chessState.saveBoard()
+      })
     },
 
     end(message) {
@@ -33,7 +30,7 @@ module.exports = {
     },
 
     h(message) {
-      message.channel.send({ embeds: [new Discord.MessageEmbed()
+      message.channel.send({ embeds: [new MessageEmbed()
         .setColor('#DD6E0F')
         .setTitle('Chess')
         .setThumbnail('https://i.imgur.com/XZMFwU1.png')
@@ -51,40 +48,38 @@ module.exports = {
     },
 
     async move(message) {
-      if (!chessState.board) return message.channel.send('♟ Start a match first pls')
+      if (!chessState.chessboard) return message.channel.send('♟ Start a match first pls')
 
       const msgNoPrefix = message.content.replace(commandPrefix, '')
       const fromTo = message.content.split(' ')
       const chessMove = parseChessMove(msgNoPrefix)
-      const { board } = chessState
+      const { chessboard } = chessState
 
-      if (!chessMove) {
-          message.channel.send('Syntax error: `ax by` with `a, b` range from a-h, `x, y` range from 1-8. Type again!')
-      } else if (board[chessMove.from.y][chessMove.from.x]) {
-          const targetPiece = board[chessMove.from.y][chessMove.from.x]
-          board[chessMove.to.y][chessMove.to.x] = targetPiece
-          board[chessMove.from.y][chessMove.from.x] = undefined
+      if (!chessMove) message.channel.send('Syntax error: `ax by` with `a, b` range from a-h, `x, y` range from 1-8. Type again!').then(m => setTimeout(() => m.delete, 7000))
+      else if (chessboard[chessMove.from.y][chessMove.from.x]) {
+          const targetPiece = chessboard[chessMove.from.y][chessMove.from.x]
+          chessboard[chessMove.to.y][chessMove.to.x] = targetPiece
+          chessboard[chessMove.from.y][chessMove.from.x] = undefined
 
           await chessState.sendBoardImage(message, `**${message.author.username}: ${fromTo[1]} to ${fromTo[2]}**`)
           chessState.saveBoard()
 
-          for (row of board) {
-            if (!row.find(p => p === 'wking')) {
-              return message.channel.send('Light king isn\'t on board anymore... I think dark won!')
-            } else if (!row.find(p => p === 'bking')) {
-              return message.channel.send('Dark king isn\'t on board anymore... I think light won!')
-            }
+          let lk = false, dk = false
+
+          for (row of chessboard) {
+            if (row.find(p => p === 'wking')) lk = true
+            else if (row.find(p => p === 'bking')) dk = true
           }
 
-          if ((chessMove.to.y === 0 || chessMove.to.y === 7) && targetPiece.includes('pawn')) {
-            message.channel.send(`You can upgrade that pawn now! For example: ` +
+          if (!lk) return message.channel.send(`Light king isn't on board anymore... I think dark won!`)
+          else if (!dk) return message.channel.send(`Dark king isn't on board anymore... I think light won!`)
+
+          if ((chessMove.to.y === 0 || chessMove.to.y === 7) && targetPiece.includes('pawn')) message.channel.send(`You can upgrade that pawn now! For example: ` +
                 `\`${commandPrefix}set b8 wqueen\`. The valid piece names are: ` +
                 `\`${piecesWithNone.join(', ')}\``
             )
-          }
-        } else {
-            message.channel.send(`\`${fromTo[1]}\` has no pieces, pls move another!`)
-        }
+      }
+      else message.channel.send(`\`${fromTo[1]}\` has no pieces, pls move another!`)
     },
 
     set(message, msgParts) {
@@ -92,7 +87,7 @@ module.exports = {
         const coord = parseChessCoord(msgParts[2])
         if (coord && piecesWithNone.includes(msgParts[3])) {
             const target = msgParts[3] === 'none' ? undefined : msgParts[3]
-            chessState.board[coord.y][coord.x] = target
+            chessState.chessboard[coord.y][coord.x] = target
             chessState.sendBoardImage(message, `set ${msgParts[2]} to ${msgParts[3]}`)
             chessState.saveBoard()
             return

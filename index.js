@@ -1,12 +1,13 @@
-const Discord = require('discord.js')
+const { Client } = require('discord.js')
 
+const chessmodule = require('./modules/chess')
 const fs = require('fs')
 require('dotenv').config()
 
-const { Collection: MongoCollection, MongoClient } = require('mongodb')
+const { MongoClient } = require('mongodb')
 const { Collection, Fields } = require('quickmongo')
 
-const client = new Discord.Client({intents: 641}, {partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
+const client = new Client({intents: 641}, {partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
 
 const mongo = new MongoClient(process.env.MONGODB_COMPASS)
 const schema = new Fields.ObjectField({
@@ -33,22 +34,24 @@ client.on('messageCreate', async message => {
   const prefixed = message.content.substring(0, prefix.length).toLowerCase()
 
   if (prefixed == prefix || prefixed == 'c!') {
-      for (thread of message.content.split(' && ')) {   
+    for (thread of message.content.split(' && ')) {   
       const main = thread.replace(RegExp(prefixed == prefix? prefix : 'c!', 'gm'), '').replace(/^\s/gm, '')
       const subcontents = main.split(' ')
 
       const cmd = main.split(/ +/g).shift().toLowerCase()
       const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
 
+      if (prefixed == 'c!' && !chessmodule[cmd]) return chessmodule.move(message)
+
       const module = function() {
         return fs.readdirSync('./modules').find(modul => {
-          const command = require('./modules/' + modul)[cmd]
+          const command = require(`./modules/${modul}`)[cmd]
           if (command) return command
         }) 
       }()
 
       if (!module) return
-      await require('./modules/' + module)[cmd](message, main, arg2)  
+      await require(`./modules/${module}`)[cmd](message, main, arg2)  
     }
   }
 });

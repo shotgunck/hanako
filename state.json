@@ -1,10 +1,10 @@
 [
-["brook","bknight","bbishop","bqueen",null,"bbishop","bknight","brook"],
+["brook","bknight","bbishop","bqueen","bking","bbishop","bknight","brook"],
 ["bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn","bpawn"],
 [null,null,null,null,null,null,null,null],
-[null,null,"wbishop",null,null,null,null,null],
+[null,null,null,null,null,null,null,null],
 [null,null,null,null,null,null,null,null],
 [null,null,null,null,null,null,null,null],
 ["wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn","wpawn"],
-["wrook","wknight",null,"wqueen","bking","wbishop","wknight","wrook"]
+["wrook","wknight","wbishop","wqueen","wking","wbishop","wknight","wrook"]
 ]

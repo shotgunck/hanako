@@ -1,24 +1,26 @@
+const { MessageAttachment } = require('discord.js')
+
 const fs = require('fs')
 const nodeCanvas =  require('canvas')
 
-const { makeSimpleErrorHandler } = require('./util')
 const { images } = require('./images')
 
-let board;
+let chessboard
 
 const newBoard = () => {
-    const board = []
+    let board = []
     const presetRows = {
         0: ['brook', 'bknight', 'bbishop', 'bqueen', 'bking', 'bbishop', 'bknight', 'brook'],
         1: ['bpawn', 'bpawn', 'bpawn', 'bpawn', 'bpawn', 'bpawn', 'bpawn', 'bpawn'],
         6: ['wpawn', 'wpawn', 'wpawn', 'wpawn', 'wpawn', 'wpawn', 'wpawn', 'wpawn'],
         7: ['wrook', 'wknight', 'wbishop', 'wqueen', 'wking', 'wbishop', 'wknight', 'wrook']
     }
-    for (let y = 0; y < 8; y++) {
-        board.push(presetRows[y] || Array.from({ length: 8 }))
-    }
+
+    for (let y = 0; y < 8; y++) board.push(presetRows[y] || Array.from({ length: 8 }))
+
+    chessmodule.chessboard = board
     return board
-};
+}
 
 const renderBoard = async () => {
     const width = 280
@@ -33,49 +35,41 @@ const renderBoard = async () => {
 
     for (let y = 0; y < 8; y++) {
         for (let x = 0; x < 8; x++) {
-            const image = images[board[y][x]]
-            if (image) {
-                ctx.drawImage(image, boardXOffset + pieceSize * x, pieceSize * y)
-            }
+            const image = images[chessboard[y][x]]
+            if (image) ctx.drawImage(image, boardXOffset + pieceSize * x, pieceSize * y)
         }
     }
 
     const buf = canvas.toBuffer('image/png', { compressionLevel: 9 })
-    const fileName = 'comg.png' //Date.now() + '.png';
-    fs.writeFile(fileName, buf, function(_, _){})
+    const fileName = 'comg.png'
+    await fs.writeFile(fileName, buf, function(_, _){})
+
     return fileName
 };
 
 const sendBoardImage = async (message, text) => {
-  message.channel.send("[Rendering...]").then(m => m.delete({ timeout: 750 }))
-  const boardImage = await renderBoard(board)
-  await message.channel.send(text, {
-    files: [{
-      attachment: boardImage,
-      name: boardImage
-    }]
-  }).catch(makeSimpleErrorHandler('Failed to send msg!'))
-  //fs.unlink(boardImage, function(e, r){})
+  await renderBoard()
+  message.channel.send({
+    content: text,
+    files: [new MessageAttachment('./comg.png')]
+  })
 }
 
 const saveBoard = () => {
-    const json = JSON.stringify(board).replace(/],/g, '],\n').replace('[[', '[\n[').replace(']]', ']\n]')
+    const json = JSON.stringify(chessboard).replace(/],/g, '],\n').replace('[[', '[\n[').replace(']]', ']\n]')
     return fs.writeFile('state.json', json, function(_, _){})
 }
 
-module.exports = {
-    board,
-    newBoard: () => {
-        board = newBoard()
-        chessState.board = board
-    },
-    sendBoardImage,
-    saveBoard,
-    loadBoard: async () => {
-        const data = fs.readFile('./state.json', 'utf8', function(_, _){})
-        if (data) {
-            board = JSON.parse(data)
-            chessState.board = board
-        }
-    }
+const chessmodule = {
+  chessboard,
+  newBoard: () => {
+    chessboard = newBoard()
+  },
+  sendBoardImage,
+  saveBoard,
+  loadBoard: async () => {
+    if (fs.readFile('./state.json', 'utf8', function(_, _){})) chessboard = JSON.parse(data)
+  }
 }
+
+module.exports = chessmodule
