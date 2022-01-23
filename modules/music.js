@@ -45,7 +45,7 @@ const play = p = async (message, main, arg2) => {
     const source = message.attachments[0]? message.attachments[0].attachment : main.replace(/play |p /gm, '')
 
     if (!source) return message.channel.send('Play what mf,.,')
-    console.log(source)
+
     distube.voices.join(message.member.voice.channel)
     distube.voices.get(message).setSelfDeaf(true)
 
