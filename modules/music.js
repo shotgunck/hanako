@@ -4,7 +4,7 @@ const { SpotifyPlugin } = require('@distube/spotify')
 const { getLyrics } = require('genius-lyrics-api')
 const { pagination } = require('reconlx')
 const lsModule = require('@penfoldium/lyrics-search')
-const tts = require('google-tts-api')
+const ProgressBar = require('progress')
 
 const findSong = new lsModule(process.env.GENIUS_API)
 
@@ -290,20 +290,26 @@ module.exports = {
       if (!queue) return message.channel.send('🗑 There are no songs around,.')
 
       const playing = queue.songs[0]
+
+      const bar = new ProgressBar(':bar', {
+        total: 50,
+        complete: '-',
+        incomplete: '-',
+        head: '🔘',
+        curr: queue.currentTime * (50 / playing.duration)
+      })
+      await bar.tick()
+
       message.channel.send({embeds: [new MessageEmbed()
         .setColor('#DD6E0F')
         .setTitle(playing.name)
         .setDescription(`by [${playing.uploader.name}](${playing.uploader.url})`)
         .setThumbnail(playing.thumbnail)
         .addFields(
-            {name: 'Source', value: playing.url}
+            {name: 'Source', value: playing.url},
          )
-        .setFooter(`${queue.formattedCurrentTime} / ${playing.formattedDuration}`)
+        .setFooter(`${queue.formattedCurrentTime} ${bar.lastDraw} ${playing.formattedDuration}`)
       ]})
-    },
-
-    async say(message, _, arg2) {
-
     },
 
     volume, vol

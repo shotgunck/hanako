@@ -15,12 +15,12 @@ A multi-purpose Discord bot written in JavaScript
 ```bash
 !play && ! play && play
 
-.chess && purge 10 && . ms hypixel.net
+>gato && > ms && wa
 ```
 
 ## To-do
-* Text-to-speech and speech-to-text
 * Slash commands
+* Something cool
 
 ## Credits
 The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).
