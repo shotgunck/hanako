@@ -18,12 +18,11 @@ module.exports = {
     achieve(message, main) {
       const args = main.slice(7).trim().split(/ +/g).join('..')
       axios.get('https://minecraft-api.com/api/achivements/cooked_salmon/achievement..got/'+args)
-      .then(data => {
-        message.channel.send({ embeds: [new MessageEmbed() 
+      .then(data => message.channel.send({ embeds: [new MessageEmbed() 
             .setColor('#DD6E0F')
             .setImage(data.config.url)
         ]})
-      })
+      )
     },
 
     async ms(message, _, arg2) {

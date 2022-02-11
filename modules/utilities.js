@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js')
-const axios = require('axios')
 const { pagination } = require('reconlx')
+const axios = require('axios')
 
 const helper = require('../helper')
 let prefix = 'oi'
@@ -66,6 +66,7 @@ module.exports = {
               **mcskin**‎  - Show skin of a Minecraft player
               **achieve**‎ - Achievement got!
               **ms**‎ ‎ ‎ ‎ ‎ ‎ - Get a Minecraft server's status
+              **minesweeper** - Minesweeper game
               **gato**‎ ‎ ‎ ‎ - Random gato picture
               **wa**‎ ‎ ‎ ‎ ‎ ‎ - wa?!
               -------------------------------
@@ -131,13 +132,9 @@ module.exports = {
           helper.getdb().set(message.guild.id, arg2, 'prefix').then(() => {
             prefix = arg2
             message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n`)
-            if (arg2 == 'default') {
-              message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
-            }
+            if (arg2 == 'default') message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
           })
-        } else {
-          message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
-        }
+        } else message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
     },
 
     async purge(message, _, arg2) {
@@ -146,45 +143,37 @@ module.exports = {
       
       const amount = parseInt(arg2) + 1
       if (amount > 0 && amount < 101) {
-        message.channel.bulkDelete(amount, true).then(_ => {
-          message.channel.send({embeds: [new MessageEmbed()
+        message.channel.bulkDelete(amount, true).then(_ => message.channel.send({embeds: [new MessageEmbed()
             .setColor('#AA11EE')
             .setDescription(`♐ Purged ${amount - 1} messages!`)
             .setTimestamp()
           ]}).then(m => setTimeout(() => m.delete(), 2000))
-        }).catch(err => {
-          message.channel.send({embeds: [new MessageEmbed()
+        ).catch(err => message.channel.send({embeds: [new MessageEmbed()
             .setColor('#AA11EE')
             .setDescription('❌ Error while purging | '+err)
             .setTimestamp()
           ]}).then(m => setTimeout(() => m.delete(), 10000))
-        })
-      } else {
-        message.channel.send('♐ You can only purge from 1 to 100 messages!')
-      }
+        )
+      } else message.channel.send('♐ You can only purge from 1 to 100 messages!')
     },
 
     async gato(message) {
-      axios.get('https://aws.random.cat/meow?ref=apilist.fun').then(res => {
-        message.channel.send({ embeds: [new MessageEmbed()
+      axios.get('https://aws.random.cat/meow?ref=apilist.fun').then(res => message.channel.send({ embeds: [new MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('gato')
             .setImage(res.data.file)
         ]})
-      })
+      )
     },
 
     async wa(message) {
       axios.get('https://api.waifu.im/sfw/waifu/').then(res => {
-        if (message.channel.nsfw) {
-          message.channel.send({ embeds: [new MessageEmbed()
+        if (message.channel.nsfw) message.channel.send({ embeds: [new MessageEmbed()
             .setColor('#DD6E0F')
             .setTitle('wa')
             .setImage(res.data.images[0].url)
           ]})
-        } else {
-          message.channel.send('Oui, nsfw channel only!')
-        }
+        else message.channel.send('Oui, nsfw channel only!')
       })
     }
 }

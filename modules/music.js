@@ -1,10 +1,10 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
-const Distube = require('distube')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { getLyrics } = require('genius-lyrics-api')
 const { pagination } = require('reconlx')
-const lsModule = require('@penfoldium/lyrics-search')
+const Distube = require('distube')
 const ProgressBar = require('progress')
+const lsModule = require('@penfoldium/lyrics-search')
 
 const findSong = new lsModule(process.env.GENIUS_API)
 
@@ -35,7 +35,7 @@ function buttons(client, message) {
   })
 }
 
-const play = p = async (message, main, arg2) => {
+const play = p = async (message, main, _) => {
     const voiceChannel = message.member.voice.channel
     if (!voiceChannel) return message.channel.send('Enter a voice channel pls!')
 
@@ -57,19 +57,15 @@ const queue = q = async message => {
     let queue = distube.getQueue(message), pages = [], q = ''
     if (!queue) return message.channel.send('🕳 Queue empty..,')
 
-    await queue.songs.map((song, index) => {
-        q += `**${index + 1}**. ${song.name} - \`${song.formattedDuration}\`\n` 
-    })
+    await queue.songs.map((song, index) => q += `**${index + 1}**. ${song.name} - \`${song.formattedDuration}\`\n`)
 
     const queueList = q.match(/(.*?\n){10}/gm) || [q]
-    for (list of queueList) {
-      pages.push(new MessageEmbed()
+    for (list of queueList) pages.push(new MessageEmbed()
         .setColor('#DD6E0F')
         .setTitle('Current Queue')
         .setDescription(`Total length - \`${queue.formattedDuration}\``)
         .addFields({ name: '​', value: list })
-      )
-    }
+    )
 
     pagination({
       author: message.author,
@@ -99,9 +95,9 @@ const repeat = loop = async (message, _, arg2) => {
         await distube.setRepeatMode(message, 2)
         message.channel.send('🔁 Current queue is now on repeat!')
     } else if (parseInt(arg2) > 0) {
-        for (var i = 1; i <= parseInt(arg2); i++) {
-          queue.songs.splice(1, 0, queue.songs[0])
-        }
+        const repeatAmount = parseInt(arg2)
+        for (var i = 1; i <= repeatAmount; i++) queue.songs.splice(1, 0, queue.songs[0])
+
         message.channel.send(`🔁 Current song will repeat for \`${arg2}\` times k`)
     }
 }
@@ -115,7 +111,7 @@ const remove = rm = async(message, _, arg2) => {
     const toRemove = queue.songs[index].name
     
     await queue.songs.splice(index, 1)
-    message.channel.send('💨 **'+toRemove+'** has been removed from queue oki')
+    message.channel.send(`💨 **${toRemove}** has been removed from queue oki`)
 }
 
 const skip = s = async message => {
@@ -206,7 +202,7 @@ module.exports = {
 
       if (!arg2) return message.channel.send('🦘 Jump to where?')
 
-      await distube.jump(message, parseInt(arg2)-1).catch(_ => message.channel.send('The given position does not exist!'))
+      await distube.jump(message, parseInt(arg2) - 1).catch(_ => message.channel.send('The given position does not exist!'))
       message.channel.send(`➡ Jumped to position ${arg2}!`)
     },
 
