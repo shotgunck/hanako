@@ -5,6 +5,16 @@ const axios = require('axios')
 const { setdb, getdb, bondapp } = require('../helper')
 let prefix = 'oi'
 
+function normal(message) {
+  axios.get('https://api.waifu.im/sfw/waifu/').then(res => message.channel.send({
+    embeds: [new MessageEmbed()
+      .setColor('#DD6E0F')
+      .setTitle('wa')
+      .setImage(res.data.images[0].url)
+    ]
+  }))
+}
+
 module.exports = {
   init(database) {
     setdb(database)
@@ -176,16 +186,16 @@ module.exports = {
     )
   },
 
-  async wa(message) {
-    axios.get('https://api.waifu.im/sfw/waifu/').then(res => {
-      if (message.channel.nsfw) message.channel.send({
-        embeds: [new MessageEmbed()
-          .setColor('#DD6E0F')
-          .setTitle('wa')
-          .setImage(res.data.images[0].url)
-        ]
-      })
-      else message.channel.send('Oui, nsfw channel only!')
-    })
+  async wa(message, _, arg2) {
+    if (!message.channel.nsfw) return message.channel.send('Oui, nsfw channel only!')
+
+    if (arg2) axios.get(process.env.SW + arg2).then(res => message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor('#DD6E0F')
+        .setTitle('wa')
+        .setImage(res.data.url)
+      ]
+    })).catch(_ => {normal(message)})
+    else normal(message)
   }
 }

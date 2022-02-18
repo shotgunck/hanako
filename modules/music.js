@@ -74,7 +74,7 @@ const repeat = loop = async (message, _, arg2) => {
     message.channel.send('🔁 Current queue is now on repeat!')
   } else if (parseInt(arg2) > 0) {
     const repeatAmount = parseInt(arg2)
-    for (var i = 1; i <= repeatAmount; i++) queue.songs.splice(1, 0, queue.songs[0])
+    for (let i = 1; i <= repeatAmount; i++, queue.songs.splice(1, 0, queue.songs[0]));
 
     message.channel.send(`🔁 Current song will repeat for \`${arg2}\` times k`)
   }
