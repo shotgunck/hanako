@@ -24,7 +24,7 @@ mongo.connect().then(() => {
 
 client.on('ready', () => {
   console.log('im on')
-  client.user.setPresence({status: 'idle', activities: [{name: 'oi help', type: 'LISTENING'}]})
+  client.user.setPresence({status: 'idle', activities: [{name: 'with sakura', type: 'PLAYING'}]})
 })
 
 client.on('messageCreate', async message => {
@@ -32,28 +32,56 @@ client.on('messageCreate', async message => {
 
   const prefix = await db.get(message.guild.id, 'prefix') || 'oi'
   const prefixed = message.content.substring(0, prefix.length).toLowerCase()
+  const threads = message.content.split(' && ')
+  
+  if (prefixed == prefix || prefixed == 'bb' || prefixed == 'c!') {
+    let strict_prefix
+    
+    threads.forEach(async (thread, index) => {
+      if (prefixed == 'bb' && index == 0) return strict_prefix = true
+      if (strict_prefix && index > 0 && thread.substring(0, prefix.length).toLowerCase() !== prefix) return
 
-  if (prefixed == prefix || prefixed == 'c!') {
-    for (thread of message.content.split(' && ')) {   
-      const main = thread.replace(RegExp(prefixed == prefix? prefix : 'c!', 'gm'), '').replace(/^\s/gm, '')
-      const subcontents = main.split(' ')
-
+      const main = thread.replace(RegExp(prefixed == prefix? prefix : (strict_prefix? 'oi|c!' : 'c!'), 'gm'), '').replace(/^\s/gm, '')
       const cmd = main.split(/ +/g).shift().toLowerCase()
-      const arg2 = cmd == subcontents[1] ? subcontents[2] : subcontents[1]
 
       if (prefixed == 'c!' && !chessmodule[cmd]) return chessmodule.move(message)
 
+      const subcontents = main.split(' ')
+      const arg2 = cmd == subcontents[2] ? subcontents[2] : subcontents[1]
+
       const module = function() {
-        return fs.readdirSync('./modules').find(modul => {
-          const command = require(`./modules/${modul}`)[cmd]
-          if (command) return command
+        return fs.readdirSync('./modules').find(m => {
+          return require(`./modules/${m}`)[cmd]
         }) 
       }()
 
       if (!module) return
+      await require(`./modules/${module}`)[cmd](message, main, arg2)
+    })
+  }
+  
+  /*
+  if (prefixed == prefix || prefixed == 'bb' || prefixed == 'c!') {
+    for (let thread of threads) {
+      const main = thread.replace(RegExp(prefixed == prefix? prefix : 'c!', 'gm'), '').replace(/^\s/gm, '')
+      const cmd = main.split(/ +/g).shift().toLowerCase()
+
+      if (prefixed == 'c!' && !chessmodule[cmd]) return chessmodule.move(message)
+
+      const subcontents = main.split(' ')
+      const arg2 = cmd == subcontents[2] ? subcontents[2] : subcontents[1]
+
+      const module = function() {
+        return fs.readdirSync('./modules').find(m => {
+          return require(`./modules/${m}`)[cmd]
+        }) 
+      }()
+
+      if (!module) continue
       await require(`./modules/${module}`)[cmd](message, main, arg2)  
     }
   }
+  */
 });
 
 (async () => {

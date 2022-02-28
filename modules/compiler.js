@@ -23,17 +23,16 @@ module.exports = {
       clientSecret: process.env.JD_CLIENT_SECRET
     }
 
-    const before = Date.now()
     axios.post('https://api.jdoodle.com/v1/execute', program)
       .then(res => {
-        const elapsed = Date.now() - before
-        const output = res.data.output
+        const data = res.data
+        const output = data.output
         message.channel.send({
           embeds: [new MessageEmbed()
             .setTitle('**💠 Output:**')
             .setColor('#DD6E0F')
             .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.' ? '❌ I can not compile the given code due to non-supportive packages/libraries!' : '```' + output + '```')
-            .setFooter(`Finished in ${elapsed}ms`)
+            .setFooter(`CPU time: ${data.cpuTime}ms | Memory used: ${data.memory}`)
             .setTimestamp()
           ]
         })

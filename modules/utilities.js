@@ -6,13 +6,16 @@ const { setdb, getdb, bondapp } = require('../helper')
 let prefix = 'oi'
 
 function normal(message) {
-  axios.get('https://api.waifu.im/sfw/waifu/').then(res => message.channel.send({
-    embeds: [new MessageEmbed()
-      .setColor('#DD6E0F')
-      .setTitle('wa')
-      .setImage(res.data.images[0].url)
-    ]
-  }))
+  axios.get('https://api.waifu.im/random/?is_nsfw=false').then(res => {
+    const info = res.data.images[0]
+    message.channel.send({
+      embeds: [new MessageEmbed()
+        .setColor(info.dominant_color)
+        .setTitle('wa')
+        .setImage(info.url)
+      ]
+    })
+  }).catch(err => message.channel.send(`wa wa err \`${err}\``))
 }
 
 module.exports = {
@@ -142,11 +145,11 @@ module.exports = {
   async prefix(message, _, arg2) {
     if (arg2) {
       if (arg2 == 'c!') return message.channel.send('⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
-
+      if (arg2 == 'default') arg2 = 'oi'
+      
       getdb().set(message.guild.id, arg2, 'prefix').then(() => {
         prefix = arg2
         message.channel.send(`❗ My prefix is now changed to \`${arg2}\`\n`)
-        if (arg2 == 'default') message.channel.send('⚠ Note: it will literally be `default`, **__not__** `oi`.')
       })
     } else message.channel.send(`Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
   },
@@ -195,7 +198,7 @@ module.exports = {
         .setTitle('wa')
         .setImage(res.data.url)
       ]
-    })).catch(_ => {normal(message)})
+    })).catch(_ => { normal(message) })
     else normal(message)
   }
 }
