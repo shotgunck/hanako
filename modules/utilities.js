@@ -32,7 +32,7 @@ module.exports = {
 
     if (!arg2 || !app) return message.channel.send('💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
 
-    const invite = await message.member.voice.channel.createInvite({
+    const invite = await channel.createInvite({
       maxAge: 86400,
       maxUses: 0,
       unique: true,
