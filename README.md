@@ -17,12 +17,22 @@ A multi-purpose Discord bot written in JavaScript
 
 >gato && > ms && wa
 ```
-* Interact with [sakura](https://github.com/shotgunck/sakura)
+* Interact with bots in [oasis](https://github.com/shotgunck/Oasis)
 ```bash
 bb help && oi help
 ```
+* Compound commands: 
+```bash
+!play && ! play && play
+
+>gato && > ms && wa
+```
+* Slash commands: 
+```bash
+/mcskin notch
+```
 ## To-do
-* Slash commands
+* Maybe compound slash commands
 
 ## Credits
 The chess game was based on [this discord bot example](https://github.com/kylepaulsen/discord-chess-bot).

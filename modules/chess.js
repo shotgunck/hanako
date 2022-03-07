@@ -7,11 +7,13 @@ const { pieces } = require('../chess/images')
 const commandPrefix = 'c!'
 const piecesWithNone = pieces.concat('none')
 
+const { msgDelete } = require('../helper')
+
 module.exports = {
   async new(message) {
     if (chessState.board) return message.reply('There\'s a match going on bru, spectate them')
 
-    message.channel.send('♟ Oki type `yes chess` to start. You have `10 seconds` to chat.').then(m => setTimeout(() => m.delete, 10000))
+    message.channel.send('♟ Oki type `yes chess` to start. You have `10 seconds` to chat.').then(m => msgDelete(m, 8))
 
     const filter = m => m.content.startsWith('yes chess')
     message.channel.awaitMessages({ filter, max: 1, time: 10_000, errors: ['time'] })
@@ -58,7 +60,7 @@ module.exports = {
     const chessMove = parseChessMove(msgNoPrefix)
     const { chessboard } = chessState
 
-    if (!chessMove) message.channel.send('Syntax error: `ax by` with `a, b` range from a-h, `x, y` range from 1-8. Type again!').then(m => setTimeout(() => m.delete, 7000))
+    if (!chessMove) message.channel.send('Syntax error: `ax by` with `a, b` range from a-h, `x, y` range from 1-8. Type again!').then(m => msgDelete(m, 7))
     else if (chessboard[chessMove.from.y][chessMove.from.x]) {
       const targetPiece = chessboard[chessMove.from.y][chessMove.from.x]
       chessboard[chessMove.to.y][chessMove.to.x] = targetPiece

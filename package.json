@@ -1,14 +1,15 @@
 {
   "name": "hanako",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "description": "a multi-purpose discord bot written in js",
-  "main": "index.js",
+  "main": "main.js",
   "engines": {
-    "node": "14.x"
+    "node": "16.x"
   },
   "dependencies": {
+    "@discordjs/builders": "^0.12.0",
     "@discordjs/opus": "^0.7.0",
-    "@discordjs/rest": "0.1.0-canary.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.7.5",
     "@distube/spotify": "^1.0.0",
     "@distube/youtube-dl": "^2.2.4",
@@ -42,7 +43,7 @@
     "ytsearcher": "^1.2.4"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node main.js"
   },
   "keywords": [],
   "author": "",
