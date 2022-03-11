@@ -128,7 +128,7 @@ module.exports = {
     }
 
     await rest.put(
-			Routes.applicationGuildCommands(process.env.BOT_CLIENT_SECRET),
+			Routes.applicationCommands(process.env.BOT_CLIENT_SECRET),
 			{ body: commands }
 		)
   },
