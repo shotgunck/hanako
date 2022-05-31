@@ -127,7 +127,7 @@ module.exports = {
       }
     }
 
-    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_SECRET), { body: commands } )
+    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: commands } )
   },
 
   command_with_its_group,

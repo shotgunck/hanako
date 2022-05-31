@@ -1,15 +1,14 @@
 const { MessageEmbed } = require('discord.js')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { SpotifyPlugin } = require('@distube/spotify')
-const { getLyrics } = require('genius-lyrics-api')
 const { pagination } = require('reconlx')
 const Distube = require('distube')
 const ProgressBar = require('progress')
-const LyricsSearch = require('@penfoldium/lyrics-search')
+const genius = require('genius-lyrics')
 
-const { msgSplit, sendMessage, msgEdit } = require('../helper')
+const { sendMessage } = require('../helper')
 
-const findSong = new LyricsSearch(process.env.GENIUS_API)
+const findSong = new genius.Client(process.env.GENIUS_API)
 
 let distube
 
@@ -71,21 +70,22 @@ module.exports = {
     async execute(message, arg2, main) {
       if (!arg2) return sendMessage(message, `🔎 Provide some lyrics!! Example: \`oi find how you want me to\``)
 
-      findSong.search(main.substr(4, main.length)).then(res => {
-        const info = res.fullTitle.split('by')
+      findSong.songs.search(main.substr(4, main.length)).then(search => {
+        const info = search[0]
+
         message.reply({
           embeds: [new MessageEmbed()
             .setColor('#DD6E0F')
-            .setTitle(info[0])
-            .setDescription('by' + info[1])
+            .setTitle(info.fullTitle)
+            .setDescription('by' + info.artist.name)
             .setAuthor('Song:')
-            .setThumbnail(res.primaryArtist.header)
-            .addFields( { name: '​', value: `[About song](${res.url})\n[About author](${res.primaryArtist.url})` } )
-            .setImage(res.songArtImage)
+            .setThumbnail(info.thumbnail)
+            .addFields( { name: '​', value: `[About song](${info.url})\n[About author](${info.artist.url})` } )
+            .setImage(info.image)
           ],
           allowedMentions: { repliedUser: false }
         })
-      }).catch(e => sendMessage(message, `❌ Request error: ${e}`))
+      }).catch(err => sendMessage(message, `!! Error: ${err}`))      
     }
   },
 
@@ -108,39 +108,6 @@ module.exports = {
 
       await distube.jump(message, parseInt(arg2) - 1).catch(_ => sendMessage(message, 'The given position does not exist!'))
       sendMessage(message, `➡ Jumped to position ${arg2}!`)
-    }
-  },
-
-  lyrics: {
-    slash: new SlashCommandBuilder()
-      .setName('lyrics')
-      .setDescription('Get the current track\'s lyrics (if available)')
-      .toJSON(),
-
-    async execute(message) {
-      const queue = distube.getQueue(message)
-      if (!queue) return sendMessage(message, '🕳 Play a sound so I can get the lyrics aight')
-
-      let data = queue.songs[0].name.split(' - ')
-      const songName = (!data[1] ? data[0] : data[1]).replace(/\([^)]*\)/gm, '')
-      const artist = data[0].replace(/\([^)]*\)/gm, '');
-
-      const options = {
-        apiKey: process.env.GENIUS_API,
-        title: songName,
-        artist: artist,
-        optimizeQuery: true
-      }
-
-      const status = await sendMessage(message, `Getting lyrics for ${songName}`)
-
-      getLyrics(options).then(res => {
-        if (!res) return msgEdit(status, 'Could not find any lyrics!')
-
-        msgSplit(res).forEach(lyricPart => {
-          if (lyricPart || lyricPart.length > 0) return message.channel.send(lyricPart)
-        })
-      }).catch(err => msgEdit(status, err))
     }
   },
 
