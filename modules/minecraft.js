@@ -111,11 +111,11 @@ module.exports = {
             .addFields(
               {
                 name: '- - - Server info - - -', value: `\n
-                  <:mc:981076950758092820> **Version:** ${data.version.name}
+                  \n<:mc:981076950758092820> **Version:** ${data.version.name}
                   \n⚪ **Ping:** ${ping}
                   \n<:steve:981078922911432774> **Players:** ${players.online}/${players.max + listofplayer}`
               },
-              { name: '- - - - - - - - - - - - -', value: '🔸 This is a cached result. Please check again in ${data.cache.ttl} seconds!' }
+              { name: '- - - - - - - - - - - - - -', value: `🔸 This is a cached result. Please check again in ${data.cache.ttl} seconds!` }
             )
             .setTimestamp()
           ],
