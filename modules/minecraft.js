@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders')
 const { MessageEmbed } = require('discord.js')
 const axios = require('axios')
 
-const { getPrefix, msgEdit, sendMessage } = require('../helper')
+const { msgEdit, sendMessage } = require('../helper')
 
 module.exports = {
   mcskin: {
@@ -18,7 +18,7 @@ module.exports = {
     args: 'username',
 
     async execute(message, arg2) {
-      if (!arg2) return message.reply(`🙄 Provide a Minecraft player's username,, like \`${await getPrefix(message.guild.id)} mcskin notch\``)
+      if (!arg2) return message.reply(`🙄 Provide a Minecraft player's username,, like \`oi mcskin notch\``)
       message.reply({
         embeds: [new MessageEmbed()
           .setColor('#DD6E0F')
@@ -73,10 +73,10 @@ module.exports = {
       let status = await sendMessage(message, '🕹 Getting server info, please wait.. (if it takes too long it\'s prob offline)')
 
       axios.get(`https://eu.mc-api.net/v3/server/ping/${arg2}`).then(res => {
-        const data = res.data
+        let data = res.data
 
         if (!data.online) {
-          const notCharacter = arg2.search(/[^\w.:]/gm) == -1 ? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `' + arg2.replace(/[^\w.:]/gm, '') + '`'
+          let notCharacter = arg2.search(/[^\w.:]/gm) == -1 ? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `' + arg2.replace(/[^\w.:]/gm, '') + '`'
 
           return msgEdit(status, {
             embeds: [new MessageEmbed()
@@ -90,10 +90,10 @@ module.exports = {
           })
         }
 
-        const players = data.players
-        const sample = players.sample || [{ name: '' }]
-        const desc = data.description
-        const descExtra = desc.extra, descText = desc.text
+        let players = data.players
+        let sample = players.sample || [{ name: '' }]
+        let desc = data.description
+        let descExtra = desc.extra, descText = desc.text
 
         let ping = data.took
         ping += 'ms ' + (ping >= 1000 ? '[WTF]' : (ping >= 400 && ping < 1000) ? '[Bad]' : (ping >= 150 && ping < 400) ? '[avg]' : (ping >= 25 && ping < 150) ? '[OK]' : '[fast af]')
@@ -104,17 +104,18 @@ module.exports = {
         msgEdit(status, {
           embeds: [new MessageEmbed()
             .setColor('#DD6E0F')
-            .setTitle(`🟢 ${arg2} is online`)
+            .setAuthor({ name: '🟢 online' })
+            .setTitle(`${arg2}`)
             .setDescription(descExtra ? descExtra[1].text : (descText || desc))
             .setThumbnail(data.favicon)
             .addFields(
               {
-                name: '🔷Info', value: `-------------------------------\n
-		         	    **Version**:  ${data.version.name}
-                  \n**Ping**: ${ping}
-                	\n**Players in game:**  ${players.online}/${players.max + listofplayer}
-                  \n-------------------------------\n🔸 This is a cached result. Please check again in ${data.cache.ttl} seconds!`
-              }
+                name: '- - - Server info - - -', value: `\n
+                  <:mc:981076950758092820> **Version:** ${data.version.name}
+                  \n⚪ **Ping:** ${ping}
+                  \n<:steve:981078922911432774> **Players:** ${players.online}/${players.max + listofplayer}`
+              },
+              { name: '- - - - - - - - - - - - -', value: '🔸 This is a cached result. Please check again in ${data.cache.ttl} seconds!' }
             )
             .setTimestamp()
           ],

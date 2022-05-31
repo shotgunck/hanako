@@ -3,8 +3,7 @@ const { MessageEmbed } = require('discord.js')
 const { pagination } = require('reconlx')
 const axios = require('axios')
 
-const { bondapp, bondapp_slash, getdb, helppages, sendMessage } = require('../helper')
-let prefix = 'oi'
+const { bondapp, bondapp_slash, helppages, sendMessage } = require('../helper')
 
 module.exports = {
   bond: {
@@ -22,15 +21,15 @@ module.exports = {
     args: 'activity',
 
     async execute(message, arg2) {
-      const channel = message.member.voice.channel
+      let channel = message.member.voice.channel
 
       if (!channel) return sendMessage(message, '💔To bond, some of yall must join voice channels oki')
       if (!channel.permissionsFor(message.guild.me).has('CREATE_INSTANT_INVITE')) return sendMessage(message, '💕I need the create invite permission pls')
 
-      const app = bondapp[arg2] || bondapp[Object.keys(bondapp).find(name => bondapp[name] == arg2)]
+      let app = bondapp[arg2] || bondapp[Object.keys(bondapp).find(name => bondapp[name] == arg2)]
       if (!arg2 || !app) return sendMessage(message, '💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
 
-      const invite = await channel.createInvite({
+      let invite = await channel.createInvite({
         maxAge: 86400,
         maxUses: 0,
         unique: true,
@@ -90,31 +89,6 @@ module.exports = {
         ],
         time: 50000
       })
-    }
-  },
-
-  prefix: {
-    slash: new SlashCommandBuilder()
-    .setName('prefix')
-    .setDescription('Set a new prefix for the guild')
-    .addStringOption(option => option
-      .setName('prefix')
-      .setDescription('Example: !')
-      .setRequired(true))
-    .toJSON(),
-
-    args: 'prefix',
-
-    async execute(message, arg2) {
-      if (arg2) {
-        if (arg2 == 'c!') return sendMessage(message, '⚠♟ `c!` is preserved for chess game! Type `c! h` for more,.')
-        if (arg2 == 'default') arg2 = 'oi'
-        
-        getdb().set(message.guild.id, arg2, 'prefix').then(() => {
-          prefix = arg2
-          sendMessage(message, `❗ My prefix is now changed to \`${arg2}\`\n`)
-        })
-      } else sendMessage(message, `Current prefix: \`${prefix}\`\nTo change prefix, type \`${prefix} prefix [new-prefix]\`\n\n`)
     }
   },
 

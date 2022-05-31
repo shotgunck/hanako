@@ -1,6 +1,6 @@
 {
   "name": "hanako",
-  "version": "5.0.0",
+  "version": "5.5.0",
   "description": "a multi-purpose discord bot written in js",
   "main": "main.js",
   "engines": {
@@ -28,14 +28,12 @@
     "fs": "0.0.1-security",
     "genius-lyrics-api": "^3.2.0",
     "install": "^0.13.0",
-    "mongodb": "^4.3.0",
-    "mongoose": "^6.2.1",
+    "mongoose": "^6.3.5",
     "node-fetch": "^3.2.0",
     "npm": "^8.1.4",
     "nth-check": "^2.0.1",
     "progress": "^2.0.3",
     "python": "0.0.4",
-    "quickmongo": "^4.0.0",
     "reconlx": "^2.5.1",
     "youtube-dl-exec": "^2.0.0",
     "ytdl-core": "^4.9.1",

@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { MessageEmbed } = require('discord.js')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { SpotifyPlugin } = require('@distube/spotify')
 const { getLyrics } = require('genius-lyrics-api')
@@ -7,7 +7,7 @@ const Distube = require('distube')
 const ProgressBar = require('progress')
 const LyricsSearch = require('@penfoldium/lyrics-search')
 
-const { getPrefix, msgSplit, sendMessage, msgEdit } = require('../helper')
+const { msgSplit, sendMessage, msgEdit } = require('../helper')
 
 const findSong = new LyricsSearch(process.env.GENIUS_API)
 
@@ -47,7 +47,7 @@ module.exports = {
     async execute(message, arg2, main) {
       if (!message.member.voice.channel) return sendMessage(message, 'Enter a voice channel bu')
       if (!distube.getQueue(message)) return sendMessage(message, '\\🌫 Oui play some sound to set filter ight')
-      if (!arg2) return sendMessage(message, `🌫 You can set the filter with: \`3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax\`\n\nExample: \`${await getPrefix(message.guild.id)}\` filter reverse\`\nMention the filter type again to turn that filter off uwu`)
+      if (!arg2) return sendMessage(message, `🌫 You can set the filter with: \`3d | bassboost | echo | karaoke | nightcore | vaporwave | flanger | gate | haas | reverse | surround | mcompand | phaser | tremolo | earwax\`\n\nExample: \`oi filter reverse\`\nMention the filter type again to turn that filter off uwu`)
 
       const filters = main.substr(7, main.length).match(/\w+/gm)
 
@@ -69,7 +69,7 @@ module.exports = {
     args: 'lyrics',
 
     async execute(message, arg2, main) {
-      if (!arg2) return sendMessage(message, `🔎 Provide some lyrics!! Example: \`${await getPrefix(message.guild.id)} find how you want me to\``)
+      if (!arg2) return sendMessage(message, `🔎 Provide some lyrics!! Example: \`oi find how you want me to\``)
 
       findSong.search(main.substr(4, main.length)).then(res => {
         const info = res.fullTitle.split('by')
@@ -222,10 +222,10 @@ module.exports = {
 
       const queue = distube.getQueue(message)
       if (!queue) return sendMessage(message, '🗑 There is no sound around,.')
-      if (queue.paused) return sendMessage(message, `🙄 Queue is already paused!! Type \`${await getPrefix(message.guild.id)} resume\` to resume!`)
+      if (queue.paused) return sendMessage(message, `🙄 Queue is already paused!! Type \`oi resume\` to resume!`)
 
       await distube.pause(message)
-      sendMessage(message, `⏸ Current queue has been paused. Type \`${await getPrefix(message.guild.id)} resume\` to resume.`)
+      sendMessage(message, `⏸ Current queue has been paused. Type \`oi resume\` to resume.`)
     }
   },
 
@@ -347,7 +347,7 @@ module.exports = {
       .setDescription('Skip to the next track in queue')
       .toJSON(),
 
-    async execute(message, arg2) {
+    async execute(message) {
       if (!message.member.voice.channel) return sendMessage(message, '🙄 You\'re not listening..,')
       if (!distube.getQueue(message)) return sendMessage(message, 'No song to skip,, Play some!!')
   

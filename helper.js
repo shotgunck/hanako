@@ -2,7 +2,6 @@ const { REST } = require('@discordjs/rest')
 const { Routes } = require('discord-api-types/v9')
 const { MessageEmbed } = require('discord.js')
 
-let db
 const command_with_its_group = {}
 
 module.exports = {
@@ -45,7 +44,7 @@ module.exports = {
     ['sketchyartist', '879864070101172255']
   ],
 
-  async helppages(guildId) {
+  async helppages() {
     return [
       new MessageEmbed()
         .setColor('#DD6E0F')
@@ -55,7 +54,7 @@ module.exports = {
         .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
         .addFields(
           {
-            name: '​', value: `💭 **Current prefix:** \`${await db.get(guildId, 'prefix')}\`\n
+            name: '​', value: `💭 **Prefix:** \`oi\`
               -------------------------------
               **help** - Show this message
               **prefix** - Set a new prefix for me
@@ -74,7 +73,7 @@ module.exports = {
       new MessageEmbed()
         .setColor('#DD6E0F')
         .setTitle('🎶 Music commands')
-        .setDescription('Play some music in voice channels igh')
+        .setDescription('Play some music in voice channels')
         .addFields(
           {
             name: '​', value: `
@@ -114,29 +113,27 @@ module.exports = {
   },
 
   async loadSlashCommands(cmd_groups) {
-    const rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN)
+    let rest = new REST({ version: '9' }).setToken(process.env.BOT_TOKEN)
 
-    const commands = []
+    let commands = []
 
     for (let cmd_group of cmd_groups) {
-      const module = require(`./modules/${cmd_group}`)
+      let module = require(`./modules/${cmd_group}`)
       for (let cmd in module) {
+        let slash_info = module[cmd].slash
+
         command_with_its_group[cmd] = cmd_group
-        const slash_info = module[cmd].slash
         if (slash_info) commands.push(slash_info)
       }
     }
 
-    await rest.put(
-			Routes.applicationCommands(process.env.BOT_CLIENT_SECRET),
-			{ body: commands }
-		)
+    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_SECRET), { body: commands } )
   },
 
   command_with_its_group,
 
   async sendMessage(message, text) {
-    const reply = await message.reply({
+    let reply = await message.reply({
       content: text,
       allowedMentions: { repliedUser: false }
     })
@@ -144,25 +141,30 @@ module.exports = {
     return message.fetchReply? await message.fetchReply() : reply
   },
 
+  async sendCustomMessage(message, info) {
+    let reply = await message.reply(info)
+
+    return message.fetchReply? await message.fetchReply() : reply
+  },
+
   msgDelete(message, when) {
-    setTimeout(_ => (message.delete || message.deleteReply)(), when * 1000)
+    setTimeout(_ => {
+      if (deleted_msgs[message.id] == message) (message.delete || message.deleteReply)()
+    }, when * 1000)
   },
+  async msgEdit(message, what, mention = false) {
+    let info, edited
 
-  async msgEdit(message, what) {
-    if (message.fetchReply) await message.fetchReply().editReply(what)
-    else await message.edit(what)
-  },
+    if (typeof(what) === 'string') info = {
+      content: what,
+      allowedMentions: { repliedUser: mention }
+    }
+    else info = what
 
-  setdb(database) {
-    db = database
-  },
+    if (message.fetchReply) edited = await message.fetchReply().editReply(info)
+    else edited = await message.edit(info)
 
-  getdb() {
-    return db
-  },
-
-  async getPrefix(guildId) {
-    return await db.get(guildId, 'prefix')
+    return edited
   },
 
   langVersion: {
