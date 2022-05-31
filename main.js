@@ -6,7 +6,7 @@ const chessmodule = require('./modules/chess')
 const { command_with_its_group, loadSlashCommands } = require('./helper')
 
 const command_groups = ['compiler', 'minecraft', 'music', 'utilities']
-const prefix = 'wa'
+const prefix = 'oi'
 
 const client = new Client({ intents: 641 }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] })
 
@@ -37,7 +37,7 @@ client.on('messageCreate', async message => {
       let arg2 = (cmd == subcontents[2] ? subcontents[2] : subcontents[1])?.trim()
 
       let exec = require('./modules/' + command_with_its_group[cmd])[cmd]
-      exec.execute(message, arg2, main)
+      if (exec) exec.execute(message, arg2, main)
     })
   }
 })
