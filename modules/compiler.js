@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 const axios = require('axios')
 
 const { sendMessage, langVersion } = require('../helper')
@@ -42,17 +42,17 @@ module.exports = {
         let output = data.output
         
         message.reply({
-          embeds: [new MessageEmbed()
+          embeds: [new EmbedBuilder()
             .setTitle('**💠 Output:**')
             .setColor('#DD6E0F')
             .setDescription(output === 'Unable to execute, please check your program and try again later, or contact JDoodle Support at jdoodle@nutpan.com.' ? '❌ I can not compile the given code due to non-supportive packages/libraries!' : '```' + output + '```')
-            .setFooter(`CPU time: ${data.cpuTime}ms | Memory used: ${data.memory}kb`)
+            .setFooter({text: `CPU time: ${data.cpuTime}ms | Memory used: ${data.memory}kb`})
             .setTimestamp()
           ],
           
           allowedMentions: { repliedUser: false }
         })
-      }).catch(error => sendMessage(`${errorLog}\n\n${error}`))
+      }).catch(error => sendMessage(message, `${errorLog}\n\n${error}`))
     }
   }
 }

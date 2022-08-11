@@ -1,4 +1,4 @@
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 
 const chessState = require('../chess/chessBoard')
 const { parseChessMove, parseChessCoord } = require('../chess/util')
@@ -10,7 +10,7 @@ const piecesWithNone = pieces.concat('none')
 const { msgDelete } = require('../helper')
 
 module.exports = {
-  async new(message) {
+  new(message) {
     if (chessState.board) return message.reply('There\'s a match going on bru, spectate them')
 
     message.channel.send('♟ Oki type `yes chess` to start. You have `10 seconds` to chat.').then(m => msgDelete(m, 8))
@@ -33,7 +33,7 @@ module.exports = {
 
   h(message) {
     message.channel.send({
-      embeds: [new MessageEmbed()
+      embeds: [new EmbedBuilder()
         .setColor('#DD6E0F')
         .setTitle('Chess')
         .setThumbnail('https://i.imgur.com/XZMFwU1.png')
@@ -55,10 +55,11 @@ module.exports = {
   async move(message) {
     if (!chessState.chessboard) return message.channel.send('♟ Start a match first pls')
 
-    const msgNoPrefix = message.content.replace(commandPrefix, '')
-    const fromTo = message.content.split(' ')
-    const chessMove = parseChessMove(msgNoPrefix)
-    const { chessboard } = chessState
+    let content = message.content
+    let msgNoPrefix = content.replace(commandPrefix, '')
+    let fromTo = content.split(' ')
+    let chessMove = parseChessMove(msgNoPrefix)
+    let { chessboard } = chessState
 
     if (!chessMove) message.channel.send('Syntax error: `ax by` with `a, b` range from a-h, `x, y` range from 1-8. Type again!').then(m => msgDelete(m, 7))
     else if (chessboard[chessMove.from.y][chessMove.from.x]) {

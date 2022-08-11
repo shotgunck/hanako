@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
-const { pagination } = require('reconlx')
+const { EmbedBuilder, PermissionsBitField } = require('discord.js')
+//const { pagination } = require('reconlx')
 const axios = require('axios')
 
-const { bondapp, bondapp_slash, helppages, sendMessage } = require('../helper')
+const { bondapp, /*helppages,*/ sendMessage } = require('../helper')
 
 module.exports = {
   bond: {
@@ -14,7 +14,21 @@ module.exports = {
       .setName('activity')
       .setDescription('Example: youtube')
       .setRequired(true)
-      .addChoices(bondapp_slash)
+      .addChoices(
+        {name: 'youtube', value: '880218394199220334'},
+        {name: 'poker', value: '755827207812677713'},
+        {name: 'betrayal', value: '773336526917861400'},
+        {name: 'fishing', value: '814288819477020702'},
+        {name: 'chess', value: '832012774040141894'},
+        {name: 'lettertile', value: '879863686565621790'},
+        {name: 'wordsnack', value: '879863976006127627'},
+        {name: 'doodlecrew', value: '878067389634314250'},
+        {name: 'awkword', value: '879863881349087252'},
+        {name: 'spellcast', value: '852509694341283871'},
+        {name: 'checkers', value: '832013003968348200'},
+        {name: 'puttparty', value: '763133495793942528'},
+        {name: 'sketchyartist', value: '879864070101172255'}
+      )
     )
     .toJSON(),
 
@@ -24,7 +38,7 @@ module.exports = {
       let channel = message.member.voice.channel
 
       if (!channel) return sendMessage(message, '💔To bond, some of yall must join voice channels oki')
-      if (!channel.permissionsFor(message.guild.me).has('CREATE_INSTANT_INVITE')) return sendMessage(message, '💕I need the create invite permission pls')
+      if (!channel.permissionsFor(message.client.user).has(PermissionsBitField.Flags.CreateInstantInvite)) return sendMessage(message, '💕I need the create invite permission pls')
 
       let app = bondapp[arg2] || bondapp[Object.keys(bondapp).find(name => bondapp[name] == arg2)]
       if (!arg2 || !app) return sendMessage(message, '💕Some bonding activities I found: `youtube | poker | betrayal | fishing | chess | lettertile | wordsnack | doodlecrew | awkword | spellcast | checkers | puttparty | sketchyartist`')
@@ -38,16 +52,16 @@ module.exports = {
       })
 
       message.reply({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
           .setColor('#DD6e0F')
           .setTitle(`:revolving_hearts: ${invite.guild.name}'s bonding time uwu`)
-          .setDescription(`Selected activity: ${invite.targetApplication.name}`)
+          .setDescription(`Selected activity: **${invite.targetApplication.name}**`)
           .setThumbnail(invite.targetApplication.coverURL())
           .addFields(
             { name: invite.targetApplication.summary || '(no description for this activity yet,,)', value: '​' },
             { name: `Join ${invite.channel.name}:`, value: `https://discord.gg/${invite.code}` }
           )
-          .setFooter('have fun bonding')
+          .setFooter({text: 'have fun bonding'})
           .setTimestamp()
         ],
 
@@ -74,6 +88,36 @@ module.exports = {
     .toJSON(),
 
     async execute(message) {
+      message.reply({
+        embeds: [new EmbedBuilder()
+          .setColor('#DD6E0F')
+          .setTitle('🌸 Hanako')
+          .setDescription('A bot with many fun stuff')
+          .setThumbnail('https://i.imgur.com/RZKGQ7z.png')
+          .addFields(
+            {
+              name: '**Prefix**: \`oi\`', value: `
+              
+              - - - - - - - Commands - - - - - - -
+              
+              **🛹 General**
+              \`help\` | \`bond\` | \`chess\` | \`compile\`  | \`mcskin\`  | \`achieve\`  | \`ms\` | \`gato\` | \`say\` | \`wa\`
+              
+              **🎶 Music**
+              \`filter\` | \`find\` | \`lyrics\` | \`play\`  | \`pause\`  | \`resume\`  | \`replay\` | \`remove\` | \`queue\` | \`skip\` | \`stop\`  | \`volume\`
+              
+              **🌸 Other**
+              \`purge\`
+
+              - - - - - - - - - - - - - - - - - - -
+              `
+            })
+          .setTimestamp()
+          .setFooter({text: 'fixing the help page rn'})
+          ]
+      })
+      
+      /*
       if (message.deleteReply) {
         const reply = await sendMessage(message, '​')
         reply.edit('💛_ _')
@@ -89,6 +133,7 @@ module.exports = {
         ],
         time: 50000
       })
+      */
     }
   },
 
@@ -115,7 +160,7 @@ module.exports = {
       if (amount > 0 && amount <= 101) {
         message.channel.bulkDelete(amount, true).catch(err => {
           return message.reply({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
               .setColor('#AA11EE')
               .setDescription(`❌ Error while purging | ${err}`)
               .setTimestamp()
@@ -134,7 +179,7 @@ module.exports = {
 
     async execute(message) {
       axios.get('https://api.thecatapi.com/v1/images/search').then(res => message.reply({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
           .setColor('#DD6E0F')
           .setTitle('gato')
           .setImage(res.data[0].url)
@@ -144,6 +189,23 @@ module.exports = {
     }
   },
   
+  say: {
+    slash: new SlashCommandBuilder()
+    .setName('say')
+    .setDescription('Let me say something')
+    .addStringOption(option => option
+      .setName('string')
+      .setDescription('ma say it')
+      .setRequired(false))
+    .toJSON(),
+
+    args: 'string',
+
+    async execute(message, arg2, main) {
+      message.channel.send(arg2? main.substring(4, main.length) : 'you are fat')  
+    }
+  },
+
   wa: {
     slash: new SlashCommandBuilder()
     .setName('wa')
@@ -166,7 +228,7 @@ module.exports = {
         const info = res.data.images? res.data.images[0] : res.data
 
         const embed = {
-          embeds: [new MessageEmbed()
+          embeds: [new EmbedBuilder()
             .setColor(info.dominant_color || '#DD6E0F')
             .setTitle('wa')
             .setDescription(`Favorites: ${info.favourites || 'idk'}\nSource: ${info.source || 'idk'}`)

@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder, PermissionsBitField } = require('discord.js')
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { SpotifyPlugin } = require('@distube/spotify')
-const { pagination } = require('reconlx')
+//const { pagination } = require('reconlx')
 const Distube = require('distube')
 const ProgressBar = require('progress')
 const genius = require('genius-lyrics')
@@ -16,7 +16,6 @@ module.exports = {
   _init(cli) {
     distube = new Distube.DisTube(cli, {
       nsfw: true,
-      youtubeDL: false, 
       leaveOnEmpty: true,
       emitNewSongOnly: true,
       plugins: [new SpotifyPlugin()]
@@ -74,7 +73,7 @@ module.exports = {
         const info = search[0]
 
         message.reply({
-          embeds: [new MessageEmbed()
+          embeds: [new EmbedBuilder()
             .setColor('#DD6E0F')
             .setTitle(info.fullTitle)
             .setDescription('by' + info.artist.name)
@@ -164,7 +163,7 @@ module.exports = {
       if (!voiceChannel) return sendMessage(message, 'Enter a voice channel pls!')
   
       const permissions = voiceChannel.permissionsFor(message.client.user)
-      if (!permissions.has("CONNECT") || !permissions.has("SPEAK")) return sendMessage(message, 'I don\'t have the permission to join or speak in the channel 😭')
+      if (!permissions.has(PermissionsBitField.Flags.Connect) || !permissions.has(PermissionsBitField.Flags.Speak)) return sendMessage(message, 'I don\'t have the permission to join or speak in the channel 😭')
   
       const attachment = message.attachments && message.attachments[0]?.attachment
     
@@ -203,21 +202,22 @@ module.exports = {
       .toJSON(),
 
     async execute(message) {
-      let queue = distube.getQueue(message), pages = [], q = ''
+      let queue = distube.getQueue(message), q = ''//, pages = []
       if (!queue) return sendMessage(message, '🕳 Queue empty..,')
       
       await queue.songs.map((song, index) => q += `**${index + 1}**. ${song.name} - \`${song.formattedDuration}\`\n`)
       
+      if (message.deleteReply) sendMessage(message, `${message.guild.name}'s current queue`)
+      sendMessage(message, q)
+
+        /*
       const queueList = q.match(/(.*?\n){10}/gm) || [q]
-      for (list of queueList) pages.push(new MessageEmbed()
+      for (list of queueList) pages.push(new EmbedBuilder()
         .setColor('#DD6E0F')
         .setTitle('Current Queue')
         .setDescription(`Total length - \`${queue.formattedDuration}\``)
         .addFields({ name: '---', value: list })
       )
-      
-      if (message.deleteReply) sendMessage(message, `${message.guild.name}'s current queue`)
-
       pagination({
         author: message.author?.id? message.author : message.user,
         channel: message.channel,
@@ -228,6 +228,7 @@ module.exports = {
         ],
         time: 120000
       })
+      */
     }
   },
 
@@ -351,13 +352,13 @@ module.exports = {
       bar.tick()
 
       message.reply({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
           .setColor('#DD6E0F')
           .setTitle(playing.name)
           .setDescription(`by [${playing.uploader.name}](${playing.uploader.url})`)
           .setThumbnail(playing.thumbnail)
           .addFields( { name: 'Source', value: playing.url } )
-          .setFooter(`${queue.formattedCurrentTime} ${bar.lastDraw} ${playing.formattedDuration}`)
+          .setFooter({text: `${queue.formattedCurrentTime} ${bar.lastDraw} ${playing.formattedDuration}`})
         ],
         
         allowedMentions: { repliedUser: false }

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { MessageEmbed } = require('discord.js')
+const { EmbedBuilder } = require('discord.js')
 const axios = require('axios')
 
 const { msgEdit, sendMessage } = require('../helper')
@@ -20,7 +20,7 @@ module.exports = {
     async execute(message, arg2) {
       if (!arg2) return message.reply(`🙄 Provide a Minecraft player's username,, like \`oi mcskin notch\``)
       message.reply({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
           .setColor('#DD6E0F')
           .setTitle(arg2)
           .setImage(`https://minotar.net/armor/body/${arg2}/150.png`)
@@ -46,7 +46,7 @@ module.exports = {
     execute(message, _, main) {
       const args = main.slice(7).trim().split(/ +/g).join('..')
       axios.get(`https://minecraft-api.com/api/achivements/cooked_salmon/achievement..got/${args}`).then(data => message.reply({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
           .setColor('#DD6E0F')
           .setImage(data.config.url)
         ],
@@ -79,7 +79,7 @@ module.exports = {
           let notCharacter = arg2.search(/[^\w.:]/gm) == -1 ? '🕐 Try again in 5 minutes!' : '🔹 Did you mean: `' + arg2.replace(/[^\w.:]/gm, '') + '`'
 
           return msgEdit(status, {
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
               .setColor('#DD6E0F')
               .setTitle('\\🔴 ' + arg2 + ' is offline')
               .setDescription(`🔸 Make sure the address is an existing Minecraft server address, or let the server owner know!\n${notCharacter}`)
@@ -102,7 +102,7 @@ module.exports = {
         sample.map(plr => listofplayer += `\n• ${plr.name}`)
 
         msgEdit(status, {
-          embeds: [new MessageEmbed()
+          embeds: [new EmbedBuilder()
             .setColor('#DD6E0F')
             .setAuthor({ name: '🟢 online' })
             .setTitle(`${arg2}`)
