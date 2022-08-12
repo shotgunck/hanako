@@ -111,7 +111,7 @@ module.exports = {
       }
     }
 
-    //await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: commands } )
+    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: commands } )
   },
 
   async sendMessage(message, text) {
