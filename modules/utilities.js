@@ -1,9 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 const { EmbedBuilder, PermissionsBitField } = require('discord.js')
-//const { pagination } = require('reconlx')
 const axios = require('axios')
 
-const { bondapp, /*helppages,*/ sendMessage } = require('../helper')
+const { bondapp, sendMessage } = require('../helper')
 
 module.exports = {
   bond: {
@@ -70,17 +69,6 @@ module.exports = {
     }
   },
 
-  chess: {
-    slash: new SlashCommandBuilder()
-    .setName('chess')
-    .setDescription('Play some chess!')
-    .toJSON(),
-
-    execute(message) {
-      sendMessage(message, '♟ Prefix for chess is specified as `c!`, type `c! h` for more help ight, or you can use Discord activities!')
-    }
-  },
-
   help: {
     slash: new SlashCommandBuilder()
     .setName('help')
@@ -101,7 +89,7 @@ module.exports = {
               - - - - - - - Commands - - - - - - -
               
               **🛹 General**
-              \`help\` | \`bond\` | \`chess\` | \`compile\`  | \`mcskin\`  | \`achieve\`  | \`ms\` | \`gato\` | \`say\` | \`wa\`
+              \`help\` | \`bond\` | \`compile\`  | \`mcskin\`  | \`achieve\`  | \`ms\` | \`gato\` | \`say\` | \`wa\`
               
               **🎶 Music**
               \`filter\` | \`find\` | \`lyrics\` | \`play\`  | \`pause\`  | \`resume\`  | \`replay\` | \`remove\` | \`queue\` | \`skip\` | \`stop\`  | \`volume\`
@@ -116,24 +104,6 @@ module.exports = {
           .setFooter({text: 'fixing the help page rn'})
           ]
       })
-      
-      /*
-      if (message.deleteReply) {
-        const reply = await sendMessage(message, '​')
-        reply.edit('💛_ _')
-      }
-
-      pagination({
-        author: message.author?.id? message.author : message.user,
-        channel: message.channel,
-        embeds: await helppages(message.guild.id),
-        button: [
-          { name: 'previous', emoji: '⬅', style: 'DANGER' },
-          { name: 'next', emoji: '➡', style: 'PRIMARY' }
-        ],
-        time: 50000
-      })
-      */
     }
   },
 
@@ -206,6 +176,36 @@ module.exports = {
     }
   },
 
+  img: {
+    slash: new SlashCommandBuilder()
+    .setName('img')
+    .setDescription('Generate an image based on given prompt')
+    .addStringOption(option => option
+      .setName('string')
+      .setDescription('Generate an image based on given prompt')
+      .setRequired(false))
+    .toJSON(),
+
+    args: 'string',
+
+    async execute(message, _, main) {
+      let prompt = 'http://image.pollinations.ai/prompt/' + main.replaceAll(' ', "%20")
+      
+      const embed = {
+          embeds: [new EmbedBuilder()
+            .setTitle(main.replace('img ', ''))
+            .setImage(prompt)
+            .setTimestamp()
+          ],
+          allowedMentions: { repliedUser: false }
+        }
+
+        if (message.reply) message.reply(embed)
+        else channel.send(embed)
+      //}).catch(err => { message.reply('💢 ai broke :( ' + err) })
+    }
+  },
+  
   wa: {
     slash: new SlashCommandBuilder()
     .setName('wa')
@@ -219,10 +219,10 @@ module.exports = {
     args: 'lang',
 
     async execute(message, arg2) {
-      if (!message.channel.nsfw) return sendMessage(message, 'Oui, nsfw channel only!')
+      if (!message.channel.nsfw) return sendMessage(message, '`nsfw channel only :(`')
       const channel = message.channel
 
-      const url = arg2? `${process.env.SW}${arg2}` : 'https://api.waifu.im/random/?is_nsfw=false'
+      const url = arg2? `${process.env.SW}${arg2}` : 'https://api.waifu.im/search/?is_nsfw=false'
 
       axios.get(url).then(res => {
         const info = res.data.images? res.data.images[0] : res.data

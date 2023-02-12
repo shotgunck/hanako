@@ -40,7 +40,6 @@ module.exports = {
               -------------------------------
               **help** - Show this message              
               **bond** - Bonding time with Discord activities
-              **chess** - Info about chess
               **compile** - Code compiler
               **mcskin** - Show skin of a Minecraft player
               **achieve** - Achievement got!
@@ -111,7 +110,9 @@ module.exports = {
       }
     }
 
-    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: commands } )
+    //await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: commands } )
+    await rest.put( Routes.applicationCommands(process.env.BOT_CLIENT_ID), { body: [] } )
+
   },
 
   async sendMessage(message, text) {
